@@ -1,7 +1,7 @@
 """"""
 
 from __future__ import annotations
-from typing import Annotated, Any, Dict, List, Literal, Union
+from typing import Annotated, Any, Dict, List, Literal, Sequence, Union
 from pydantic import (
     AfterValidator,
     BeforeValidator,
@@ -12,9 +12,7 @@ from pydantic import (
     Tag,
     WrapValidator,
 )
-from pymarc import Indicators as PymarcIndicators
 from pymarc import Leader as PymarcLeader
-from pymarc import Subfield as PymarcSubfield
 from pydantic_marc.rules import MARC_RULES
 from pydantic_marc.validators import (
     validate_control_field,
@@ -38,8 +36,31 @@ def field_discriminator(v: Any) -> str:
         return "data_field"
 
 
-def remove_default(field_properties: Dict[str, Any]):
+def remove_default(field_properties: Dict[str, Any]) -> None:
     field_properties.pop("default")
+
+
+class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
+    first: Annotated[str, Field(min_length=0, max_length=1)]
+    second: Annotated[str, Field(min_length=0, max_length=1)]
+
+    def __getitem__(self, index: int) -> str:
+        return list(self.__dict__.values())[index]
+
+    @model_serializer(when_used="unless-none")
+    def serialize_indicators(self) -> tuple[str, str]:
+        """Serialize the indicators into a tuple with the correct format."""
+        return (self.first, self.second)
+
+
+class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
+    code: Annotated[str, Field(max_length=1)]
+    value: str
+
+    @model_serializer(when_used="unless-none")
+    def serialize_subfield(self) -> Dict[str, str]:
+        """Serialize the subfield into a dict with the correct format."""
+        return {self.code: self.value}
 
 
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
@@ -95,8 +116,10 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     ]
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
-    indicators: Annotated[PymarcIndicators, AfterValidator(validate_indicators)]
-    subfields: Annotated[List[PymarcSubfield], AfterValidator(validate_subfields)]
+    indicators: Annotated[
+        Union[PydanticIndicators, Sequence], AfterValidator(validate_indicators)
+    ]
+    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_subfields)]
 
     @model_serializer
     def serialize_data_field(

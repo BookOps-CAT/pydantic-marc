@@ -5,8 +5,72 @@ from pymarc import Indicators as PymarcIndicators
 from pymarc import Leader as PymarcLeader
 from pymarc import Subfield as PymarcSubfield
 from pymarc import MARCReader
-from pydantic_marc.models import ControlField, DataField, MarcRecord
+from pydantic_marc.models import (
+    ControlField,
+    DataField,
+    MarcRecord,
+    PydanticIndicators,
+    PydanticSubfield,
+)
 from pydantic_marc.rules import MARC_RULES
+
+
+class TestPydanticIndicators:
+    @pytest.mark.parametrize(
+        "first, second",
+        [
+            ("0", "1"),
+            ("", " "),
+            (" ", "5"),
+        ],
+    )
+    def test_PydanticIndicators_valid(self, first, second):
+        model = PydanticIndicators(first=first, second=second)
+        assert model.model_dump(by_alias=True) == (first, second)
+        assert model[0] == first
+        assert model[1] == second
+
+    @pytest.mark.parametrize(
+        "first, second, errors",
+        [
+            ("10", "100", ["string_too_long", "string_too_long"]),
+            (4, [], ["string_type", "string_type"]),
+            (2.0, {}, ["string_type", "string_type"]),
+        ],
+    )
+    def test_PydanticIndicators_invalid(self, first, second, errors):
+        with pytest.raises(ValidationError) as e:
+            PydanticIndicators(first=first, second=second)
+        error_types = [i["type"] for i in e.value.errors()]
+        assert sorted(error_types) == sorted(errors)
+
+
+class TestPydanticSubfield:
+    @pytest.mark.parametrize(
+        "code, value",
+        [
+            ("a", "foo"),
+            ("b", "bar"),
+            ("8", "baz"),
+        ],
+    )
+    def test_PydanticSubfield_valid(self, code, value):
+        model = PydanticSubfield(code=code, value=value)
+        assert model.model_dump(by_alias=True) == {code: value}
+
+    @pytest.mark.parametrize(
+        "code, value, errors",
+        [
+            ("10", 4, ["string_too_long", "string_type"]),
+            (4, [], ["string_type", "string_type"]),
+            (2.0, {}, ["string_type", "string_type"]),
+        ],
+    )
+    def test_PydanticSubfield_invalid(self, code, value, errors):
+        with pytest.raises(ValidationError) as e:
+            PydanticSubfield(code=code, value=value)
+        error_types = [i["type"] for i in e.value.errors()]
+        assert sorted(error_types) == sorted(errors)
 
 
 class TestControlField:
@@ -212,6 +276,8 @@ class TestDataField:
                 "subfields": [{"a": "2024111111"}, {"z": "2020111111"}],
             }
         }
+        assert model.indicators[0] == ""
+        assert model.indicators[1] == ""
 
     def test_DataField_010_valid_from_field(self):
         field = PymarcField(
@@ -345,6 +411,8 @@ class TestDataField:
         assert model.model_dump() == {
             "020": {"ind1": "", "ind2": "", "subfields": [{"a": "2024111111"}]}
         }
+        assert model.indicators[0] == ""
+        assert model.indicators[1] == ""
 
     def test_DataField_020_valid_from_field(self):
         field = PymarcField(
@@ -451,6 +519,8 @@ class TestDataField:
         assert model.model_dump() == {
             "050": {"ind1": "0", "ind2": "4", "subfields": [{"a": "F00"}]}
         }
+        assert model.indicators[0] == "0"
+        assert model.indicators[1] == "4"
 
     def test_DataField_050_valid_from_field(self):
         field = PymarcField(
@@ -561,6 +631,10 @@ class TestMarcRecord:
         model = MarcRecord.model_validate(stub_record, from_attributes=True)
         assert isinstance(stub_record.leader, str)
         assert list(model.model_dump().keys()) == ["leader", "fields"]
+
+    def test_MarcRecord_model_default_values(self, stub_record):
+        model = MarcRecord.model_validate(stub_record, from_attributes=True)
+        assert model.model_json_schema()["properties"]["rules"].get("default") is None
 
     def test_MarcRecord_pymarcleader(self, stub_record):
         record = stub_record.as_marc21()
