@@ -27,7 +27,6 @@ associated rules. The rules defined for each field include:
 
 from typing import Any, Dict
 
-
 MARC_RULES: Dict[str, Any] = {
     "001": {
         "repeatable": False,
