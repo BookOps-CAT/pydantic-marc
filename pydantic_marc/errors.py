@@ -8,8 +8,10 @@ required in order to wrap the exception within a `ValidationError` object.
 """
 
 from __future__ import annotations
+
 from typing import Any, Dict
-from pydantic_core import PydanticCustomError, InitErrorDetails
+
+from pydantic_core import InitErrorDetails, PydanticCustomError
 
 
 class MarcCustomError(PydanticCustomError):

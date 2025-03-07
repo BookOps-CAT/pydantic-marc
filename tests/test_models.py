@@ -3,8 +3,9 @@ from pydantic import ValidationError
 from pymarc import Field as PymarcField
 from pymarc import Indicators as PymarcIndicators
 from pymarc import Leader as PymarcLeader
-from pymarc import Subfield as PymarcSubfield
 from pymarc import MARCReader
+from pymarc import Subfield as PymarcSubfield
+
 from pydantic_marc.models import ControlField, DataField, MarcRecord
 from pydantic_marc.rules import MARC_RULES
 
