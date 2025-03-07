@@ -3,8 +3,9 @@ from pydantic import ValidationError
 from pymarc import Field as PymarcField
 from pymarc import Indicators as PymarcIndicators
 from pymarc import Leader as PymarcLeader
-from pymarc import Subfield as PymarcSubfield
 from pymarc import MARCReader
+from pymarc import Subfield as PymarcSubfield
+
 from pydantic_marc.models import (
     ControlField,
     DataField,
@@ -736,7 +737,10 @@ class TestMarcRecord:
         with pytest.raises(ValidationError) as e:
             MarcRecord(leader=record.leader, fields=record.fields)
         errors = e.value.errors()
+        error_count = len(errors)
         error_types = [i["type"] for i in errors]
+        error_locs = [i["loc"] for i in errors]
+        assert error_count == 9
         assert sorted(error_types) == sorted(
             [
                 "invalid_indicator",
@@ -750,3 +754,12 @@ class TestMarcRecord:
                 "string_pattern_mismatch",
             ]
         )
+        assert ("leader",) in error_locs
+        assert ("fields", "001") in error_locs
+        assert ("fields", "006") in error_locs
+        assert ("fields", "100", "110") in error_locs
+        assert ("fields", "245") in error_locs
+        assert ("fields", "336", "ind1") in error_locs
+        assert ("fields", "336", "ind2") in error_locs
+        assert ("fields", "336", "z") in error_locs
+        assert ("fields", "600", "a") in error_locs
