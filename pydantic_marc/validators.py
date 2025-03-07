@@ -5,6 +5,8 @@ The functions contained within this module validate the content of the data pass
 or wrap validators.
 """
 
+from __future__ import annotations
+
 from collections import Counter
 from typing import Any, Dict, List, Optional
 
@@ -136,7 +138,7 @@ def validate_indicators(indicators: tuple, info: ValidationInfo) -> tuple:
     for n, indicator in enumerate(indicators):
         ind = f"ind{n+1}"
         valid = field_rules.get(ind)
-        if indicator not in valid:
+        if indicators[n] not in valid:
             error = InvalidIndicator(
                 {"loc": (tag, ind), "input": indicators[n], "valid": valid}
             )
