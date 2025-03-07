@@ -1,16 +1,18 @@
 from typing import Any, Dict, Optional
+
 import pytest
-from pymarc import Indicators, Subfield
 from pydantic import TypeAdapter
+from pymarc import Indicators, Subfield
+
+from pydantic_marc.models import ControlField
+from pydantic_marc.rules import MARC_RULES
 from pydantic_marc.validators import (
     check_marc_rules,
     validate_control_field,
+    validate_fields,
     validate_indicators,
     validate_subfields,
-    validate_fields,
 )
-from pydantic_marc.models import ControlField
-from pydantic_marc.rules import MARC_RULES
 
 
 class MockInfo:

@@ -1,7 +1,6 @@
 import pytest
-
-from pymarc import Indicators, Record, Subfield
 from pymarc import Field as PymarcField
+from pymarc import Indicators, Record, Subfield
 
 
 @pytest.fixture
