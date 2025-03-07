@@ -22,9 +22,10 @@ class MarcCustomError(PydanticCustomError):
         """Return the exception as an `InitErrorDetails` object."""
         context = {} if not self.context else self.context
         loc = context.get("loc", context.get("tag", context.get("input")))
+        input = context.get("input", {})
         if isinstance(loc, str):
-            return InitErrorDetails(type=self, input=context["input"], loc=(loc,))
-        return InitErrorDetails(type=self, input=context["input"], loc=loc)
+            return InitErrorDetails(type=self, input=input, loc=(loc,))
+        return InitErrorDetails(type=self, input=input, loc=loc)
 
 
 class InvalidIndicator(MarcCustomError):
