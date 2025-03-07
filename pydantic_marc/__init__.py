@@ -1,1 +1,1 @@
-from .models import MarcRecord, ControlField, DataField  # noqa: F401
+from .models import ControlField, DataField, MarcRecord  # noqa: F401
