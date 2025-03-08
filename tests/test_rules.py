@@ -59,3 +59,7 @@ def test_marc_rules_data_fields_020():
 
 def test_marc_rules_data_fields_900():
     assert MARC_RULES.get("900") is None
+
+
+def test_marc_rules_data_fields_count():
+    assert len(list(MARC_RULES.keys())) == 241
