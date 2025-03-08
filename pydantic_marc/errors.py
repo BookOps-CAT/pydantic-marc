@@ -1,10 +1,11 @@
-"""Exceptions raised during the validation of the content of a `MarcRecord` model.
+"""Exceptions raised during the validation of a `MarcRecord` model.
 
-These exceptions are based off of errors identified in records when using the MarcEdit
+Exceptions in this module are based off of errors identified when using the MarcEdit
 Validate MARC Records tool. Each exception inherits from `MarcCustomError` which
-inherits from `PydanticCustomError` and contains an `error_details` property that will
-create an `InitErrorDetails` object from the exception. An `InitErrorDetails` object is
-required in order to wrap the exception within a `ValidationError` object.
+inherits from `PydanticCustomError`. The `MarcCustomError` exception and includes
+an `error_details` property to will create an `InitErrorDetails` object from the
+exception. An `InitErrorDetails` object is required in order to wrap an exception
+within a `pydantic.ValidationError` object.
 """
 
 from __future__ import annotations
@@ -33,11 +34,17 @@ class InvalidIndicator(MarcCustomError):
 
     def __new__(cls, context: Dict[str, Any]) -> InvalidIndicator:
         """
-        Context dictionary should contain:
+        Create a new `InvalidIndicator` object.
 
-            loc: a tuple containing the tag and indicator number
-            input: the value passed to the indicator
-            valid: a list of valid values for the indicator
+        Args:
+            context: a dictionary containing:
+                loc:
+                    a tuple with the tag and indicator number. example: (100, ind1)
+                input:
+                    the value passed to the indicator
+                valid:
+                   a list of valid values for the indicator
+
         """
         context["tag"], context["ind"] = context["loc"]
         instance = super().__new__(
@@ -54,10 +61,14 @@ class InvalidSubfield(MarcCustomError):
 
     def __new__(cls, context: Dict[str, Any]) -> InvalidSubfield:
         """
-        Context dictionary should contain:
+        Create a new `InvalidIndicator` object.
 
-            loc: a tuple containing the tag and subfield code
-            input: a list of subfields with the invalid subfield code
+        Args:
+            context: a dictionary containing:
+                loc:
+                    a tuple containing the tag and subfield code. example: (100, a)
+                input:
+                    a list of subfields with the invalid subfield code
         """
         context["tag"], context["code"] = context["loc"]
         instance = super().__new__(
@@ -74,11 +85,13 @@ class ControlFieldLength(MarcCustomError):
 
     def __new__(cls, context: Dict[str, Any]) -> ControlFieldLength:
         """
-        Context dictionary should contain:
+        Create a new `InvalidIndicator` object.
 
-            tag: the field's tag
-            input: value passed to the control field's data attribute
-            valid: the valid length for the field
+        Args:
+            context: a dictionary containing:
+                tag: the field's tag
+                input: value passed to the control field's data attribute
+                valid: the valid length for the field
         """
         context["length"] = len(context["input"])
         instance = super().__new__(
@@ -95,8 +108,11 @@ class MultipleMainEntryValues(MarcCustomError):
 
     def __new__(cls, context: Dict[str, Any]) -> MultipleMainEntryValues:
         """
-        Context dictionary should contain:
-            input: the field's tag
+        Create a new `InvalidIndicator` object.
+
+        Args:
+            context: a dictionary containing:
+                input: the field's tag
         """
         instance = super().__new__(
             cls,
@@ -112,8 +128,11 @@ class MissingRequiredField(MarcCustomError):
 
     def __new__(cls, context: Dict[str, Any]) -> MissingRequiredField:
         """
-        Context dictionary should contain:
-            input: the field's tag
+        Create a new `InvalidIndicator` object.
+
+        Args:
+            context: a dictionary containing:
+                input: the field's tag
         """
         instance = super().__new__(
             cls,
@@ -129,8 +148,11 @@ class NonRepeatableField(MarcCustomError):
 
     def __new__(cls, context: Dict[str, Any]) -> NonRepeatableField:
         """
-        Context dictionary should contain:
-            input: the field's tag
+        Create a new `InvalidIndicator` object.
+
+        Args:
+            context: a dictionary containing:
+                input: the field's tag
         """
         instance = super().__new__(
             cls,
@@ -146,10 +168,14 @@ class NonRepeatableSubfield(MarcCustomError):
 
     def __new__(cls, context: Dict[str, Any]) -> NonRepeatableSubfield:
         """
-        Context dictionary should contain:
+        Create a new `InvalidIndicator` object.
 
-            loc: a tuple containing the tag and subfield code
-            input: a list of subfields with the invalid subfield code
+        Args:
+            context: a dictionary containing:
+                loc:
+                    a tuple containing the tag and subfield code. example: (100, a)
+                input:
+                    a list of subfields with the invalid subfield code
         """
         context["tag"], context["code"] = context["loc"]
         instance = super().__new__(
