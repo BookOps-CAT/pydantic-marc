@@ -105,9 +105,6 @@ pydantic-core==2.27.2 ; python_version >= "3.9" \
 pydantic==2.10.6 ; python_version >= "3.9" \
     --hash=sha256:427d664bf0b8a2b34ff5dd0f5a18df00591adcee7198fbd71981054cef37b584 \
     --hash=sha256:ca5daa827cce33de7a42be142548b0096bf05a7e7b365aebfa5f8eeec7128236
-pymarc==5.2.3 ; python_version >= "3.9" \
-    --hash=sha256:02a151d89c3b36f92bbc92c2e972bcfe91b91fc93529d8862e5f7c292a15c9f0 \
-    --hash=sha256:9e0b2fff0f97764889fe2af08a93d137e0a46630c006c6330bebf0bdcd52201a
 typing-extensions==4.12.2 ; python_version >= "3.9" \
     --hash=sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d \
     --hash=sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8

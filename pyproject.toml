@@ -9,7 +9,6 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "pymarc (>=5.2.3,<6.0.0)",
     "pydantic (>=2.10.6,<3.0.0)"
 ]
 
@@ -21,6 +20,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 pytest-cov = "^6.0.0"
+pymarc = "^5.2.3"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
