@@ -13,64 +13,6 @@ from pydantic_marc.fields import (
 from pydantic_marc.rules import MARC_RULES
 
 
-class TestPydanticIndicators:
-    @pytest.mark.parametrize(
-        "first, second",
-        [
-            ("0", "1"),
-            ("", " "),
-            (" ", "5"),
-        ],
-    )
-    def test_PydanticIndicators_valid(self, first, second):
-        model = PydanticIndicators(first=first, second=second)
-        assert model.model_dump(by_alias=True) == (first, second)
-        assert model[0] == first
-        assert model[1] == second
-
-    @pytest.mark.parametrize(
-        "first, second, errors",
-        [
-            ("10", "100", ["string_too_long", "string_too_long"]),
-            (4, [], ["string_type", "string_type"]),
-            (2.0, {}, ["string_type", "string_type"]),
-        ],
-    )
-    def test_PydanticIndicators_invalid(self, first, second, errors):
-        with pytest.raises(ValidationError) as e:
-            PydanticIndicators(first=first, second=second)
-        error_types = [i["type"] for i in e.value.errors()]
-        assert sorted(error_types) == sorted(errors)
-
-
-class TestPydanticSubfield:
-    @pytest.mark.parametrize(
-        "code, value",
-        [
-            ("a", "foo"),
-            ("b", "bar"),
-            ("8", "baz"),
-        ],
-    )
-    def test_PydanticSubfield_valid(self, code, value):
-        model = PydanticSubfield(code=code, value=value)
-        assert model.model_dump(by_alias=True) == {code: value}
-
-    @pytest.mark.parametrize(
-        "code, value, errors",
-        [
-            ("10", 4, ["string_too_long", "string_type"]),
-            (4, [], ["string_type", "string_type"]),
-            (2.0, {}, ["string_type", "string_type"]),
-        ],
-    )
-    def test_PydanticSubfield_invalid(self, code, value, errors):
-        with pytest.raises(ValidationError) as e:
-            PydanticSubfield(code=code, value=value)
-        error_types = [i["type"] for i in e.value.errors()]
-        assert sorted(error_types) == sorted(errors)
-
-
 class TestControlField:
     @pytest.mark.parametrize(
         "tag, data",
@@ -625,3 +567,61 @@ class TestDataField:
         assert sorted(error_types) == sorted(["subfield_not_allowed"])
         assert sorted(error_locs) == sorted([("subfields", "050", "t")])
         assert len(e.value.errors()) == 1
+
+
+class TestPydanticIndicators:
+    @pytest.mark.parametrize(
+        "first, second",
+        [
+            ("0", "1"),
+            ("", " "),
+            (" ", "5"),
+        ],
+    )
+    def test_PydanticIndicators_valid(self, first, second):
+        model = PydanticIndicators(first=first, second=second)
+        assert model.model_dump(by_alias=True) == (first, second)
+        assert model[0] == first
+        assert model[1] == second
+
+    @pytest.mark.parametrize(
+        "first, second, errors",
+        [
+            ("10", "100", ["string_too_long", "string_too_long"]),
+            (4, [], ["string_type", "string_type"]),
+            (2.0, {}, ["string_type", "string_type"]),
+        ],
+    )
+    def test_PydanticIndicators_invalid(self, first, second, errors):
+        with pytest.raises(ValidationError) as e:
+            PydanticIndicators(first=first, second=second)
+        error_types = [i["type"] for i in e.value.errors()]
+        assert sorted(error_types) == sorted(errors)
+
+
+class TestPydanticSubfield:
+    @pytest.mark.parametrize(
+        "code, value",
+        [
+            ("a", "foo"),
+            ("b", "bar"),
+            ("8", "baz"),
+        ],
+    )
+    def test_PydanticSubfield_valid(self, code, value):
+        model = PydanticSubfield(code=code, value=value)
+        assert model.model_dump(by_alias=True) == {code: value}
+
+    @pytest.mark.parametrize(
+        "code, value, errors",
+        [
+            ("10", 4, ["string_too_long", "string_type"]),
+            (4, [], ["string_type", "string_type"]),
+            (2.0, {}, ["string_type", "string_type"]),
+        ],
+    )
+    def test_PydanticSubfield_invalid(self, code, value, errors):
+        with pytest.raises(ValidationError) as e:
+            PydanticSubfield(code=code, value=value)
+        error_types = [i["type"] for i in e.value.errors()]
+        assert sorted(error_types) == sorted(errors)

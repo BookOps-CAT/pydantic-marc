@@ -14,29 +14,6 @@ from pydantic_marc.validators import (
 )
 
 
-class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
-    first: Annotated[str, Field(min_length=0, max_length=1)]
-    second: Annotated[str, Field(min_length=0, max_length=1)]
-
-    def __getitem__(self, index: int) -> str:
-        return list(self.__dict__.values())[index]
-
-    @model_serializer(when_used="unless-none")
-    def serialize_indicators(self) -> tuple[str, str]:
-        """Serialize indicators into a tuple with the correct format."""
-        return (self.first, self.second)
-
-
-class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
-    code: Annotated[str, Field(max_length=1)]
-    value: str
-
-    @model_serializer(when_used="unless-none")
-    def serialize_subfield(self) -> Dict[str, str]:
-        """Serialize a subfield into a dict with the correct format."""
-        return {self.code: self.value}
-
-
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
     A class that defines a control field in a MARC record. The `tag` attribute is
@@ -118,3 +95,26 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
                 "subfields": [{i.code: i.value} for i in self.subfields],
             }
         }
+
+
+class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
+    first: Annotated[str, Field(min_length=0, max_length=1)]
+    second: Annotated[str, Field(min_length=0, max_length=1)]
+
+    def __getitem__(self, index: int) -> str:
+        return list(self.__dict__.values())[index]
+
+    @model_serializer(when_used="unless-none")
+    def serialize_indicators(self) -> tuple[str, str]:
+        """Serialize indicators into a tuple with the correct format."""
+        return (self.first, self.second)
+
+
+class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
+    code: Annotated[str, Field(max_length=1)]
+    value: str
+
+    @model_serializer(when_used="unless-none")
+    def serialize_subfield(self) -> Dict[str, str]:
+        """Serialize a subfield into a dict with the correct format."""
+        return {self.code: self.value}
