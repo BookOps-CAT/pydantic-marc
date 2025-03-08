@@ -1,4 +1,8 @@
-""""""
+"""A model that defines a valid MARC record.
+
+The `MarcRecord` model can be used to validate that an object conforms
+to the MARC21 format for bibliographic data.
+"""
 
 from __future__ import annotations
 
@@ -19,14 +23,20 @@ from pydantic_marc.rules import MARC_RULES
 from pydantic_marc.validators import validate_fields
 
 
-def field_discriminator(v: Any) -> str:
+def field_discriminator(data: Any) -> str:
     """
     A function used to determine whether to validate a field against the `ControlField`
     model or the `DataField` model. If `00x` fields will be validated against the
     `ControlField` model and all other fields will be validated against the `DataField`
     model.
+
+    Args:
+        data: An object within the list passed to the `MarcRecord.fields` attribute.
+
+    Returns:
+        A string. Either 'control_field' or 'data_field'.
     """
-    tag = getattr(v, "tag", v.get("tag"))
+    tag = getattr(data, "tag", data.get("tag"))
     if tag and tag.startswith("00"):
         return "control_field"
     else:
@@ -42,7 +52,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     Attributes:
         rules: A dictionary representing the MARC rules that define a valid MARC record.
-        leader: A string representing a MARC record's leader.
+        leader: A string or `PydanticLeader` representing a MARC record's leader.
         fields: A list of `ControlField` and `DataField` objects.
     """
 
@@ -78,7 +88,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     @model_serializer
     def serialize_marc_record(self) -> Dict[str, Union[str, List[Any]]]:
-        """Serialize a MARC record using the serializers for nested models"""
+        """Serialize a MARC record using the custom serializers for nested models"""
         return {
             "leader": str(self.leader),
             "fields": [field.model_dump() for field in self.fields],

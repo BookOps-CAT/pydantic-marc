@@ -1,4 +1,21 @@
-""""""
+"""Models that define components of MARC record objects.
+
+Models defined in this module include:
+
+`ControlField`:
+    a model to validate MARC 00x fields. Contains `tag` and `data` attributes.
+`DataField`:
+    a model to validate all other MARC fields. Contains `tag`, `indicators`
+    and `subfield` attributes.
+`PydanticIndicators`:
+    a model to validate the structure of the `indicators` attribute of a
+    `DataField` object.
+`PydanticLeader`:
+    a model to validate a MARC record's `leader` attribute.
+`PydanticSubfield`:
+    a model to validate a the structure of the `subfields` attribute of a
+    `DataField` object.
+"""
 
 from __future__ import annotations
 
@@ -24,9 +41,14 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
     included in serialization.
 
     Attributes:
-        tag: A three-digit string that represents the control field tag.
-        data: A string that represents the value of the control field.
-        rules: A dictionary that represents the MARC standard for a particular field
+        rules:
+            A dictionary that represents the MARC standard for a particular field
+        tag:
+            A three-digit string that represents the control field's tag.
+        data:
+            A string that represents the value of the control field. The `data`
+            field's custom validator confirms that the `data` attribute is the expected
+            length.
     """
 
     rules: Annotated[
@@ -52,17 +74,26 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     A class that defines a data field in a MARC record. This can be used for all
     MARC fields when validating a record against MARC rules. The `tag` attribute
     is a three-digit string. The `indicators` attribute is a tuple of single digit
-    strings represented by a pymarc.Indicators object. The `subfields` attribute
-    is a list of pymarc.Subfield objects. The `rules` attribute is a dictionary that
-    contains rules for the particular MARC field and is computed by looking up the
-    tag within the `MARC_RULES` dictionary. The `rules` attribute is not validated
-    nor is it included in serialization.
+    strings represented by a `PydanticIndicators` or a `Sequence` object. The `subfields`
+    attribute is a list of `PydanticSubfield` objects. The `rules` attribute is a
+    dictionary that contains rules for the particular MARC field and is computed by
+    looking up the tag within the `MARC_RULES` dictionary. The `rules` attribute is not
+    validated nor is it included in serialization.
+
+    The `indicators` and `subfields` attributes have custom validators that confirm that
+    the field`s attributes conform to the MARC rules for that given field.
 
     Attributes:
-        tag: A three-digit string that represents the field's tag.
-        indicators: A tuple of one-character strings representing field's indicators.
-        subfields: a list of dictionaries or pymarc.Subfield objects.
-        rules: A dictionary that represents the MARC standard for a particular field
+        rules:
+            A dictionary that represents the MARC standard for a particular field
+        tag:
+            A three-digit string that represents the data field's tag.
+        indicators:
+            A `PydanticIndicators` object or a `Sequence` object representing the field's
+            indicators.
+        subfields:
+            A list of `PydanticSubfield` objects.
+
     """
 
     rules: Annotated[
@@ -98,6 +129,16 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
 
 class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
+    """
+    A class that defines a set of indicators for a `DataField` object. Each indicator
+    must be an empty string or a single character string.
+
+    Args:
+        first: the field's first indicator as a 0-1 character string
+        second: the field's second indicator as a 0-1 character string.
+
+    """
+
     first: Annotated[str, Field(min_length=0, max_length=1)]
     second: Annotated[str, Field(min_length=0, max_length=1)]
 
@@ -111,6 +152,8 @@ class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attribute
 
 
 class PydanticLeader(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
+    """A class to define a MARC record's leader"""
+
     leader: Annotated[
         str,
         Field(
@@ -128,7 +171,17 @@ class PydanticLeader(BaseModel, arbitrary_types_allowed=True, from_attributes=Tr
 
 
 class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
-    code: Annotated[str, Field(max_length=1)]
+    """
+    A class that defines a single subfield within  a `DataField` object. Each subfield
+    must contain a `code` attribute as a single character string and a `value` attribute.
+
+    Args:
+        code: The subfield's code. Must be a single character string.
+        value: The data contained within a subfield.
+
+    """
+
+    code: Annotated[str, Field(min_length=1, max_length=1)]
     value: str
 
     @model_serializer(when_used="unless-none")

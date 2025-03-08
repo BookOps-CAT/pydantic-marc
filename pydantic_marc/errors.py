@@ -37,13 +37,13 @@ class InvalidIndicator(MarcCustomError):
         Create a new `InvalidIndicator` object.
 
         Args:
-            context: a dictionary containing:
+            context: A dictionary containing:
                 loc:
-                    a tuple with the tag and indicator number. example: (100, ind1)
+                    A tuple with the tag and indicator number. example: (100, ind1).
                 input:
-                    the value passed to the indicator
+                    The value passed to the indicator.
                 valid:
-                   a list of valid values for the indicator
+                    A list of valid values for the indicator.
 
         """
         context["tag"], context["ind"] = context["loc"]
@@ -64,11 +64,11 @@ class InvalidSubfield(MarcCustomError):
         Create a new `InvalidIndicator` object.
 
         Args:
-            context: a dictionary containing:
+            context: A dictionary containing:
                 loc:
-                    a tuple containing the tag and subfield code. example: (100, a)
+                    A tuple containing the tag and subfield code. example: (100, a).
                 input:
-                    a list of subfields with the invalid subfield code
+                    A list of subfields with the invalid subfield code.
         """
         context["tag"], context["code"] = context["loc"]
         instance = super().__new__(
@@ -88,10 +88,10 @@ class ControlFieldLength(MarcCustomError):
         Create a new `InvalidIndicator` object.
 
         Args:
-            context: a dictionary containing:
-                tag: the field's tag
-                input: value passed to the control field's data attribute
-                valid: the valid length for the field
+            context: A dictionary containing:
+                tag: The field's tag.
+                input: Value passed to the control field's data attribute.
+                valid: The valid length for the field.
         """
         context["length"] = len(context["input"])
         instance = super().__new__(
@@ -111,8 +111,8 @@ class MultipleMainEntryValues(MarcCustomError):
         Create a new `InvalidIndicator` object.
 
         Args:
-            context: a dictionary containing:
-                input: the field's tag
+            context: A dictionary containing:
+                input: The field's tag.
         """
         instance = super().__new__(
             cls,
@@ -131,8 +131,8 @@ class MissingRequiredField(MarcCustomError):
         Create a new `InvalidIndicator` object.
 
         Args:
-            context: a dictionary containing:
-                input: the field's tag
+            context: A dictionary containing:
+                input: The field's tag.
         """
         instance = super().__new__(
             cls,
@@ -151,8 +151,8 @@ class NonRepeatableField(MarcCustomError):
         Create a new `InvalidIndicator` object.
 
         Args:
-            context: a dictionary containing:
-                input: the field's tag
+            context: A dictionary containing:
+                input: The field's tag.
         """
         instance = super().__new__(
             cls,
@@ -171,11 +171,11 @@ class NonRepeatableSubfield(MarcCustomError):
         Create a new `InvalidIndicator` object.
 
         Args:
-            context: a dictionary containing:
+            context: A dictionary containing:
                 loc:
-                    a tuple containing the tag and subfield code. example: (100, a)
+                    A tuple containing the tag and subfield code. example: (100, a).
                 input:
-                    a list of subfields with the invalid subfield code
+                    A list of subfields with the invalid subfield code.
         """
         context["tag"], context["code"] = context["loc"]
         instance = super().__new__(

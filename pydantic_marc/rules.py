@@ -8,20 +8,20 @@ Bibliographic Data may not be reflected in these rules.
 The `MARC_RULES` dictionary contains key, value pairs with a MARC tag and it's
 associated rules. The rules defined for each field include:
     repeatable:
-        whether or not the tag can be repeated within a record
+        Whether or not the tag can be repeated within a record.
     ind1:
-        a list of valid values for a field's first indicator or None if the field
-        should not contain indicators
+        A list of valid values for a field's first indicator or None if the field
+        should not contain indicators.
     ind2:
-        a list of valid values for a field's second indicator or None if the field
-        should not contain indicators
+        A list of valid values for a field's second indicator or None if the field
+        should not contain indicators.
     subfields:
-        a dictionary containing lists of valid fields, repeatable fields, and
-        non-repeatable fields
+        A dictionary containing lists of valid fields, repeatable fields, and
+        non-repeatable fields.
     length:
-        the expected length of the data attribute of a control field. represented
+        The expected length of the data attribute of a control field. represented
         as an integer if there is only one valid length or a dictionary if the
-        length of the field is dependent on the material type
+        length of the field is dependent on the material type.
 
 """
 
