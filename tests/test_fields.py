@@ -2,12 +2,15 @@ import pytest
 from pydantic import ValidationError
 from pymarc import Field as PymarcField
 from pymarc import Indicators as PymarcIndicators
+from pymarc import Leader as PymarcLeader
+from pymarc import MARCReader
 from pymarc import Subfield as PymarcSubfield
 
 from pydantic_marc.fields import (
     ControlField,
     DataField,
     PydanticIndicators,
+    PydanticLeader,
     PydanticSubfield,
 )
 from pydantic_marc.rules import MARC_RULES
@@ -597,6 +600,36 @@ class TestPydanticIndicators:
             PydanticIndicators(first=first, second=second)
         error_types = [i["type"] for i in e.value.errors()]
         assert sorted(error_types) == sorted(errors)
+
+
+class TestPydanticLeader:
+    def test_PydanticLeader_valid(self):
+        model = PydanticLeader(leader="00215cam a22000975i 4500")
+        assert model.model_dump(by_alias=True) == "00215cam a22000975i 4500"
+
+    def test_PydanticLeader_valid_from_marc(self, stub_record):
+        record = stub_record.as_marc21()
+        reader = MARCReader(record)
+        record = next(reader)
+        assert isinstance(record.leader, PymarcLeader)
+        model = PydanticLeader(leader=record.leader)
+        assert model.model_dump(by_alias=True) == "00215cam a22000975i 4500"
+
+    def test_PydanticLeader_invalid(self):
+        with pytest.raises(ValidationError) as e:
+            PydanticLeader(leader="01632cam a2200529       ")
+        assert len(e.value.errors()) == 1
+        assert e.value.errors()[0]["type"] == "string_pattern_mismatch"
+
+    def test_PydanticLeader_invalid_from_marc(self, stub_invalid_record):
+        invalid_record = stub_invalid_record.as_marc21()
+        reader = MARCReader(invalid_record)
+        invalid_record = next(reader)
+        assert isinstance(invalid_record.leader, PymarcLeader)
+        with pytest.raises(ValidationError) as e:
+            PydanticLeader(leader=stub_invalid_record.leader)
+        assert len(e.value.errors()) == 1
+        assert e.value.errors()[0]["type"] == "string_pattern_mismatch"
 
 
 class TestPydanticSubfield:
