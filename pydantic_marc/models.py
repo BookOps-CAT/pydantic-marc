@@ -13,9 +13,8 @@ from pydantic import (
     WrapValidator,
     model_serializer,
 )
-from pymarc import Leader as PymarcLeader
 
-from pydantic_marc.fields import ControlField, DataField
+from pydantic_marc.fields import ControlField, DataField, PydanticLeader
 from pydantic_marc.rules import MARC_RULES
 from pydantic_marc.validators import validate_fields
 
@@ -56,7 +55,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
         ),
     ]
     leader: Annotated[
-        Union[PymarcLeader, str],
+        Union[PydanticLeader, str],
         Field(
             min_length=24,
             max_length=24,
