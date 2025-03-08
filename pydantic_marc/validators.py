@@ -11,7 +11,6 @@ from collections import Counter
 from typing import Any, Dict, List, Optional
 
 from pydantic import ValidationError, ValidationInfo, ValidatorFunctionWrapHandler
-from pymarc import Field as PymarcField
 
 from pydantic_marc.errors import (
     ControlFieldLength,
@@ -60,9 +59,9 @@ def check_marc_rules(fields: List[Any], info: ValidationInfo) -> List[Dict[str, 
             field["rules"] = {tag: rules.get(field["tag"], {})}
         elif hasattr(field, "rules") and "rules" not in field.model_fields_set:
             field.rules = {tag: rules.get(tag, {})}
-        elif isinstance(field, PymarcField) and field.is_control_field():
+        elif hasattr(field, "is_control_field") and field.is_control_field() is True:
             field = {"rules": {tag: rules.get(tag, {})}, "tag": tag, "data": field.data}
-        elif isinstance(field, PymarcField) and not field.is_control_field():
+        elif hasattr(field, "is_control_field") and field.is_control_field() is False:
             field = {
                 "rules": {tag: rules.get(tag, {})},
                 "tag": tag,
