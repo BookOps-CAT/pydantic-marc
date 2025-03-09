@@ -5,11 +5,12 @@ The functions contained within this module validate the content of the data pass
 or wrap validators.
 """
 
+from __future__ import annotations
+
 from collections import Counter
 from typing import Any, Dict, List, Optional
 
 from pydantic import ValidationError, ValidationInfo, ValidatorFunctionWrapHandler
-from pymarc import Field as PymarcField
 
 from pydantic_marc.errors import (
     ControlFieldLength,
@@ -40,12 +41,12 @@ def check_marc_rules(fields: List[Any], info: ValidationInfo) -> List[Dict[str, 
 
     Args:
 
-        fields: a list of objects passed to the `MarcRecord.fields` attribute
-        info: a `ValidationInfo` object
+        fields: A list of objects passed to the `MarcRecord.fields` attribute.
+        info: A `ValidationInfo` object.
 
     Returns:
 
-        a list of dictionaries representing the fields within the MarcRecord
+        A list of dictionaries representing the fields within the MarcRecord.
     """
     if info.context is not None and "rules" in info.context:
         rules = info.context.get("rules", info.data.get("rules"))
@@ -58,9 +59,9 @@ def check_marc_rules(fields: List[Any], info: ValidationInfo) -> List[Dict[str, 
             field["rules"] = {tag: rules.get(field["tag"], {})}
         elif hasattr(field, "rules") and "rules" not in field.model_fields_set:
             field.rules = {tag: rules.get(tag, {})}
-        elif isinstance(field, PymarcField) and field.is_control_field():
+        elif hasattr(field, "is_control_field") and field.is_control_field() is True:
             field = {"rules": {tag: rules.get(tag, {})}, "tag": tag, "data": field.data}
-        elif isinstance(field, PymarcField) and not field.is_control_field():
+        elif hasattr(field, "is_control_field") and field.is_control_field() is False:
             field = {
                 "rules": {tag: rules.get(tag, {})},
                 "tag": tag,
@@ -82,12 +83,12 @@ def validate_control_field(data: str, info: ValidationInfo) -> str:
 
     Args:
 
-        data: string passed to the `ControlField.data` attribute
-        info: a `ValidationInfo` object
+        data: A string passed to the `ControlField.data` attribute.
+        info: A `ValidationInfo` object.
 
     Returns:
 
-        a string representing the representing the validated `data` attribute
+        A string representing the representing the validated `data` attribute.
     """
     tag = info.data["tag"]
     field_rules = info.data["rules"].get(tag, {})
@@ -120,12 +121,12 @@ def validate_indicators(indicators: tuple, info: ValidationInfo) -> tuple:
 
     Args:
 
-        indicators: a tuple passed to the `DataField.indicators` attribute
-        info: a `ValidationInfo` object
+        indicators: A tuple passed to the `DataField.indicators` attribute.
+        info: A `ValidationInfo` object.
 
     Returns:
 
-        a tuple representing the validated `indicators` attribute
+        A tuple representing the validated `indicators` attribute.
     """
     tag = info.data["tag"]
     field_rules = info.data["rules"].get(tag, None)
@@ -136,7 +137,7 @@ def validate_indicators(indicators: tuple, info: ValidationInfo) -> tuple:
     for n, indicator in enumerate(indicators):
         ind = f"ind{n+1}"
         valid = field_rules.get(ind)
-        if indicator not in valid:
+        if indicators[n] not in valid:
             error = InvalidIndicator(
                 {"loc": (tag, ind), "input": indicators[n], "valid": valid}
             )
@@ -163,12 +164,12 @@ def validate_fields(
 
     Args:
 
-        fields: a list of objects passed to the `MarcRecord.fields` attribute
-        info: a `ValidationInfo` object
+        fields: A list of objects passed to the `MarcRecord.fields` attribute.
+        info: A `ValidationInfo` object.
 
     Returns:
 
-        a list representing the validated `fields` attribute
+        A list representing the validated `fields` attribute.
     """
 
     errors = []
@@ -209,12 +210,12 @@ def validate_marc_fields(fields: Any, info: ValidationInfo) -> Optional[List[Any
 
     Args:
 
-        fields: a list of objects passed to the `MarcRecord.fields` attribute
-        info: a `ValidationInfo` object
+        fields: A list of objects passed to the `MarcRecord.fields` attribute.
+        info: A `ValidationInfo` object.
 
     Returns:
 
-        a list representing the validated `fields` attribute
+        A list representing the validated `fields` attribute.
     """
     errors = []
 
@@ -252,12 +253,12 @@ def validate_subfields(subfields: List[Any], info: ValidationInfo) -> List[Any]:
 
     Args:
 
-        subfields: a list of objects passed to the `DataField.subfields` attribute
-        info: a `ValidationInfo` object
+        subfields: A list of objects passed to the `DataField.subfields` attribute.
+        info: A `ValidationInfo` object.
 
     Returns:
 
-        a list representing the validated `subfields` attribute
+        A list representing the validated `subfields` attribute.
     """
     tag = info.data["tag"]
     field_rules = info.data["rules"].get(tag, None)

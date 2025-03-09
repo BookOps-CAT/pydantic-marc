@@ -4,7 +4,7 @@ import pytest
 from pydantic import TypeAdapter
 from pymarc import Indicators, Subfield
 
-from pydantic_marc.models import ControlField
+from pydantic_marc.fields import ControlField
 from pydantic_marc.rules import MARC_RULES
 from pydantic_marc.validators import (
     check_marc_rules,

@@ -4,11 +4,6 @@ from pymarc import Indicators, Record, Subfield
 
 
 @pytest.fixture
-def fake_marc_rules_str() -> str:
-    return """009\tNR\tFAKE CONTROL FIELD 1\nlength\t12\t\nind1\tblank\tUndefinedind2\tblank\tUndefined\n\tNR\tUndefined\n\n900\tR\tFAKE FIELD 1\nind1\tb01\tIndicator 1\nind2\tblank\tUndefined\nsubfield\ta\tValid Subfields\na\tNR\tSubfield a\n\n901\tR\tFAKE FIELD 2\nind1\tblank\tUndefined\nind2\tblank\tUndefined\nsubfield\tab\tValid Subfields\na\tR\tSubfield a\nb\tNR\tSubfield b\n"""
-
-
-@pytest.fixture
 def stub_record() -> Record:
     bib = Record()
     bib.leader = "00454cam a22001575i 4500"
