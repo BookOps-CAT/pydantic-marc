@@ -16,7 +16,6 @@ pydantic-marc uses `pydantic`, the popular data validation library, to define th
 Validating a MARC record:
 ```python
 from pymarc import MARCReader
-from rich import print
 
 from pydantic_marc import MarcRecord
 
@@ -85,7 +84,7 @@ with open("temp/invalid.mrc", "rb") as fh:
     for record in reader:
         print(record)
         try:
-            MarcRecord.model_validate(record)
+            MarcRecord.model_validate(record, from_attributes=True)
         except ValidationError as e:
             # errors as a dictionary
             print(e.errors())
@@ -156,7 +155,7 @@ with open("temp/invalid.mrc", "rb") as fh:
     for record in reader:
         print(record)
         try:
-            MarcRecord.model_validate(record)
+            MarcRecord.model_validate(record, from_attributes=True)
         except ValidationError as e:
             # errors in a human-readable format
             print(e.errors())
