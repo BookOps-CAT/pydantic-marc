@@ -48,6 +48,7 @@ class Rule(BaseModel, frozen=True):
 
     @classmethod
     def create_default(cls, tag: str) -> Optional[Rule]:
+        """Get the default MARC rule for a specified tag"""
         data = cls._default.get(tag, None)
         if data is not None:
             return Rule(**data)
@@ -72,10 +73,10 @@ class RuleSet(BaseModel, frozen=True):
         for MARC rules: the model's validation context, and the model's `rules` attribute.
 
         This function first checks if MARC rules were passed to the model via validation
-        context (indentified in the `ValidationInfo.context`attribute). It then checks the
-        rules passed to the model via the `MarcRecord.rules` attribute. If a value was not
-        passed to the `MarcRecord.rules` attribute then the default value `RuleSet` will be
-        used.
+        context (indentified in the `ValidationInfo.context`attribute). It then checks
+        the rules passed to the model via the `MarcRecord.rules` attribute. If a value
+        was not passed to the `MarcRecord.rules` attribute then the default value
+        `RuleSet` will be used.
         """
         rules = {}
         context = info.context
@@ -83,7 +84,7 @@ class RuleSet(BaseModel, frozen=True):
         if context and "rules" in context:
             for k, v in context["rules"].items():
                 rules[k] = Rule(**{**v, "tag": v.get("tag", k)})
-            if context.get("replace"):
+            if context.get("replace_all"):
                 return RuleSet(rules=rules)
         record_rules = info.data["rules"]
         if not record_rules and not rules:
