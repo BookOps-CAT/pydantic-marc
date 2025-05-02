@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Dict, List, Literal, Sequence, Union
 
-from pydantic import AfterValidator, BaseModel, BeforeValidator, Field, model_serializer
+from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
 from pydantic_marc.rules import MARC_RULES
 from pydantic_marc.validators import (
@@ -149,25 +149,6 @@ class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attribute
     def serialize_indicators(self) -> tuple[str, str]:
         """Serialize indicators into a tuple with the correct format."""
         return (self.first, self.second)
-
-
-class PydanticLeader(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
-    """A class to define a MARC record's leader"""
-
-    leader: Annotated[
-        str,
-        Field(
-            min_length=24,
-            max_length=24,
-            pattern=r"^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\sa][\sa]22[0-9]{5}[\s12345678uzIKLM][\sacinu][\sabc]4500$",  # noqa E501
-        ),
-        BeforeValidator(lambda x: str(x)),
-    ]
-
-    @model_serializer(when_used="unless-none")
-    def serialize_leader(self) -> str:
-        """Serialize leader into a string."""
-        return str(self.leader)
 
 
 class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
