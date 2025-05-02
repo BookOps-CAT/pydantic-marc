@@ -1,6 +1,29 @@
+from typing import Any, Dict, Optional
+
 import pytest
 from pymarc import Field as PymarcField
 from pymarc import Indicators, Record, Subfield
+
+
+@pytest.fixture
+def make_mock_info():
+    class MockInfo:
+        def __init__(
+            self,
+            data: Dict[str, Any],
+            field_name: str,
+            context: Optional[Dict[str, Any]] = None,
+        ):
+            self.data = data
+            self.field_name = field_name
+            self.context = context
+
+    def _make_mock_info(
+        data: Dict[str, Any], field_name: str, context: Optional[Dict[str, Any]] = None
+    ):
+        return MockInfo(data=data, context=context, field_name=field_name)
+
+    return _make_mock_info
 
 
 @pytest.fixture
@@ -131,3 +154,16 @@ def stub_invalid_record() -> Record:
         )
     )
     return bib
+
+
+@pytest.fixture
+def stub_record_invalid_300(stub_record) -> PymarcField:
+    stub_record.remove_fields("300")
+    stub_record.add_field(
+        PymarcField(
+            tag="300",
+            indicators=Indicators("1", "0"),
+            subfields=[Subfield(code="h", value="foo")],
+        )
+    )
+    return stub_record
