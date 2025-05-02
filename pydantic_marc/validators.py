@@ -1,8 +1,6 @@
 """Custom validation functions for `ControlField`, `DataField`, and `MarcRecord` models.
 
-The validator functions in this module are used to validate the values of the data
-passed to `ControlField`, `DataField` and `MarcRecord` models. They are used as either
-after or wrap validators depending on the field.
+The validator functions in this module are used as either after or wrap validators depending on the field and model.
 """
 
 from __future__ import annotations
@@ -31,7 +29,21 @@ FIELD_VALIDATION_RULES = {
 
 
 def validate_field(data: Any, info: ValidationInfo) -> Any:
-    """"""
+    """
+    Run field-level validation for a MARC field using rules from the model.
+
+    This function looks up a validation function based on the field name and applies
+    it if a corresponding rule and validator are found. If no rule or validator is
+    found, the input `data` is returned unchanged. If validation errors are found,
+    they are raised using `raise_validation_errors`.
+
+    Args:
+        data: the data passed to the field being validated
+        info: A `ValidationInfo` object.
+
+    Returns:
+        The validated field data, or raises a `ValidationError` if rules are violated.
+    """
     rule = info.data.get("rules", None)
     validator_func = FIELD_VALIDATION_RULES.get(str(info.field_name))
     if not rule or not validator_func:
