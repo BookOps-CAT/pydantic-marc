@@ -564,6 +564,56 @@ class TestDataField:
         assert sorted(error_locs) == sorted([("subfields", "050", "t")])
         assert len(e.value.errors()) == 1
 
+    def test_DataField_900_valid(self):
+        model = DataField(
+            tag="900",
+            indicators=PymarcIndicators("", ""),
+            subfields=[
+                PymarcSubfield(code="a", value="Foo"),
+            ],
+        )
+        assert model.model_dump() == {
+            "900": {"ind1": "", "ind2": "", "subfields": [{"a": "Foo"}]}
+        }
+        assert model.indicators[0] == ""
+        assert model.indicators[1] == ""
+
+    def test_DataField_900_valid_from_field(self):
+        field = PymarcField(
+            tag="900",
+            indicators=PymarcIndicators("", ""),
+            subfields=[
+                PymarcSubfield(code="a", value="Foo"),
+            ],
+        )
+        model = DataField.model_validate(field, from_attributes=True)
+        assert model.model_dump() == {
+            "900": {"ind1": "", "ind2": "", "subfields": [{"a": "Foo"}]}
+        }
+        assert model.indicators[0] == ""
+        assert model.indicators[1] == ""
+
+    @pytest.mark.parametrize(
+        "field_value",
+        [
+            1,
+            1.0,
+            None,
+            [],
+        ],
+    )
+    def test_DataField_900_invalid_type(self, field_value):
+        with pytest.raises(ValidationError) as e:
+            DataField(
+                tag="900",
+                indicators=PymarcIndicators(" ", " "),
+                subfields=[
+                    PymarcSubfield(code="a", value=field_value),
+                ],
+            )
+        error_types = [i["type"] for i in e.value.errors()]
+        assert "string_type" in error_types
+
 
 class TestPydanticIndicators:
     @pytest.mark.parametrize(
