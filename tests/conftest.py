@@ -4,6 +4,18 @@ import pytest
 from pymarc import Field as PymarcField
 from pymarc import Indicators, Record, Subfield
 
+from pydantic_marc.marc_rules import RuleSet
+
+
+@pytest.fixture
+def get_default_rule():
+    rules = RuleSet()
+
+    def _get_default_rule(tag):
+        return rules.rules.get(tag)
+
+    return _get_default_rule
+
 
 @pytest.fixture
 def make_mock_info():

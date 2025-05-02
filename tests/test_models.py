@@ -38,6 +38,29 @@ class TestMarcRecord:
         assert isinstance(model.fields[1], ControlField)
         assert isinstance(model.fields[2], DataField)
 
+    def test_MarcRecord_with_context(self, stub_record):
+        context_dict = {
+            "rules": {
+                "910": {
+                    "tag": "910",
+                    "repeatable": False,
+                    "ind1": ["0", "1"],
+                    "ind2": ["0", "1"],
+                }
+            },
+            "replace": True,
+        }
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, context=context_dict)
+        errors = e.value.errors()
+        assert len(errors) == 2
+        assert sorted([i["type"] for i in errors]) == sorted(
+            ["invalid_indicator", "invalid_indicator"]
+        )
+        assert sorted([i["loc"] for i in errors]) == sorted(
+            [("fields", "910", "ind1"), ("fields", "910", "ind2")]
+        )
+
     def test_MarcRecord_050_errors(self, stub_record):
         stub_record["050"].add_subfield("b", "foo")
         stub_record["050"].add_subfield("b", "bar")
@@ -50,10 +73,7 @@ class TestMarcRecord:
             ["non_repeatable_subfield", "subfield_not_allowed"]
         )
         assert sorted([i["loc"] for i in errors]) == sorted(
-            [
-                ("fields", "050", "b"),
-                ("fields", "050", "t"),
-            ]
+            [("fields", "050", "b"), ("fields", "050", "t")]
         )
         assert sorted([i["msg"] for i in errors]) == sorted(
             [
@@ -69,10 +89,7 @@ class TestMarcRecord:
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
         assert error["type"] == "non_repeatable_field"
-        assert error["loc"] == (
-            "fields",
-            "001",
-        )
+        assert error["loc"] == ("fields", "001")
         assert error["msg"] == "001: Has been marked as a non-repeating field."
 
     def test_MarcRecord_missing_245(self, stub_record):
@@ -89,20 +106,14 @@ class TestMarcRecord:
         stub_record.add_ordered_field(
             PymarcField(
                 tag="100",
-                indicators=(
-                    "0",
-                    "",
-                ),
+                indicators=("0", ""),
                 subfields=[PymarcSubfield(code="a", value="foo")],
             )
         )
         stub_record.add_ordered_field(
             PymarcField(
                 tag="110",
-                indicators=(
-                    "0",
-                    "",
-                ),
+                indicators=("0", ""),
                 subfields=[PymarcSubfield(code="a", value="bar")],
             )
         )
@@ -150,3 +161,257 @@ class TestMarcRecord:
         assert ("fields", "336", "ind2") in error_locs
         assert ("fields", "336", "z") in error_locs
         assert ("fields", "600", "a") in error_locs
+
+
+class TestMarcRecordCustomRulesAsContext:
+    def test_default_rules(self, stub_record_invalid_300):
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record_invalid_300)
+        errors = e.value.errors()
+        assert len(errors) == 3
+        assert sorted([i["type"] for i in errors]) == sorted(
+            ["invalid_indicator", "invalid_indicator", "subfield_not_allowed"]
+        )
+        assert sorted([i["loc"] for i in errors]) == sorted(
+            [
+                ("fields", "300", "ind1"),
+                ("fields", "300", "ind2"),
+                ("fields", "300", "h"),
+            ]
+        )
+
+    def test_custom_rules_replace_all_false(self, stub_record_invalid_300):
+        custom_rules = {
+            "replace_all": False,
+            "rules": {
+                "008": {
+                    "tag": "008",
+                    "repeatable": False,
+                    "ind1": None,
+                    "ind2": None,
+                    "subfields": None,
+                    "length": 30,
+                    "required": True,
+                }
+            },
+        }
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record_invalid_300, context=custom_rules)
+        errors = e.value.errors()
+        assert len(errors) == 4
+        assert sorted([i["type"] for i in errors]) == sorted(
+            [
+                "control_field_length_invalid",
+                "invalid_indicator",
+                "invalid_indicator",
+                "subfield_not_allowed",
+            ]
+        )
+        assert sorted([i["loc"] for i in errors]) == sorted(
+            [
+                ("fields", "008"),
+                ("fields", "300", "ind1"),
+                ("fields", "300", "ind2"),
+                ("fields", "300", "h"),
+            ]
+        )
+
+    def test_custom_rules_replace_existing(self, stub_record_invalid_300):
+        custom_rules = {
+            "rules": {
+                "008": {
+                    "tag": "008",
+                    "repeatable": False,
+                    "ind1": None,
+                    "ind2": None,
+                    "subfields": None,
+                    "length": 30,
+                    "required": True,
+                },
+                "245": {
+                    "tag": "245",
+                    "repeatable": False,
+                    "ind1": [" ", ""],
+                    "ind2": [" ", ""],
+                    "subfields": {
+                        "valid": ["p", "s"],
+                        "repeatable": ["p"],
+                        "non_repeatable": ["s"],
+                    },
+                    "length": None,
+                    "required": True,
+                },
+            }
+        }
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record_invalid_300, context=custom_rules)
+        errors = e.value.errors()
+        assert len(errors) == 9
+        assert sorted([i["type"] for i in errors]) == sorted(
+            [
+                "control_field_length_invalid",
+                "invalid_indicator",
+                "invalid_indicator",
+                "invalid_indicator",
+                "invalid_indicator",
+                "subfield_not_allowed",
+                "subfield_not_allowed",
+                "subfield_not_allowed",
+                "subfield_not_allowed",
+            ]
+        )
+        assert sorted([i["loc"] for i in errors]) == sorted(
+            [
+                ("fields", "008"),
+                ("fields", "245", "ind1"),
+                ("fields", "245", "ind2"),
+                ("fields", "245", "a"),
+                ("fields", "245", "b"),
+                ("fields", "245", "c"),
+                ("fields", "300", "ind1"),
+                ("fields", "300", "ind2"),
+                ("fields", "300", "h"),
+            ]
+        )
+
+    def test_custom_rules_replace_all_true(self, stub_record_invalid_300):
+        custom_rules = {
+            "replace_all": True,
+            "rules": {
+                "008": {
+                    "tag": "008",
+                    "repeatable": False,
+                    "ind1": None,
+                    "ind2": None,
+                    "subfields": None,
+                    "length": 30,
+                    "required": True,
+                }
+            },
+        }
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record_invalid_300, context=custom_rules)
+        errors = e.value.errors()
+        assert len(errors) == 1
+        assert sorted([i["type"] for i in errors]) == sorted(
+            ["control_field_length_invalid"]
+        )
+        assert sorted([i["loc"] for i in errors]) == sorted([("fields", "008")])
+
+
+class TestMarcRecordCustomRulesPassedToModel:
+    def test_custom_rules_dict(self, stub_record_invalid_300):
+        custom_rules = {
+            "replace_all": False,
+            "rules": {
+                "008": {
+                    "tag": "008",
+                    "repeatable": False,
+                    "ind1": None,
+                    "ind2": None,
+                    "subfields": None,
+                    "length": 40,
+                    "required": True,
+                }
+            },
+        }
+        data = {
+            "rules": custom_rules,
+            "leader": stub_record_invalid_300.leader,
+            "fields": stub_record_invalid_300.fields,
+        }
+        model = MarcRecord.model_validate(data)
+        assert list(model.model_dump().keys()) == ["leader", "fields"]
+        assert list(model.model_dump()["fields"][0].keys()) == ["001"]
+        assert list(model.model_dump()["fields"][1].keys()) == ["008"]
+        assert list(model.model_dump()["fields"][2].keys()) == ["050"]
+
+    def test_custom_rule_set(self, stub_record_invalid_300):
+        custom_rules = {
+            "replace_all": False,
+            "rules": {
+                "008": {
+                    "tag": "008",
+                    "repeatable": False,
+                    "ind1": None,
+                    "ind2": None,
+                    "subfields": None,
+                    "length": 40,
+                    "required": True,
+                }
+            },
+        }
+        model = MarcRecord(
+            leader=stub_record_invalid_300.leader,
+            fields=stub_record_invalid_300.fields,
+            rules=custom_rules,
+        )
+        assert list(model.model_dump().keys()) == ["leader", "fields"]
+        assert list(model.model_dump()["fields"][0].keys()) == ["001"]
+        assert list(model.model_dump()["fields"][1].keys()) == ["008"]
+        assert list(model.model_dump()["fields"][2].keys()) == ["050"]
+
+    def test_custom_rule_dict_replace_all_true(self, stub_record_invalid_300):
+        custom_rules = {
+            "replace_all": True,
+            "rules": {
+                "008": {
+                    "tag": "008",
+                    "repeatable": False,
+                    "ind1": None,
+                    "ind2": None,
+                    "subfields": None,
+                    "length": 40,
+                    "required": True,
+                }
+            },
+        }
+        model = MarcRecord(
+            leader=stub_record_invalid_300.leader,
+            fields=stub_record_invalid_300.fields,
+            rules=custom_rules,
+        )
+        assert list(model.model_dump().keys()) == ["leader", "fields"]
+        assert list(model.model_dump()["fields"][0].keys()) == ["001"]
+        assert list(model.model_dump()["fields"][1].keys()) == ["008"]
+        assert list(model.model_dump()["fields"][2].keys()) == ["050"]
+
+    def test_custom_rule_dict_replace_all_false(self, stub_record_invalid_300):
+        custom_rules = {
+            "replace_all": False,
+            "rules": {
+                "008": {
+                    "tag": "008",
+                    "repeatable": False,
+                    "ind1": None,
+                    "ind2": None,
+                    "subfields": None,
+                    "length": 30,
+                    "required": True,
+                }
+            },
+        }
+        data = {
+            "rules": custom_rules,
+            "leader": stub_record_invalid_300.leader,
+            "fields": stub_record_invalid_300.fields,
+        }
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(data)
+        errors = e.value.errors()
+        assert len(errors) == 1
+        assert sorted([i["type"] for i in errors]) == sorted(
+            ["control_field_length_invalid"]
+        )
+        assert sorted([i["loc"] for i in errors]) == sorted([("fields", "008")])
+
+    def test_no_marc_rules(self, stub_record_invalid_300):
+        data = {
+            "rules": None,
+            "leader": stub_record_invalid_300.leader,
+            "fields": stub_record_invalid_300.fields,
+        }
+        model = MarcRecord.model_validate(data)
+        assert model.model_dump()["fields"][-1] == {
+            "300": {"ind1": "1", "ind2": "0", "subfields": [{"h": "foo"}]}
+        }

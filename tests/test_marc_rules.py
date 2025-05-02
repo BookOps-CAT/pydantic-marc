@@ -71,11 +71,13 @@ def test_marc_rules_data_fields_020():
         length=None,
         required=False,
     )
+    assert rules.rules.get("020") == Rule.create_default("020")
 
 
 def test_marc_rules_data_fields_900():
     rules = RuleSet()
     assert rules.rules.get("900") is None
+    assert Rule.create_default("900") is None
 
 
 def test_marc_rules_data_fields_count():
