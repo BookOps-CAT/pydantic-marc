@@ -19,6 +19,8 @@ from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 
 class _DefaultRules:
+    """Used to generate a default set of MARC rules from rules/default.json"""
+
     _cached_rules = None
 
     @classmethod
