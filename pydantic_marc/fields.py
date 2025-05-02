@@ -10,8 +10,6 @@ Models defined in this module include:
 `PydanticIndicators`:
     a model to validate the structure of the `indicators` attribute of a
     `DataField` object.
-`PydanticLeader`:
-    a model to validate a MARC record's `leader` attribute.
 `PydanticSubfield`:
     a model to validate a the structure of the `subfields` attribute of a
     `DataField` object.
@@ -35,14 +33,14 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
     """
     A class that defines a control field in a MARC record. The `tag` attribute is
     a three-digit string and the `data` attribute is a string that represents the
-    value of the control field. The `rules` attribute is a dictionary that contains
-    rules for the particular MARC field and is computed by looking up the tag within
-    the `MARC_RULES` dictionary. The `rules` attribute is not validated nor is it
-    included in serialization.
+    value of the control field. The `rules` attribute contains the custom validation
+    logic the particular MARC field and is computed passed to the `ControlField` model
+    when it is called within a `MarcRecord` model. The `rules` attribute is not validated nor is it included in serialization.
 
     Attributes:
         rules:
-            A dictionary that represents the MARC standard for a particular field
+            A `Rule` or dictionary that represents the MARC rules for the specified
+            field
         tag:
             A three-digit string that represents the control field's tag.
         data:
@@ -74,18 +72,19 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     A class that defines a data field in a MARC record. This can be used for all
     MARC fields when validating a record against MARC rules. The `tag` attribute
     is a three-digit string. The `indicators` attribute is a tuple of single digit
-    strings represented by a `PydanticIndicators` or a `Sequence` object. The `subfields`
-    attribute is a list of `PydanticSubfield` objects. The `rules` attribute is a
-    dictionary that contains rules for the particular MARC field and is computed by
-    looking up the tag within the `MARC_RULES` dictionary. The `rules` attribute is not
-    validated nor is it included in serialization.
+    strings represented by a `PydanticIndicators` or a `Sequence` object. The
+    `subfields` attribute is a list of `PydanticSubfield` objects. The `rules`
+    attribute contains the custom validation logic the particular MARC field and is
+    computed passed to the `ControlField` model when it is called within a `MarcRecord`
+    model. The `rules` attribute is not validated nor is it included in serialization.
 
     The `indicators` and `subfields` attributes have custom validators that confirm that
     the field`s attributes conform to the MARC rules for that given field.
 
     Attributes:
         rules:
-            A dictionary that represents the MARC standard for a particular field
+            A `Rule` or dictionary that represents the MARC rules for the specified
+            field
         tag:
             A three-digit string that represents the data field's tag.
         indicators:
