@@ -19,8 +19,8 @@ from pydantic import (
 )
 
 from pydantic_marc.fields import ControlField, DataField
-from pydantic_marc.rules import MARC_RULES
-from pydantic_marc.validators import validate_fields
+from pydantic_marc.marc_rules import RuleSet
+from pydantic_marc.validators import validate_marc_fields
 
 
 def field_discriminator(data: Any) -> str:
@@ -57,12 +57,8 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
 
     rules: Annotated[
-        Dict[str, Any],
-        Field(
-            default=MARC_RULES,
-            exclude=True,
-            json_schema_extra=lambda x: x.pop("default"),
-        ),
+        Union[RuleSet, Dict[str, Any], None],
+        Field(default_factory=RuleSet, exclude=True),
     ]
     leader: Annotated[
         str,
@@ -83,7 +79,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
                 Discriminator(field_discriminator),
             ],
         ],
-        WrapValidator(validate_fields),
+        WrapValidator(validate_marc_fields),
     ]
 
     @model_serializer

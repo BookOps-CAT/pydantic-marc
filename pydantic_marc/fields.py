@@ -21,12 +21,8 @@ from typing import Annotated, Any, Dict, List, Literal, Sequence, Union
 
 from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
-from pydantic_marc.rules import MARC_RULES
-from pydantic_marc.validators import (
-    validate_control_field,
-    validate_indicators,
-    validate_subfields,
-)
+from pydantic_marc.marc_rules import Rule
+from pydantic_marc.validators import validate_field
 
 
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
@@ -49,17 +45,10 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
             length.
     """
 
-    rules: Annotated[
-        Dict[str, Any],
-        Field(
-            default=MARC_RULES,
-            exclude=True,
-            json_schema_extra=lambda x: x.pop("default"),
-        ),
-    ]
+    rules: Annotated[Union[Rule, Dict[str, Any], None], Field(exclude=True)]
 
     tag: Literal["001", "002", "003", "004", "005", "006", "007", "008", "009"]
-    data: Annotated[str, AfterValidator(validate_control_field)]
+    data: Annotated[str, AfterValidator(validate_field)]
 
     @model_serializer(when_used="unless-none")
     def serialize_control_field(self) -> Dict[str, str]:
@@ -95,23 +84,13 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     """
 
-    rules: Annotated[
-        Dict[str, Any],
-        Field(
-            default=MARC_RULES,
-            exclude=True,
-            json_schema_extra=lambda x: x.pop("default"),
-        ),
-    ]
+    rules: Annotated[Union[Rule, Dict[str, Any], None], Field(exclude=True)]
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
     indicators: Annotated[
-        Union[PydanticIndicators, Sequence], AfterValidator(validate_indicators)
+        Union[PydanticIndicators, Sequence], AfterValidator(validate_field)
     ]
-    subfields: Annotated[
-        List[PydanticSubfield],
-        AfterValidator(validate_subfields),
-    ]
+    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_field)]
 
     @model_serializer
     def serialize_data_field(
@@ -122,7 +101,7 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
             self.tag: {
                 "ind1": self.indicators[0],
                 "ind2": self.indicators[1],
-                "subfields": [{i.code: i.value} for i in self.subfields],
+                "subfields": [i.model_dump() for i in self.subfields],
             }
         }
 
