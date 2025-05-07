@@ -1,70 +1,46 @@
-"""Rules used by the `pydantic_marc` package to validate a MARC record.
-
-This module contains a dictionary with rules that define attributes of a valid
-MARC record based off of the rules file (marcrules.txt) used to validate MARC
-records in MarcEdit (version 7.7). Recent changes to the MARC21 Format for
-Bibliographic Data may not be reflected in these rules.
-
-The `MARC_RULES` dictionary contains key, value pairs with a MARC tag and it's
-associated rules. The rules defined for each field include:
-    repeatable:
-        Whether or not the tag can be repeated within a record.
-    ind1:
-        A list of valid values for a field's first indicator or None if the field
-        should not contain indicators.
-    ind2:
-        A list of valid values for a field's second indicator or None if the field
-        should not contain indicators.
-    subfields:
-        A dictionary containing lists of valid fields, repeatable fields, and
-        non-repeatable fields.
-    length:
-        The expected length of the data attribute of a control field. represented
-        as an integer if there is only one valid length or a dictionary if the
-        length of the field is dependent on the material type.
-
-"""
-
-from typing import Any, Dict
-
-MARC_RULES: Dict[str, Any] = {
+{
     "001": {
-        "repeatable": False,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "001",
+        "repeatable": false,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "003": {
-        "repeatable": False,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "003",
+        "repeatable": false,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "005": {
-        "repeatable": False,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "005",
+        "repeatable": false,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "006": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
+        "tag": "006",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
         "length": 18,
-        "required": False,
+        "required": false
     },
     "007": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
+        "tag": "007",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
         "length": {
             "a": 8,
             "c": [6, 14],
@@ -80,188 +56,204 @@ MARC_RULES: Dict[str, Any] = {
             "s": 14,
             "t": 2,
             "v": 9,
-            "z": 2,
+            "z": 2
         },
-        "required": False,
+        "required": false
     },
     "008": {
-        "repeatable": False,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
+        "tag": "008",
+        "repeatable": false,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
         "length": 40,
-        "required": True,
+        "required": true
     },
     "010": {
-        "repeatable": False,
+        "tag": "010",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "z", "8"],
             "repeatable": ["b", "z", "8"],
-            "non_repeatable": ["a"],
+            "non_repeatable": ["a"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "013": {
-        "repeatable": True,
+        "tag": "013",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "6", "8"],
             "repeatable": ["d", "e", "f", "8"],
-            "non_repeatable": ["a", "b", "c", "6"],
+            "non_repeatable": ["a", "b", "c", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "015": {
-        "repeatable": True,
+        "tag": "015",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "2", "6", "8"],
             "repeatable": ["a", "z", "8"],
-            "non_repeatable": ["2", "6"],
+            "non_repeatable": ["2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "016": {
-        "repeatable": True,
+        "tag": "016",
+        "repeatable": true,
         "ind1": ["", " ", "7"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "2", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a", "2"],
+            "non_repeatable": ["a", "2"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "017": {
-        "repeatable": True,
+        "tag": "017",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " ", "8"],
         "subfields": {
             "valid": ["a", "b", "d", "i", "z", "2", "6", "8"],
             "repeatable": ["a", "z", "8"],
-            "non_repeatable": ["b", "d", "i", "2", "6"],
+            "non_repeatable": ["b", "d", "i", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "018": {
-        "repeatable": False,
+        "tag": "018",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "020": {
-        "repeatable": True,
+        "tag": "020",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "c", "q", "z", "6", "8"],
             "repeatable": ["q", "z", "8"],
-            "non_repeatable": ["a", "c", "6"],
+            "non_repeatable": ["a", "c", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "022": {
-        "repeatable": True,
+        "tag": "022",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "l", "m", "y", "z", "2", "6", "8"],
             "repeatable": ["m", "y", "z", "8"],
-            "non_repeatable": ["a", "l", "2", "6"],
+            "non_repeatable": ["a", "l", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "024": {
-        "repeatable": True,
+        "tag": "024",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3", "4", "7", "8"],
         "ind2": ["", " ", "0", "1"],
         "subfields": {
             "valid": ["a", "c", "d", "z", "2", "6", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a", "c", "d", "2", "6"],
+            "non_repeatable": ["a", "c", "d", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "025": {
-        "repeatable": True,
+        "tag": "025",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": [],
+            "non_repeatable": []
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "026": {
-        "repeatable": True,
+        "tag": "026",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "2", "5", "6", "8"],
             "repeatable": ["a", "b", "d", "5", "8"],
-            "non_repeatable": ["c", "e", "2", "6"],
+            "non_repeatable": ["c", "e", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "027": {
-        "repeatable": True,
+        "tag": "027",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "6", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "028": {
-        "repeatable": True,
+        "tag": "028",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3", "4", "5", "6"],
         "ind2": ["0", "1", "2", "3"],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "030": {
-        "repeatable": True,
+        "tag": "030",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "6", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "031": {
-        "repeatable": True,
+        "tag": "031",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -285,7 +277,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "2",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["d", "q", "s", "t", "u", "y", "z", "8"],
             "non_repeatable": [
@@ -300,38 +292,41 @@ MARC_RULES: Dict[str, Any] = {
                 "p",
                 "r",
                 "2",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "032": {
-        "repeatable": True,
+        "tag": "032",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "033": {
-        "repeatable": True,
+        "tag": "033",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2"],
         "ind2": ["", " ", "0", "1", "2"],
         "subfields": {
             "valid": ["a", "b", "c", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "c", "0", "1", "2", "8"],
-            "non_repeatable": ["3", "6"],
+            "non_repeatable": ["3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "034": {
-        "repeatable": True,
+        "tag": "034",
+        "repeatable": true,
         "ind1": ["0", "1", "3"],
         "ind2": ["", " ", "0", "1"],
         "subfields": {
@@ -358,7 +353,7 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["b", "c", "h", "s", "t", "1", "8"],
             "non_repeatable": [
@@ -377,74 +372,80 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "035": {
-        "repeatable": True,
+        "tag": "035",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "z", "6", "8"],
             "repeatable": ["b", "z", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "036": {
-        "repeatable": False,
+        "tag": "036",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "037": {
-        "repeatable": True,
+        "tag": "037",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "f", "g", "n", "6", "8"],
             "repeatable": ["c", "f", "g", "n", "8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "038": {
-        "repeatable": False,
+        "tag": "038",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "040": {
-        "repeatable": False,
+        "tag": "040",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "6", "8"],
             "repeatable": ["d", "e", "8"],
-            "non_repeatable": ["a", "b", "c", "6"],
+            "non_repeatable": ["a", "b", "c", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "041": {
-        "repeatable": True,
+        "tag": "041",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " ", "7"],
         "subfields": {
@@ -467,7 +468,7 @@ MARC_RULES: Dict[str, Any] = {
                 "t",
                 "2",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "a",
@@ -486,59 +487,64 @@ MARC_RULES: Dict[str, Any] = {
                 "q",
                 "r",
                 "t",
-                "8",
+                "8"
             ],
-            "non_repeatable": ["2", "6"],
+            "non_repeatable": ["2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "042": {
-        "repeatable": False,
+        "tag": "042",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {"valid": ["a"], "repeatable": ["a"], "non_repeatable": []},
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "043": {
-        "repeatable": False,
+        "tag": "043",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "0", "1", "2", "6", "8"],
             "repeatable": ["a", "b", "c", "0", "1", "2", "8"],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "044": {
-        "repeatable": False,
+        "tag": "044",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "2", "6", "8"],
             "repeatable": ["a", "b", "c", "2", "8"],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "045": {
-        "repeatable": False,
+        "tag": "045",
+        "repeatable": false,
         "ind1": ["", " ", "0", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "6", "8"],
             "repeatable": ["a", "b", "c", "8"],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "046": {
-        "repeatable": True,
+        "tag": "046",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -556,218 +562,236 @@ MARC_RULES: Dict[str, Any] = {
                 "m",
                 "n",
                 "2",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "047": {
-        "repeatable": True,
+        "tag": "047",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " ", "7"],
         "subfields": {
             "valid": ["a", "2", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": ["2"],
+            "non_repeatable": ["2"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "048": {
-        "repeatable": True,
+        "tag": "048",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " ", "7"],
         "subfields": {
             "valid": ["a", "b", "2", "8"],
             "repeatable": ["a", "b", "8"],
-            "non_repeatable": ["2"],
+            "non_repeatable": ["2"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "050": {
-        "repeatable": True,
+        "tag": "050",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["0", "4"],
         "subfields": {
             "valid": ["a", "b", "0", "1", "3", "6", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["b", "3", "6"],
+            "non_repeatable": ["b", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "051": {
-        "repeatable": True,
+        "tag": "051",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "c"],
+            "non_repeatable": ["a", "b", "c"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "052": {
-        "repeatable": True,
+        "tag": "052",
+        "repeatable": true,
         "ind1": ["", " ", "1", "7"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "d", "0", "1", "2", "6", "8"],
             "repeatable": ["b", "d", "0", "1", "8"],
-            "non_repeatable": ["a", "2", "6"],
+            "non_repeatable": ["a", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "055": {
-        "repeatable": True,
+        "tag": "055",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "8"],
             "repeatable": ["0", "1", "8"],
-            "non_repeatable": ["a", "b", "2"],
+            "non_repeatable": ["a", "b", "2"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "060": {
-        "repeatable": True,
+        "tag": "060",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["0", "4"],
         "subfields": {
             "valid": ["a", "b", "0", "1", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["b"],
+            "non_repeatable": ["b"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "061": {
-        "repeatable": True,
+        "tag": "061",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": ["b", "c"],
+            "non_repeatable": ["b", "c"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "066": {
-        "repeatable": False,
+        "tag": "066",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c"],
             "repeatable": ["c"],
-            "non_repeatable": ["a", "b"],
+            "non_repeatable": ["a", "b"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "070": {
-        "repeatable": True,
+        "tag": "070",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["b"],
+            "non_repeatable": ["b"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "071": {
-        "repeatable": True,
+        "tag": "071",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": ["b", "c"],
+            "non_repeatable": ["b", "c"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "072": {
-        "repeatable": True,
+        "tag": "072",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["0", "7"],
         "subfields": {
             "valid": ["a", "x", "2", "6", "8"],
             "repeatable": ["x", "8"],
-            "non_repeatable": ["a", "2", "6"],
+            "non_repeatable": ["a", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "074": {
-        "repeatable": True,
+        "tag": "074",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a"],
+            "non_repeatable": ["a"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "080": {
-        "repeatable": True,
+        "tag": "080",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "x", "0", "1", "2", "6", "8"],
             "repeatable": ["x", "0", "1", "8"],
-            "non_repeatable": ["a", "b", "2", "6"],
+            "non_repeatable": ["a", "b", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "082": {
-        "repeatable": True,
+        "tag": "082",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "0", "4"],
         "subfields": {
             "valid": ["a", "b", "m", "q", "2", "6", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": ["b", "m", "q", "2", "6"],
+            "non_repeatable": ["b", "m", "q", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "083": {
-        "repeatable": True,
+        "tag": "083",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "c", "m", "q", "y", "z", "2", "6", "8"],
             "repeatable": ["a", "c", "y", "z", "8"],
-            "non_repeatable": ["m", "q", "2", "6"],
+            "non_repeatable": ["m", "q", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "084": {
-        "repeatable": True,
+        "tag": "084",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "6", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["b", "2", "6"],
+            "non_repeatable": ["b", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "085": {
-        "repeatable": True,
+        "tag": "085",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -787,7 +811,7 @@ MARC_RULES: Dict[str, Any] = {
                 "0",
                 "1",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "a",
@@ -804,39 +828,42 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "0",
                 "1",
-                "8",
+                "8"
             ],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "086": {
-        "repeatable": True,
+        "tag": "086",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "0", "1", "2", "6", "8"],
             "repeatable": ["z", "0", "1", "8"],
-            "non_repeatable": ["a", "2", "6"],
+            "non_repeatable": ["a", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "088": {
-        "repeatable": True,
+        "tag": "088",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "6", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "100": {
-        "repeatable": False,
+        "tag": "100",
+        "repeatable": false,
         "ind1": ["0", "1", "3"],
         "ind2": ["", " "],
         "subfields": {
@@ -861,16 +888,17 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["c", "e", "j", "k", "n", "p", "0", "1", "4", "8"],
-            "non_repeatable": ["a", "b", "d", "f", "g", "l", "q", "t", "u", "2", "6"],
+            "non_repeatable": ["a", "b", "d", "f", "g", "l", "q", "t", "u", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "110": {
-        "repeatable": False,
+        "tag": "110",
+        "repeatable": false,
         "ind1": ["0", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
@@ -893,16 +921,17 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["b", "d", "e", "k", "n", "p", "0", "1", "4", "8"],
-            "non_repeatable": ["a", "c", "f", "g", "l", "t", "u", "2", "6"],
+            "non_repeatable": ["a", "c", "f", "g", "l", "t", "u", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "111": {
-        "repeatable": False,
+        "tag": "111",
+        "repeatable": false,
         "ind1": ["0", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
@@ -926,16 +955,17 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["e", "j", "k", "n", "p", "0", "1", "4", "8"],
-            "non_repeatable": ["a", "c", "d", "f", "g", "l", "q", "t", "u", "2", "6"],
+            "non_repeatable": ["a", "c", "d", "f", "g", "l", "q", "t", "u", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "130": {
-        "repeatable": False,
+        "tag": "130",
+        "repeatable": false,
         "ind1": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "ind2": ["", " "],
         "subfields": {
@@ -958,40 +988,43 @@ MARC_RULES: Dict[str, Any] = {
                 "1",
                 "2",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["d", "k", "m", "n", "p", "0", "1", "8"],
-            "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "t", "2", "6"],
+            "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "t", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "210": {
-        "repeatable": True,
+        "tag": "210",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "0"],
         "subfields": {
             "valid": ["a", "b", "2", "6", "8"],
             "repeatable": ["2", "8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "222": {
-        "repeatable": True,
+        "tag": "222",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "240": {
-        "repeatable": False,
+        "tag": "240",
+        "repeatable": false,
         "ind1": ["0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
@@ -1013,28 +1046,30 @@ MARC_RULES: Dict[str, Any] = {
                 "1",
                 "2",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["d", "k", "m", "n", "p", "0", "1", "8"],
-            "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "2", "6"],
+            "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "242": {
-        "repeatable": True,
+        "tag": "242",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
             "valid": ["a", "b", "c", "h", "n", "p", "y", "6", "8"],
             "repeatable": ["n", "p", "8"],
-            "non_repeatable": ["a", "b", "c", "h", "y", "6"],
+            "non_repeatable": ["a", "b", "c", "h", "y", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "243": {
-        "repeatable": False,
+        "tag": "243",
+        "repeatable": false,
         "ind1": ["0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
@@ -1053,196 +1088,212 @@ MARC_RULES: Dict[str, Any] = {
                 "r",
                 "s",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["d", "k", "m", "n", "p", "8"],
-            "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "6"],
+            "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "245": {
-        "repeatable": False,
+        "tag": "245",
+        "repeatable": false,
         "ind1": ["0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
             "valid": ["a", "b", "c", "f", "g", "h", "k", "n", "p", "s", "6", "8"],
             "repeatable": ["k", "n", "p", "8"],
-            "non_repeatable": ["a", "b", "c", "f", "g", "h", "s", "6"],
+            "non_repeatable": ["a", "b", "c", "f", "g", "h", "s", "6"]
         },
-        "length": None,
-        "required": True,
+        "length": null,
+        "required": true
     },
     "246": {
-        "repeatable": True,
+        "tag": "246",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3"],
         "ind2": ["", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8"],
         "subfields": {
             "valid": ["a", "b", "f", "g", "h", "i", "n", "p", "5", "6", "8"],
             "repeatable": ["n", "p", "8"],
-            "non_repeatable": ["a", "b", "f", "g", "h", "i", "5", "6"],
+            "non_repeatable": ["a", "b", "f", "g", "h", "i", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "247": {
-        "repeatable": True,
+        "tag": "247",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["0", "1"],
         "subfields": {
             "valid": ["a", "b", "f", "g", "h", "n", "p", "x", "6", "8"],
             "repeatable": ["n", "p", "8"],
-            "non_repeatable": ["a", "b", "f", "g", "h", "x", "6"],
+            "non_repeatable": ["a", "b", "f", "g", "h", "x", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "250": {
-        "repeatable": True,
+        "tag": "250",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "251": {
-        "repeatable": True,
+        "tag": "251",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "254": {
-        "repeatable": False,
+        "tag": "254",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "255": {
-        "repeatable": True,
+        "tag": "255",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "g", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "c", "d", "e", "f", "g", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "e", "f", "g", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "256": {
-        "repeatable": False,
+        "tag": "256",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "257": {
-        "repeatable": True,
+        "tag": "257",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "0", "1", "2", "6", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["2", "6"],
+            "non_repeatable": ["2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "258": {
-        "repeatable": True,
+        "tag": "258",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "260": {
-        "repeatable": True,
+        "tag": "260",
+        "repeatable": true,
         "ind1": ["", " ", "2", "3"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "g", "3", "6", "8"],
             "repeatable": ["a", "b", "c", "e", "f", "g", "8"],
-            "non_repeatable": ["d", "3", "6"],
+            "non_repeatable": ["d", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "261": {
-        "repeatable": False,
+        "tag": "261",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "d", "e", "f", "6", "8"],
             "repeatable": ["a", "b", "d", "e", "f", "8"],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "262": {
-        "repeatable": False,
+        "tag": "262",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "k", "l", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "c", "k", "l", "6"],
+            "non_repeatable": ["a", "b", "c", "k", "l", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "263": {
-        "repeatable": False,
+        "tag": "263",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "264": {
-        "repeatable": True,
+        "tag": "264",
+        "repeatable": true,
         "ind1": ["", " ", "2", "3"],
         "ind2": ["0", "1", "2", "3", "4"],
         "subfields": {
             "valid": ["a", "b", "c", "3", "6", "8"],
             "repeatable": ["a", "b", "c", "8"],
-            "non_repeatable": ["3", "6"],
+            "non_repeatable": ["3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "270": {
-        "repeatable": True,
+        "tag": "270",
+        "repeatable": true,
         "ind1": ["", " ", "1", "2"],
         "ind2": ["", " ", "0", "7"],
         "subfields": {
@@ -1267,112 +1318,121 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["a", "j", "k", "l", "m", "n", "p", "q", "r", "z", "4", "8"],
-            "non_repeatable": ["b", "c", "d", "e", "f", "g", "h", "i", "6"],
+            "non_repeatable": ["b", "c", "d", "e", "f", "g", "h", "i", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "300": {
-        "repeatable": True,
+        "tag": "300",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "e", "f", "g", "3", "6", "8"],
             "repeatable": ["a", "c", "f", "g", "8"],
-            "non_repeatable": ["b", "e", "3", "6"],
+            "non_repeatable": ["b", "e", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "306": {
-        "repeatable": False,
+        "tag": "306",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "307": {
-        "repeatable": True,
+        "tag": "307",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "310": {
-        "repeatable": False,
+        "tag": "310",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "321": {
-        "repeatable": True,
+        "tag": "321",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "336": {
-        "repeatable": True,
+        "tag": "336",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "337": {
-        "repeatable": True,
+        "tag": "337",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "338": {
-        "repeatable": True,
+        "tag": "338",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "340": {
-        "repeatable": True,
+        "tag": "340",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -1396,7 +1456,7 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "a",
@@ -1415,15 +1475,16 @@ MARC_RULES: Dict[str, Any] = {
                 "o",
                 "0",
                 "1",
-                "8",
+                "8"
             ],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "342": {
-        "repeatable": True,
+        "tag": "342",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
         "subfields": {
@@ -1452,7 +1513,7 @@ MARC_RULES: Dict[str, Any] = {
                 "w",
                 "2",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["e", "f", "8"],
             "non_repeatable": [
@@ -1477,26 +1538,28 @@ MARC_RULES: Dict[str, Any] = {
                 "v",
                 "w",
                 "2",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "343": {
-        "repeatable": True,
+        "tag": "343",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "344": {
-        "repeatable": True,
+        "tag": "344",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -1514,124 +1577,134 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["a", "b", "c", "d", "e", "f", "g", "h", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "345": {
-        "repeatable": True,
+        "tag": "345",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "346": {
-        "repeatable": True,
+        "tag": "346",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "347": {
-        "repeatable": True,
+        "tag": "347",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "c", "d", "e", "f", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "348": {
-        "repeatable": True,
+        "tag": "348",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "351": {
-        "repeatable": True,
+        "tag": "351",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "3", "6", "8"],
             "repeatable": ["a", "b", "8"],
-            "non_repeatable": ["c", "3", "6"],
+            "non_repeatable": ["c", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "352": {
-        "repeatable": True,
+        "tag": "352",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "g", "i", "q", "6", "8"],
             "repeatable": ["b", "c", "q", "8"],
-            "non_repeatable": ["a", "d", "e", "f", "g", "i", "6"],
+            "non_repeatable": ["a", "d", "e", "f", "g", "i", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "355": {
-        "repeatable": True,
+        "tag": "355",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3", "4", "5", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "g", "h", "j", "6", "8"],
             "repeatable": ["b", "c", "j", "8"],
-            "non_repeatable": ["a", "d", "e", "f", "g", "h", "6"],
+            "non_repeatable": ["a", "d", "e", "f", "g", "h", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "357": {
-        "repeatable": False,
+        "tag": "357",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "g", "6", "8"],
             "repeatable": ["b", "c", "g", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "362": {
-        "repeatable": True,
+        "tag": "362",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "z", "6"],
+            "non_repeatable": ["a", "z", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "363": {
-        "repeatable": True,
+        "tag": "363",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " ", "0", "1"],
         "subfields": {
@@ -1654,7 +1727,7 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "z",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["x", "z"],
             "non_repeatable": [
@@ -1674,14 +1747,15 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "v",
                 "6",
-                "8",
-            ],
+                "8"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "365": {
-        "repeatable": True,
+        "tag": "365",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -1700,7 +1774,7 @@ MARC_RULES: Dict[str, Any] = {
                 "m",
                 "2",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["8"],
             "non_repeatable": [
@@ -1717,14 +1791,15 @@ MARC_RULES: Dict[str, Any] = {
                 "k",
                 "m",
                 "2",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "366": {
-        "repeatable": True,
+        "tag": "366",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -1742,62 +1817,67 @@ MARC_RULES: Dict[str, Any] = {
                 "k",
                 "m",
                 "2",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "370": {
-        "repeatable": True,
+        "tag": "370",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["c", "f", "g", "s", "t", "u", "v", "0", "1", "2", "6", "8"],
             "repeatable": ["c", "f", "g", "u", "v", "0", "1", "8"],
-            "non_repeatable": ["s", "t", "2", "6"],
+            "non_repeatable": ["s", "t", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "377": {
-        "repeatable": True,
+        "tag": "377",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " ", "7"],
         "subfields": {
             "valid": ["a", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "380": {
-        "repeatable": True,
+        "tag": "380",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "381": {
-        "repeatable": True,
+        "tag": "381",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "u", "v", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "u", "v", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "382": {
-        "repeatable": True,
+        "tag": "382",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " ", "0", "1"],
         "subfields": {
@@ -1817,76 +1897,82 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["a", "b", "d", "e", "n", "p", "v", "0", "1", "8"],
-            "non_repeatable": ["r", "s", "t", "2", "3", "6"],
+            "non_repeatable": ["r", "s", "t", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "383": {
-        "repeatable": True,
+        "tag": "383",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "2", "6", "8"],
             "repeatable": ["a", "b", "c"],
-            "non_repeatable": ["d", "e", "2", "6", "8"],
+            "non_repeatable": ["d", "e", "2", "6", "8"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "384": {
-        "repeatable": False,
+        "tag": "384",
+        "repeatable": false,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "385": {
-        "repeatable": True,
+        "tag": "385",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "m", "n", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "8"],
-            "non_repeatable": ["m", "n", "2", "3", "6"],
+            "non_repeatable": ["m", "n", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "386": {
-        "repeatable": True,
+        "tag": "386",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "m", "n", "0", "1", "2", "3", "4", "6", "8"],
             "repeatable": ["a", "b", "0", "1", "4", "8"],
-            "non_repeatable": ["m", "n", "2", "3", "6"],
+            "non_repeatable": ["m", "n", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "388": {
-        "repeatable": True,
+        "tag": "388",
+        "repeatable": true,
         "ind1": ["", " ", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["a", "0", "1", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "400": {
-        "repeatable": True,
+        "tag": "400",
+        "repeatable": true,
         "ind1": ["0", "1", "3"],
         "ind2": ["0", "1"],
         "subfields": {
@@ -1908,16 +1994,17 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["c", "e", "k", "n", "p", "4", "8"],
-            "non_repeatable": ["a", "b", "d", "f", "g", "l", "t", "u", "v", "x", "6"],
+            "non_repeatable": ["a", "b", "d", "f", "g", "l", "t", "u", "v", "x", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "410": {
-        "repeatable": True,
+        "tag": "410",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["0", "1"],
         "subfields": {
@@ -1939,16 +2026,17 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["b", "d", "e", "k", "n", "p", "4", "8"],
-            "non_repeatable": ["a", "c", "f", "g", "l", "t", "u", "v", "x", "6"],
+            "non_repeatable": ["a", "c", "f", "g", "l", "t", "u", "v", "x", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "411": {
-        "repeatable": True,
+        "tag": "411",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["0", "1"],
         "subfields": {
@@ -1970,7 +2058,7 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["e", "k", "n", "p", "4", "8"],
             "non_repeatable": [
@@ -1985,170 +2073,184 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "v",
                 "x",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "440": {
-        "repeatable": True,
+        "tag": "440",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
             "valid": ["a", "n", "p", "v", "x", "w", "0", "6", "8"],
             "repeatable": ["n", "p", "w", "0", "8"],
-            "non_repeatable": ["a", "v", "x", "6"],
+            "non_repeatable": ["a", "v", "x", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "490": {
-        "repeatable": True,
+        "tag": "490",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "l", "v", "x", "3", "6", "8"],
             "repeatable": ["a", "v", "8"],
-            "non_repeatable": ["l", "x", "3", "6"],
+            "non_repeatable": ["l", "x", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "500": {
-        "repeatable": True,
+        "tag": "500",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "3", "5", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "3", "5", "6"],
+            "non_repeatable": ["a", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "501": {
-        "repeatable": True,
+        "tag": "501",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "5", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "5", "6"],
+            "non_repeatable": ["a", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "502": {
-        "repeatable": True,
+        "tag": "502",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "g", "o", "6", "8"],
             "repeatable": ["g", "o", "8"],
-            "non_repeatable": ["a", "b", "c", "d", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "504": {
-        "repeatable": True,
+        "tag": "504",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "505": {
-        "repeatable": True,
+        "tag": "505",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "8"],
         "ind2": ["", " ", "0"],
         "subfields": {
             "valid": ["a", "g", "r", "t", "u", "6", "8"],
             "repeatable": ["g", "r", "t", "u", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "506": {
-        "repeatable": True,
+        "tag": "506",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "u", "2", "3", "5", "6", "8"],
             "repeatable": ["b", "c", "d", "e", "f", "u", "8"],
-            "non_repeatable": ["a", "2", "3", "5", "6"],
+            "non_repeatable": ["a", "2", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "507": {
-        "repeatable": False,
+        "tag": "507",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "508": {
-        "repeatable": True,
+        "tag": "508",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "510": {
-        "repeatable": True,
+        "tag": "510",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3", "4"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "x", "3", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "c", "x", "3", "6"],
+            "non_repeatable": ["a", "b", "c", "x", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "511": {
-        "repeatable": True,
+        "tag": "511",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "513": {
-        "repeatable": True,
+        "tag": "513",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "514": {
-        "repeatable": False,
+        "tag": "514",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -2168,148 +2270,160 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "z",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["b", "c", "g", "h", "j", "k", "u", "z", "8"],
-            "non_repeatable": ["a", "d", "e", "f", "i", "m", "6"],
+            "non_repeatable": ["a", "d", "e", "f", "i", "m", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "515": {
-        "repeatable": True,
+        "tag": "515",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "516": {
-        "repeatable": True,
+        "tag": "516",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "518": {
-        "repeatable": True,
+        "tag": "518",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["0", "1", "8"],
-            "non_repeatable": ["a", "2", "3", "6"],
+            "non_repeatable": ["a", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "520": {
-        "repeatable": True,
+        "tag": "520",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2", "3", "4", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "u", "2", "3", "6", "8"],
             "repeatable": ["u", "8"],
-            "non_repeatable": ["a", "b", "c", "2", "3", "6"],
+            "non_repeatable": ["a", "b", "c", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "521": {
-        "repeatable": True,
+        "tag": "521",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2", "3", "4", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "3", "6", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": ["b", "3", "6"],
+            "non_repeatable": ["b", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "522": {
-        "repeatable": True,
+        "tag": "522",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "524": {
-        "repeatable": True,
+        "tag": "524",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "2", "3", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "2", "3", "6"],
+            "non_repeatable": ["a", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "525": {
-        "repeatable": True,
+        "tag": "525",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "526": {
-        "repeatable": True,
+        "tag": "526",
+        "repeatable": true,
         "ind1": ["0", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "i", "x", "z", "5", "6", "8"],
             "repeatable": ["x", "z", "8"],
-            "non_repeatable": ["a", "b", "c", "d", "i", "5", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "i", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "530": {
-        "repeatable": True,
+        "tag": "530",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "u", "3", "6", "8"],
             "repeatable": ["u", "8"],
-            "non_repeatable": ["a", "b", "c", "d", "3", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "533": {
-        "repeatable": True,
+        "tag": "533",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "m", "n", "3", "5", "6", "7", "8"],
             "repeatable": ["b", "c", "f", "m", "n", "8"],
-            "non_repeatable": ["a", "d", "e", "3", "5", "6", "7"],
+            "non_repeatable": ["a", "d", "e", "3", "5", "6", "7"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "534": {
-        "repeatable": True,
+        "tag": "534",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -2329,76 +2443,82 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "z",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["f", "k", "n", "o", "x", "z", "8"],
-            "non_repeatable": ["a", "b", "c", "e", "l", "m", "p", "t", "6"],
+            "non_repeatable": ["a", "b", "c", "e", "l", "m", "p", "t", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "535": {
-        "repeatable": True,
+        "tag": "535",
+        "repeatable": true,
         "ind1": ["1", "2"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "g", "3", "6", "8"],
             "repeatable": ["b", "c", "d", "8"],
-            "non_repeatable": ["a", "g", "3", "6"],
+            "non_repeatable": ["a", "g", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "536": {
-        "repeatable": True,
+        "tag": "536",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "g", "h", "6", "8"],
             "repeatable": ["b", "c", "d", "e", "f", "g", "h", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "538": {
-        "repeatable": True,
+        "tag": "538",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "i", "u", "3", "5", "6", "8"],
             "repeatable": ["u", "8"],
-            "non_repeatable": ["a", "i", "3", "5", "6"],
+            "non_repeatable": ["a", "i", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "540": {
-        "repeatable": True,
+        "tag": "540",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "u", "3", "5", "6", "8"],
             "repeatable": ["u", "8"],
-            "non_repeatable": ["a", "b", "c", "d", "3", "5", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "541": {
-        "repeatable": True,
+        "tag": "541",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "h", "n", "o", "3", "5", "6", "8"],
             "repeatable": ["n", "o", "8"],
-            "non_repeatable": ["a", "b", "c", "d", "e", "f", "h", "3", "5", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "e", "f", "h", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "542": {
-        "repeatable": True,
+        "tag": "542",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
@@ -2424,7 +2544,7 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["d", "e", "f", "h", "k", "n", "u", "8"],
             "non_repeatable": [
@@ -2441,74 +2561,80 @@ MARC_RULES: Dict[str, Any] = {
                 "r",
                 "s",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "544": {
-        "repeatable": True,
+        "tag": "544",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "n", "3", "6", "8"],
             "repeatable": ["a", "b", "c", "d", "e", "n", "8"],
-            "non_repeatable": ["3", "6"],
+            "non_repeatable": ["3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "545": {
-        "repeatable": True,
+        "tag": "545",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "u", "6", "8"],
             "repeatable": ["u", "8"],
-            "non_repeatable": ["a", "b", "6"],
+            "non_repeatable": ["a", "b", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "546": {
-        "repeatable": True,
+        "tag": "546",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "3", "6", "8"],
             "repeatable": ["b", "8"],
-            "non_repeatable": ["a", "3", "6"],
+            "non_repeatable": ["a", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "547": {
-        "repeatable": True,
+        "tag": "547",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "550": {
-        "repeatable": True,
+        "tag": "550",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "552": {
-        "repeatable": True,
+        "tag": "552",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -2532,7 +2658,7 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "z",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["e", "f", "o", "p", "u", "z", "8"],
             "non_repeatable": [
@@ -2548,122 +2674,132 @@ MARC_RULES: Dict[str, Any] = {
                 "l",
                 "m",
                 "n",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "555": {
-        "repeatable": True,
+        "tag": "555",
+        "repeatable": true,
         "ind1": ["", " ", "0", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "u", "3", "6", "8"],
             "repeatable": ["b", "u", "8"],
-            "non_repeatable": ["a", "c", "d", "3", "6"],
+            "non_repeatable": ["a", "c", "d", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "556": {
-        "repeatable": True,
+        "tag": "556",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "6", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "561": {
-        "repeatable": True,
+        "tag": "561",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "3", "5", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "3", "5", "6"],
+            "non_repeatable": ["a", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "562": {
-        "repeatable": True,
+        "tag": "562",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "3", "5", "6", "8"],
             "repeatable": ["a", "b", "c", "d", "e", "8"],
-            "non_repeatable": ["3", "5", "6"],
+            "non_repeatable": ["3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "563": {
-        "repeatable": True,
+        "tag": "563",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "u", "3", "5", "6", "8"],
             "repeatable": ["u", "8"],
-            "non_repeatable": ["a", "3", "5", "6"],
+            "non_repeatable": ["a", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "565": {
-        "repeatable": True,
+        "tag": "565",
+        "repeatable": true,
         "ind1": ["", " ", "0", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "3", "6", "8"],
             "repeatable": ["b", "c", "d", "e", "8"],
-            "non_repeatable": ["a", "3", "6"],
+            "non_repeatable": ["a", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "567": {
-        "repeatable": True,
+        "tag": "567",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "0", "1", "2", "6", "8"],
             "repeatable": ["0", "1", "8"],
-            "non_repeatable": ["a", "2", "6"],
+            "non_repeatable": ["a", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "580": {
-        "repeatable": True,
+        "tag": "580",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "581": {
-        "repeatable": True,
+        "tag": "581",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "z", "3", "6", "8"],
             "repeatable": ["z", "8"],
-            "non_repeatable": ["a", "3", "6"],
+            "non_repeatable": ["a", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "583": {
-        "repeatable": True,
+        "tag": "583",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
@@ -2688,7 +2824,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "5",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "b",
@@ -2706,63 +2842,68 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "x",
                 "z",
-                "8",
+                "8"
             ],
-            "non_repeatable": ["a", "2", "3", "5", "6"],
+            "non_repeatable": ["a", "2", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "584": {
-        "repeatable": True,
+        "tag": "584",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "3", "5", "6", "8"],
             "repeatable": ["a", "b", "8"],
-            "non_repeatable": ["3", "5", "6"],
+            "non_repeatable": ["3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "585": {
-        "repeatable": True,
+        "tag": "585",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "3", "5", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "3", "5", "6"],
+            "non_repeatable": ["a", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "586": {
-        "repeatable": True,
+        "tag": "586",
+        "repeatable": true,
         "ind1": ["", " ", "8"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "3", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "3", "6"],
+            "non_repeatable": ["a", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "588": {
-        "repeatable": True,
+        "tag": "588",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "5", "6", "8"],
             "repeatable": ["8"],
-            "non_repeatable": ["a", "5", "6"],
+            "non_repeatable": ["a", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "600": {
-        "repeatable": True,
+        "tag": "600",
+        "repeatable": true,
         "ind1": ["0", "1", "3"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -2797,7 +2938,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "c",
@@ -2814,7 +2955,7 @@ MARC_RULES: Dict[str, Any] = {
                 "0",
                 "1",
                 "4",
-                "8",
+                "8"
             ],
             "non_repeatable": [
                 "a",
@@ -2832,14 +2973,15 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "610": {
-        "repeatable": True,
+        "tag": "610",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -2872,7 +3014,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "b",
@@ -2889,7 +3031,7 @@ MARC_RULES: Dict[str, Any] = {
                 "0",
                 "1",
                 "4",
-                "8",
+                "8"
             ],
             "non_repeatable": [
                 "a",
@@ -2905,14 +3047,15 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "611": {
-        "repeatable": True,
+        "tag": "611",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -2943,7 +3086,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "e",
@@ -2958,7 +3101,7 @@ MARC_RULES: Dict[str, Any] = {
                 "0",
                 "1",
                 "4",
-                "8",
+                "8"
             ],
             "non_repeatable": [
                 "a",
@@ -2974,14 +3117,15 @@ MARC_RULES: Dict[str, Any] = {
                 "u",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "630": {
-        "repeatable": True,
+        "tag": "630",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -3011,7 +3155,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "d",
@@ -3027,7 +3171,7 @@ MARC_RULES: Dict[str, Any] = {
                 "0",
                 "1",
                 "4",
-                "8",
+                "8"
             ],
             "non_repeatable": [
                 "a",
@@ -3041,14 +3185,15 @@ MARC_RULES: Dict[str, Any] = {
                 "t",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "647": {
-        "repeatable": True,
+        "tag": "647",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -3066,28 +3211,30 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["c", "g", "v", "x", "y", "z", "0", "1", "8"],
-            "non_repeatable": ["a", "d", "2", "3", "6"],
+            "non_repeatable": ["a", "d", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "648": {
-        "repeatable": True,
+        "tag": "648",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
             "valid": ["a", "v", "x", "y", "z", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["v", "x", "y", "z", "0", "1", "8"],
-            "non_repeatable": ["a", "2", "3", "6"],
+            "non_repeatable": ["a", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "650": {
-        "repeatable": True,
+        "tag": "650",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -3107,40 +3254,43 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["v", "x", "y", "z", "0", "1", "4", "8"],
-            "non_repeatable": ["a", "b", "c", "d", "e", "2", "3", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "e", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "651": {
-        "repeatable": True,
+        "tag": "651",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
             "valid": ["a", "e", "v", "x", "y", "z", "0", "1", "2", "3", "4", "6", "8"],
             "repeatable": ["e", "v", "x", "y", "z", "0", "1", "4", "8"],
-            "non_repeatable": ["a", "2", "3", "6"],
+            "non_repeatable": ["a", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "653": {
-        "repeatable": True,
+        "tag": "653",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2"],
         "ind2": ["", " ", "0", "1", "2", "3", "4", "5", "6"],
         "subfields": {
             "valid": ["a", "6", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "654": {
-        "repeatable": True,
+        "tag": "654",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
@@ -3158,16 +3308,17 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["a", "b", "c", "e", "v", "y", "z", "0", "1", "4", "8"],
-            "non_repeatable": ["2", "3", "6"],
+            "non_repeatable": ["2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "655": {
-        "repeatable": True,
+        "tag": "655",
+        "repeatable": true,
         "ind1": ["", " ", "0"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -3185,52 +3336,56 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "5",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["b", "c", "v", "x", "y", "z", "0", "1", "8"],
-            "non_repeatable": ["a", "2", "3", "5", "6"],
+            "non_repeatable": ["a", "2", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "656": {
-        "repeatable": True,
+        "tag": "656",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["7"],
         "subfields": {
             "valid": ["a", "k", "v", "x", "y", "z", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["v", "x", "y", "z", "0", "1", "8"],
-            "non_repeatable": ["a", "k", "2", "3", "6"],
+            "non_repeatable": ["a", "k", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "657": {
-        "repeatable": True,
+        "tag": "657",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["7"],
         "subfields": {
             "valid": ["a", "v", "x", "y", "z", "0", "1", "2", "3", "6", "8"],
             "repeatable": ["v", "x", "y", "z", "0", "1", "8"],
-            "non_repeatable": ["a", "2", "3", "6"],
+            "non_repeatable": ["a", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "658": {
-        "repeatable": True,
+        "tag": "658",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "2", "6", "8"],
             "repeatable": ["b", "8"],
-            "non_repeatable": ["a", "c", "d", "2", "6"],
+            "non_repeatable": ["a", "c", "d", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "662": {
-        "repeatable": True,
+        "tag": "662",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
@@ -3248,16 +3403,17 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["a", "c", "e", "f", "g", "h", "0", "1", "4", "8"],
-            "non_repeatable": ["b", "d", "2", "6"],
+            "non_repeatable": ["b", "d", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "700": {
-        "repeatable": True,
+        "tag": "700",
+        "repeatable": true,
         "ind1": ["0", "1", "3"],
         "ind2": ["", " ", "2"],
         "subfields": {
@@ -3290,7 +3446,7 @@ MARC_RULES: Dict[str, Any] = {
                 "4",
                 "5",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["c", "e", "j", "k", "m", "n", "p", "0", "1", "4", "8"],
             "non_repeatable": [
@@ -3311,14 +3467,15 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "5",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "710": {
-        "repeatable": True,
+        "tag": "710",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["", " ", "2"],
         "subfields": {
@@ -3349,7 +3506,7 @@ MARC_RULES: Dict[str, Any] = {
                 "4",
                 "5",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["b", "d", "e", "k", "m", "n", "p", "0", "1", "4", "8"],
             "non_repeatable": [
@@ -3368,14 +3525,15 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "5",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "711": {
-        "repeatable": True,
+        "tag": "711",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["", " ", "2"],
         "subfields": {
@@ -3404,7 +3562,7 @@ MARC_RULES: Dict[str, Any] = {
                 "4",
                 "5",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["e", "j", "k", "n", "p", "0", "1", "4", "8"],
             "non_repeatable": [
@@ -3423,26 +3581,28 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "5",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "720": {
-        "repeatable": True,
+        "tag": "720",
+        "repeatable": true,
         "ind1": ["", " ", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "e", "4", "6", "8"],
             "repeatable": ["e", "4", "8"],
-            "non_repeatable": ["a", "6"],
+            "non_repeatable": ["a", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "730": {
-        "repeatable": True,
+        "tag": "730",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "ind2": ["", " ", "2"],
         "subfields": {
@@ -3469,7 +3629,7 @@ MARC_RULES: Dict[str, Any] = {
                 "4",
                 "5",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["d", "k", "m", "n", "p", "0", "1", "4", "8"],
             "non_repeatable": [
@@ -3486,86 +3646,93 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "5",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "740": {
-        "repeatable": True,
+        "tag": "740",
+        "repeatable": true,
         "ind1": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "ind2": ["", " ", "2"],
         "subfields": {
             "valid": ["a", "h", "n", "p", "5", "6", "8"],
             "repeatable": ["n", "p", "8"],
-            "non_repeatable": ["a", "h", "5", "6"],
+            "non_repeatable": ["a", "h", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "751": {
-        "repeatable": True,
+        "tag": "751",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "e", "0", "1", "2", "3", "4", "6", "8"],
             "repeatable": ["e", "0", "1", "4", "8"],
-            "non_repeatable": ["a", "2", "3", "6"],
+            "non_repeatable": ["a", "2", "3", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "752": {
-        "repeatable": True,
+        "tag": "752",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "e", "f", "g", "h", "0", "1", "2", "6", "8"],
             "repeatable": ["e", "f", "g", "h", "0", "1", "8"],
-            "non_repeatable": ["a", "b", "c", "d", "2", "6"],
+            "non_repeatable": ["a", "b", "c", "d", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "753": {
-        "repeatable": True,
+        "tag": "753",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "0", "1", "2", "6", "8"],
             "repeatable": ["0", "1", "8"],
-            "non_repeatable": ["a", "b", "c", "2", "6"],
+            "non_repeatable": ["a", "b", "c", "2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "754": {
-        "repeatable": True,
+        "tag": "754",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "c", "d", "x", "z", "0", "1", "2", "6", "8"],
             "repeatable": ["a", "c", "d", "x", "z", "0", "1", "8"],
-            "non_repeatable": ["2", "6"],
+            "non_repeatable": ["2", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "758": {
-        "repeatable": True,
+        "tag": "758",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "i", "0", "1", "2", "3", "4", "5", "6", "8"],
             "repeatable": ["i", "0", "1", "4", "8"],
-            "non_repeatable": ["a", "2", "3", "5", "6"],
+            "non_repeatable": ["a", "2", "3", "5", "6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "760": {
-        "repeatable": True,
+        "tag": "760",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3587,7 +3754,7 @@ MARC_RULES: Dict[str, Any] = {
                 "y",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "n", "o", "w", "8"],
             "non_repeatable": [
@@ -3603,14 +3770,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "762": {
-        "repeatable": True,
+        "tag": "762",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3632,7 +3800,7 @@ MARC_RULES: Dict[str, Any] = {
                 "y",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "n", "o", "w", "8"],
             "non_repeatable": [
@@ -3648,14 +3816,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "765": {
-        "repeatable": True,
+        "tag": "765",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3681,7 +3850,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -3698,14 +3867,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "767": {
-        "repeatable": True,
+        "tag": "767",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3731,7 +3901,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -3748,14 +3918,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "770": {
-        "repeatable": True,
+        "tag": "770",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3781,7 +3952,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -3798,14 +3969,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "772": {
-        "repeatable": True,
+        "tag": "772",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "0", "8"],
         "subfields": {
@@ -3831,7 +4003,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -3848,14 +4020,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "773": {
-        "repeatable": True,
+        "tag": "773",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3883,7 +4056,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -3902,14 +4075,15 @@ MARC_RULES: Dict[str, Any] = {
                 "y",
                 "3",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "774": {
-        "repeatable": True,
+        "tag": "774",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3935,7 +4109,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -3952,14 +4126,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "775": {
-        "repeatable": True,
+        "tag": "775",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -3987,7 +4162,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -4006,14 +4181,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "776": {
-        "repeatable": True,
+        "tag": "776",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -4039,7 +4215,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -4056,14 +4232,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "777": {
-        "repeatable": True,
+        "tag": "777",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -4086,7 +4263,7 @@ MARC_RULES: Dict[str, Any] = {
                 "y",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "w", "8"],
             "non_repeatable": [
@@ -4102,14 +4279,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "780": {
-        "repeatable": True,
+        "tag": "780",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7"],
         "subfields": {
@@ -4135,7 +4313,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -4152,14 +4330,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "785": {
-        "repeatable": True,
+        "tag": "785",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
         "subfields": {
@@ -4185,7 +4364,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -4202,14 +4381,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "786": {
-        "repeatable": True,
+        "tag": "786",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -4238,7 +4418,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -4258,14 +4438,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "787": {
-        "repeatable": True,
+        "tag": "787",
+        "repeatable": true,
         "ind1": ["0", "1"],
         "ind2": ["", " ", "8"],
         "subfields": {
@@ -4291,7 +4472,7 @@ MARC_RULES: Dict[str, Any] = {
                 "z",
                 "6",
                 "7",
-                "8",
+                "8"
             ],
             "repeatable": ["g", "k", "n", "o", "r", "w", "z", "8"],
             "non_repeatable": [
@@ -4308,14 +4489,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "6",
-                "7",
-            ],
+                "7"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "800": {
-        "repeatable": True,
+        "tag": "800",
+        "repeatable": true,
         "ind1": ["0", "1", "3"],
         "ind2": ["", " "],
         "subfields": {
@@ -4349,7 +4531,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["c", "e", "j", "k", "m", "n", "p", "w", "0", "1", "4", "8"],
             "non_repeatable": [
@@ -4370,14 +4552,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "810": {
-        "repeatable": True,
+        "tag": "810",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
@@ -4409,7 +4592,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["b", "d", "e", "k", "m", "n", "p", "w", "0", "1", "4", "8"],
             "non_repeatable": [
@@ -4428,14 +4611,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "811": {
-        "repeatable": True,
+        "tag": "811",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
@@ -4465,7 +4649,7 @@ MARC_RULES: Dict[str, Any] = {
                 "3",
                 "4",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["e", "j", "k", "n", "p", "w", "0", "1", "4", "8"],
             "non_repeatable": [
@@ -4484,14 +4668,15 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "830": {
-        "repeatable": True,
+        "tag": "830",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
@@ -4518,7 +4703,7 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": ["d", "k", "m", "n", "p", "w", "0", "1", "8"],
             "non_repeatable": [
@@ -4535,66 +4720,73 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "841": {
-        "repeatable": False,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "841",
+        "repeatable": false,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "842": {
-        "repeatable": False,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "842",
+        "repeatable": false,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "843": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "843",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "844": {
-        "repeatable": False,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "844",
+        "repeatable": false,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "845": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "845",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "850": {
-        "repeatable": True,
+        "tag": "850",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "8"],
             "repeatable": ["a", "8"],
-            "non_repeatable": [],
+            "non_repeatable": []
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "852": {
-        "repeatable": True,
+        "tag": "852",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8"],
         "ind2": ["", " ", "0", "1", "2"],
         "subfields": {
@@ -4623,7 +4815,7 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "b",
@@ -4638,7 +4830,7 @@ MARC_RULES: Dict[str, Any] = {
                 "s",
                 "u",
                 "x",
-                "z",
+                "z"
             ],
             "non_repeatable": [
                 "a",
@@ -4652,38 +4844,42 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
-            ],
+                "8"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "853": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "853",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "854": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "854",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "855": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "855",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "856": {
-        "repeatable": True,
+        "tag": "856",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2", "3", "4", "7"],
         "ind2": ["", " ", "0", "1", "2", "8"],
         "subfields": {
@@ -4715,7 +4911,7 @@ MARC_RULES: Dict[str, Any] = {
                 "2",
                 "3",
                 "6",
-                "8",
+                "8"
             ],
             "repeatable": [
                 "a",
@@ -4733,7 +4929,7 @@ MARC_RULES: Dict[str, Any] = {
                 "x",
                 "y",
                 "z",
-                "8",
+                "8"
             ],
             "non_repeatable": [
                 "h",
@@ -4747,86 +4943,96 @@ MARC_RULES: Dict[str, Any] = {
                 "r",
                 "2",
                 "3",
-                "6",
-            ],
+                "6"
+            ]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "863": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "863",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "864": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "864",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "865": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "865",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "866": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "866",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "867": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "867",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "868": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "868",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "876": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "876",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "877": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "877",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "878": {
-        "repeatable": True,
-        "ind1": None,
-        "ind2": None,
-        "subfields": None,
-        "length": None,
-        "required": False,
+        "tag": "878",
+        "repeatable": true,
+        "ind1": null,
+        "ind2": null,
+        "subfields": null,
+        "length": null,
+        "required": false
     },
     "880": {
-        "repeatable": True,
+        "tag": "880",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "ind2": ["", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "subfields": {
@@ -4866,7 +5072,7 @@ MARC_RULES: Dict[str, Any] = {
                 "6",
                 "7",
                 "8",
-                "9",
+                "9"
             ],
             "repeatable": [
                 "a",
@@ -4903,63 +5109,68 @@ MARC_RULES: Dict[str, Any] = {
                 "6",
                 "7",
                 "8",
-                "9",
+                "9"
             ],
-            "non_repeatable": ["2"],
+            "non_repeatable": ["2"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "882": {
-        "repeatable": False,
+        "tag": "882",
+        "repeatable": false,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "i", "w", "6", "8"],
             "repeatable": ["a", "i", "w", "8"],
-            "non_repeatable": ["6"],
+            "non_repeatable": ["6"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "883": {
-        "repeatable": True,
+        "tag": "883",
+        "repeatable": true,
         "ind1": ["", " ", "0", "1"],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "c", "d", "q", "x", "u", "w", "0", "1", "8"],
             "repeatable": ["w", "0", "1", "8"],
-            "non_repeatable": ["a", "c", "d", "q", "x", "u"],
+            "non_repeatable": ["a", "c", "d", "q", "x", "u"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "884": {
-        "repeatable": True,
+        "tag": "884",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "g", "k", "q", "u"],
             "repeatable": ["u"],
-            "non_repeatable": ["a", "g", "k", "q"],
+            "non_repeatable": ["a", "g", "k", "q"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "885": {
-        "repeatable": True,
+        "tag": "885",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "b", "c", "d", "w", "x", "z", "0", "1", "2", "5"],
             "repeatable": ["w", "x", "z", "0", "1"],
-            "non_repeatable": ["a", "b", "c", "d", "2", "5"],
+            "non_repeatable": ["a", "b", "c", "d", "2", "5"]
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "886": {
-        "repeatable": True,
+        "tag": "886",
+        "repeatable": true,
         "ind1": ["0", "1", "2"],
         "ind2": ["", " "],
         "subfields": {
@@ -4999,7 +5210,7 @@ MARC_RULES: Dict[str, Any] = {
                 "6",
                 "7",
                 "8",
-                "9",
+                "9"
             ],
             "repeatable": [
                 "a",
@@ -5037,23 +5248,24 @@ MARC_RULES: Dict[str, Any] = {
                 "6",
                 "7",
                 "8",
-                "9",
+                "9"
             ],
-            "non_repeatable": [],
+            "non_repeatable": []
         },
-        "length": None,
-        "required": False,
+        "length": null,
+        "required": false
     },
     "887": {
-        "repeatable": True,
+        "tag": "887",
+        "repeatable": true,
         "ind1": ["", " "],
         "ind2": ["", " "],
         "subfields": {
             "valid": ["a", "2"],
             "repeatable": [],
-            "non_repeatable": ["a", "2"],
+            "non_repeatable": ["a", "2"]
         },
-        "length": None,
-        "required": False,
-    },
+        "length": null,
+        "required": false
+    }
 }

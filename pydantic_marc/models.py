@@ -18,15 +18,15 @@ from pydantic import (
     model_serializer,
 )
 
-from pydantic_marc.fields import ControlField, DataField, PydanticLeader
-from pydantic_marc.rules import MARC_RULES
-from pydantic_marc.validators import validate_fields
+from pydantic_marc.fields import ControlField, DataField
+from pydantic_marc.marc_rules import RuleSet
+from pydantic_marc.validators import validate_marc_fields
 
 
 def field_discriminator(data: Any) -> str:
     """
     A function used to determine whether to validate a field against the `ControlField`
-    model or the `DataField` model. If `00x` fields will be validated against the
+    model or the `DataField` model. All `00x` fields will be validated against the
     `ControlField` model and all other fields will be validated against the `DataField`
     model.
 
@@ -46,26 +46,22 @@ def field_discriminator(data: Any) -> str:
 class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
     A class that defines a MARC record. The `leader` attribute will validate that the
-    record's leader is either a string or a pymarc.Leader object and that it matches
-    the pattern defined by the MARC standard. The `fields` attribute is a list of
-    `ControlField` and `DataField` objects.
+    record's leader is either a string and that it matches the pattern defined by the
+    MARC standard. The `fields` attribute is a list of `ControlField` and `DataField`
+    objects.
 
     Attributes:
-        rules: A dictionary representing the MARC rules that define a valid MARC record.
-        leader: A string or `PydanticLeader` representing a MARC record's leader.
+        rules: The rules that define a valid MARC record as a `RuleSet` or dictionary.
+        leader: A string representing a MARC record's leader.
         fields: A list of `ControlField` and `DataField` objects.
     """
 
     rules: Annotated[
-        Dict[str, Any],
-        Field(
-            default=MARC_RULES,
-            exclude=True,
-            json_schema_extra=lambda x: x.pop("default"),
-        ),
+        Union[RuleSet, Dict[str, Any], None],
+        Field(default_factory=RuleSet, exclude=True),
     ]
     leader: Annotated[
-        Union[PydanticLeader, str],
+        str,
         Field(
             min_length=24,
             max_length=24,
@@ -83,7 +79,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
                 Discriminator(field_discriminator),
             ],
         ],
-        WrapValidator(validate_fields),
+        WrapValidator(validate_marc_fields),
     ]
 
     @model_serializer
