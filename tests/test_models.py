@@ -124,6 +124,26 @@ class TestMarcRecord:
             },
         } in errors
 
+    def test_MarcRecord_invalid_leader(self, stub_record):
+        with pytest.raises(ValidationError) as e:
+            MarcRecord(leader="xxxxxcam a22001575i 4500", fields=stub_record.fields)
+        errors = e.value.errors()
+        assert len(errors) == 5
+        assert [i["type"] for i in errors] == [
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+        ]
+        assert [i["loc"] for i in errors] == [
+            ("leader", "00"),
+            ("leader", "01"),
+            ("leader", "02"),
+            ("leader", "03"),
+            ("leader", "04"),
+        ]
+
     def test_MarcRecord_nr_field_error(self, stub_record):
         stub_record.add_field(PymarcField(tag="001", data="foo"))
         with pytest.raises(ValidationError) as e:
@@ -199,7 +219,7 @@ class TestMarcRecord:
         with pytest.raises(ValidationError) as e:
             MarcRecord(leader=record.leader, fields=record.fields)
         errors = e.value.errors()
-        assert len(errors) == 9
+        assert len(errors) == 12
         assert {
             "ctx": {
                 "input": "245",
@@ -301,14 +321,32 @@ class TestMarcRecord:
             },
         } in errors
         assert {
-            "type": "string_pattern_mismatch",
-            "loc": ("leader",),
-            "msg": "String should match pattern '^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\\sa][\\sa]22[0-9]{5}[\\s12345678uzIKLM][\\sacinu][\\sabc]4500$'",
-            "input": "00327cam a2200133       ",
-            "ctx": {
-                "pattern": "^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\\sa][\\sa]22[0-9]{5}[\\s12345678uzIKLM][\\sacinu][\\sabc]4500$"
-            },
-            "url": "https://errors.pydantic.dev/2.10/v/string_pattern_mismatch",
+            "type": "invalid_leader",
+            "loc": ("leader", "20"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Byte should be: ['4'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "21"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Byte should be: ['5'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "22"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Byte should be: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "23"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Byte should be: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
         } in errors
 
 

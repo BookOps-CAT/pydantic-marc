@@ -82,4 +82,4 @@ def test_marc_rules_data_fields_900():
 
 def test_marc_rules_data_fields_count():
     rules = RuleSet()
-    assert len(rules.rules.keys()) == 241
+    assert len(rules.rules.keys()) == 242

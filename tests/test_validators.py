@@ -3,10 +3,7 @@ from pydantic import ValidationError
 from pymarc import Indicators, Subfield
 
 from pydantic_marc.marc_rules import RuleSet
-from pydantic_marc.validators import (
-    validate_field,
-    validate_marc_data,
-)
+from pydantic_marc.validators import validate_field, validate_leader, validate_marc_data
 
 
 class TestFieldValidators:
@@ -154,3 +151,15 @@ class TestMarcRecordValidators:
         assert len(e.value.errors()) == 1
         assert e.value.errors()[0]["type"] == "missing_required_field"
         assert "245" in e.value.errors()[0]["loc"]
+
+    @pytest.mark.parametrize(
+        "leader", ["00454cam a22001575i 4500", "00454nam a2200157 i 4500"]
+    )
+    def test_validate_leader(self, leader, make_mock_info):
+        leader_output = validate_leader(
+            leader,
+            info=make_mock_info(
+                data={"rules": RuleSet(), "tag": "LDR"}, field_name="leader"
+            ),
+        )
+        assert leader_output == leader
