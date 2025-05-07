@@ -5,7 +5,7 @@ from pymarc import Leader as PymarcLeader
 from pymarc import MARCReader
 from pymarc import Subfield as PymarcSubfield
 
-from pydantic_marc.fields import ControlField, DataField
+from pydantic_marc.fields import ControlField, DataField, PydanticSubfield
 from pydantic_marc.models import MarcRecord
 
 
@@ -54,12 +54,32 @@ class TestMarcRecord:
             MarcRecord.model_validate(stub_record, context=context_dict)
         errors = e.value.errors()
         assert len(errors) == 2
-        assert sorted([i["type"] for i in errors]) == sorted(
-            ["invalid_indicator", "invalid_indicator"]
-        )
-        assert sorted([i["loc"] for i in errors]) == sorted(
-            [("fields", "910", "ind1"), ("fields", "910", "ind2")]
-        )
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": " ",
+                "loc": ("910", "ind1"),
+                "tag": "910",
+                "valid": ["0", "1"],
+            },
+            "input": " ",
+            "loc": ("fields", "910", "ind1"),
+            "msg": "910 ind1: Invalid data ( ). Indicator should be ['0', '1'].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": " ",
+                "loc": ("910", "ind2"),
+                "tag": "910",
+                "valid": ["0", "1"],
+            },
+            "input": " ",
+            "loc": ("fields", "910", "ind2"),
+            "msg": "910 ind2: Invalid data ( ). Indicator should be ['0', '1'].",
+            "type": "invalid_indicator",
+        } in errors
 
     def test_MarcRecord_050_errors(self, stub_record):
         stub_record["050"].add_subfield("b", "foo")
@@ -69,18 +89,40 @@ class TestMarcRecord:
             MarcRecord.model_validate(stub_record, from_attributes=True)
         errors = e.value.errors()
         assert len(errors) == 2
-        assert sorted([i["type"] for i in errors]) == sorted(
-            ["non_repeatable_subfield", "subfield_not_allowed"]
-        )
-        assert sorted([i["loc"] for i in errors]) == sorted(
-            [("fields", "050", "b"), ("fields", "050", "t")]
-        )
-        assert sorted([i["msg"] for i in errors]) == sorted(
-            [
-                "050 $b: Subfield cannot repeat.",
-                "050 $t: Subfield cannot be defined in this field.",
-            ]
-        )
+        assert {
+            "ctx": {
+                "code": "t",
+                "input": [
+                    PydanticSubfield(code="t", value="foo"),
+                ],
+                "loc": ("050", "t"),
+                "tag": "050",
+            },
+            "input": [
+                PydanticSubfield(code="t", value="foo"),
+            ],
+            "loc": ("fields", "050", "t"),
+            "msg": "050 $t: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
+        assert {
+            "type": "non_repeatable_subfield",
+            "loc": ("fields", "050", "b"),
+            "msg": "050 $b: Subfield cannot repeat.",
+            "input": [
+                PydanticSubfield(code="b", value="foo"),
+                PydanticSubfield(code="b", value="bar"),
+            ],
+            "ctx": {
+                "loc": ("050", "b"),
+                "input": [
+                    PydanticSubfield(code="b", value="foo"),
+                    PydanticSubfield(code="b", value="bar"),
+                ],
+                "tag": "050",
+                "code": "b",
+            },
+        } in errors
 
     def test_MarcRecord_nr_field_error(self, stub_record):
         stub_record.add_field(PymarcField(tag="001", data="foo"))
@@ -88,9 +130,13 @@ class TestMarcRecord:
             MarcRecord.model_validate(stub_record, from_attributes=True)
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
-        assert error["type"] == "non_repeatable_field"
-        assert error["loc"] == ("fields", "001")
-        assert error["msg"] == "001: Has been marked as a non-repeating field."
+        assert error == {
+            "type": "non_repeatable_field",
+            "loc": ("fields", "001"),
+            "msg": "001: Has been marked as a non-repeating field.",
+            "input": "001",
+            "ctx": {"input": "001"},
+        }
 
     def test_MarcRecord_missing_245(self, stub_record):
         stub_record.remove_fields("245")
@@ -98,9 +144,18 @@ class TestMarcRecord:
             MarcRecord.model_validate(stub_record, from_attributes=True)
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
-        assert error["type"] == "missing_required_field"
-        assert error["loc"] == ("fields", "245")
-        assert error["msg"] == "One 245 field must be present in a MARC21 record."
+        assert error == {
+            "ctx": {
+                "input": "245",
+            },
+            "input": "245",
+            "loc": (
+                "fields",
+                "245",
+            ),
+            "msg": "One 245 field must be present in a MARC21 record.",
+            "type": "missing_required_field",
+        }
 
     def test_MarcRecord_multiple_1xx(self, stub_record):
         stub_record.add_ordered_field(
@@ -121,6 +176,15 @@ class TestMarcRecord:
             MarcRecord.model_validate(stub_record, from_attributes=True)
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
+        assert error == {
+            "ctx": {
+                "input": ["100", "110"],
+            },
+            "input": ["100", "110"],
+            "loc": ("fields", "100", "110"),
+            "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
+            "type": "multiple_1xx_fields",
+        }
         assert error["type"] == "multiple_1xx_fields"
         assert error["loc"] == ("fields", "100", "110")
         assert (
@@ -135,50 +199,184 @@ class TestMarcRecord:
         with pytest.raises(ValidationError) as e:
             MarcRecord(leader=record.leader, fields=record.fields)
         errors = e.value.errors()
-        error_count = len(errors)
-        error_types = [i["type"] for i in errors]
-        error_locs = [i["loc"] for i in errors]
-        assert error_count == 9
-        assert sorted(error_types) == sorted(
-            [
-                "invalid_indicator",
-                "invalid_indicator",
-                "subfield_not_allowed",
-                "control_field_length_invalid",
-                "multiple_1xx_fields",
-                "non_repeatable_subfield",
-                "non_repeatable_field",
-                "missing_required_field",
-                "string_pattern_mismatch",
-            ]
-        )
-        assert ("leader",) in error_locs
-        assert ("fields", "001") in error_locs
-        assert ("fields", "006") in error_locs
-        assert ("fields", "100", "110") in error_locs
-        assert ("fields", "245") in error_locs
-        assert ("fields", "336", "ind1") in error_locs
-        assert ("fields", "336", "ind2") in error_locs
-        assert ("fields", "336", "z") in error_locs
-        assert ("fields", "600", "a") in error_locs
+        assert len(errors) == 9
+        assert {
+            "ctx": {
+                "input": "245",
+            },
+            "input": "245",
+            "loc": (
+                "fields",
+                "245",
+            ),
+            "msg": "One 245 field must be present in a MARC21 record.",
+            "type": "missing_required_field",
+        } in errors
+        assert {
+            "ctx": {
+                "input": "p|||||",
+                "length": 6,
+                "tag": "006",
+                "valid": 18,
+            },
+            "input": "p|||||",
+            "loc": ("fields", "006"),
+            "msg": "006: Length appears to be invalid. Reported length is: 6. Expected length is: 18",
+            "type": "control_field_length_invalid",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": "1",
+                "loc": ("336", "ind1"),
+                "tag": "336",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "336", "ind1"),
+            "msg": "336 ind1: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": "1",
+                "loc": ("336", "ind2"),
+                "tag": "336",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "336", "ind2"),
+            "msg": "336 ind2: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "z",
+                "input": [
+                    PydanticSubfield(code="z", value="foo"),
+                ],
+                "loc": ("336", "z"),
+                "tag": "336",
+            },
+            "input": [
+                PydanticSubfield(code="z", value="foo"),
+            ],
+            "loc": ("fields", "336", "z"),
+            "msg": "336 $z: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
+        assert {
+            "type": "non_repeatable_field",
+            "loc": ("fields", "001"),
+            "msg": "001: Has been marked as a non-repeating field.",
+            "input": "001",
+            "ctx": {"input": "001"},
+        } in errors
+        assert {
+            "ctx": {
+                "input": ["100", "110"],
+            },
+            "input": ["100", "110"],
+            "loc": ("fields", "100", "110"),
+            "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
+            "type": "multiple_1xx_fields",
+        } in errors
+        assert {
+            "type": "non_repeatable_subfield",
+            "loc": ("fields", "600", "a"),
+            "msg": "600 $a: Subfield cannot repeat.",
+            "input": [
+                PydanticSubfield(code="a", value="Foo, Bar,"),
+                PydanticSubfield(code="a", value="Foo, Bar,"),
+            ],
+            "ctx": {
+                "loc": ("600", "a"),
+                "input": [
+                    PydanticSubfield(code="a", value="Foo, Bar,"),
+                    PydanticSubfield(code="a", value="Foo, Bar,"),
+                ],
+                "tag": "600",
+                "code": "a",
+            },
+        } in errors
+        assert {
+            "type": "string_pattern_mismatch",
+            "loc": ("leader",),
+            "msg": "String should match pattern '^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\\sa][\\sa]22[0-9]{5}[\\s12345678uzIKLM][\\sacinu][\\sabc]4500$'",
+            "input": "00327cam a2200133       ",
+            "ctx": {
+                "pattern": "^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\\sa][\\sa]22[0-9]{5}[\\s12345678uzIKLM][\\sacinu][\\sabc]4500$"
+            },
+            "url": "https://errors.pydantic.dev/2.10/v/string_pattern_mismatch",
+        } in errors
 
 
 class TestMarcRecordCustomRulesAsContext:
+    """
+    The test record used in these tests (stub_record_invalid_300) contains the
+    following fields and errors:
+        leader: valid
+        001:
+            valid
+        008:
+            valid
+        245:
+            valid
+        300:
+            invalid values for ind1 ("1") and ind2 ("0"). contains invalid
+            subfield "h".
+        910:
+            valid
+    """
+
     def test_default_rules(self, stub_record_invalid_300):
         with pytest.raises(ValidationError) as e:
             MarcRecord.model_validate(stub_record_invalid_300)
         errors = e.value.errors()
         assert len(errors) == 3
-        assert sorted([i["type"] for i in errors]) == sorted(
-            ["invalid_indicator", "invalid_indicator", "subfield_not_allowed"]
-        )
-        assert sorted([i["loc"] for i in errors]) == sorted(
-            [
-                ("fields", "300", "ind1"),
-                ("fields", "300", "ind2"),
-                ("fields", "300", "h"),
-            ]
-        )
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": "1",
+                "loc": ("300", "ind1"),
+                "tag": "300",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "300", "ind1"),
+            "msg": "300 ind1: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": "0",
+                "loc": ("300", "ind2"),
+                "tag": "300",
+                "valid": ["", " "],
+            },
+            "input": "0",
+            "loc": ("fields", "300", "ind2"),
+            "msg": "300 ind2: Invalid data (0). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "h",
+                "input": [
+                    PydanticSubfield(code="h", value="foo"),
+                ],
+                "loc": ("300", "h"),
+                "tag": "300",
+            },
+            "input": [
+                PydanticSubfield(code="h", value="foo"),
+            ],
+            "loc": ("fields", "300", "h"),
+            "msg": "300 $h: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
 
     def test_custom_rules_replace_all_false(self, stub_record_invalid_300):
         custom_rules = {
@@ -199,22 +397,60 @@ class TestMarcRecordCustomRulesAsContext:
             MarcRecord.model_validate(stub_record_invalid_300, context=custom_rules)
         errors = e.value.errors()
         assert len(errors) == 4
-        assert sorted([i["type"] for i in errors]) == sorted(
-            [
-                "control_field_length_invalid",
-                "invalid_indicator",
-                "invalid_indicator",
-                "subfield_not_allowed",
-            ]
-        )
-        assert sorted([i["loc"] for i in errors]) == sorted(
-            [
-                ("fields", "008"),
-                ("fields", "300", "ind1"),
-                ("fields", "300", "ind2"),
-                ("fields", "300", "h"),
-            ]
-        )
+        assert {
+            "ctx": {
+                "input": "190306s2017    ht a   j      000 1 hat d",
+                "length": 40,
+                "tag": "008",
+                "valid": 30,
+            },
+            "input": "190306s2017    ht a   j      000 1 hat d",
+            "loc": ("fields", "008"),
+            "msg": "008: Length appears to be invalid. Reported length is: 40. Expected length is: 30",
+            "type": "control_field_length_invalid",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": "1",
+                "loc": ("300", "ind1"),
+                "tag": "300",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "300", "ind1"),
+            "msg": "300 ind1: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": "0",
+                "loc": ("300", "ind2"),
+                "tag": "300",
+                "valid": ["", " "],
+            },
+            "input": "0",
+            "loc": ("fields", "300", "ind2"),
+            "msg": "300 ind2: Invalid data (0). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "h",
+                "input": [
+                    PydanticSubfield(code="h", value="foo"),
+                ],
+                "loc": ("300", "h"),
+                "tag": "300",
+            },
+            "input": [
+                PydanticSubfield(code="h", value="foo"),
+            ],
+            "loc": ("fields", "300", "h"),
+            "msg": "300 $h: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
 
     def test_custom_rules_replace_existing(self, stub_record_invalid_300):
         custom_rules = {
@@ -247,32 +483,134 @@ class TestMarcRecordCustomRulesAsContext:
             MarcRecord.model_validate(stub_record_invalid_300, context=custom_rules)
         errors = e.value.errors()
         assert len(errors) == 9
-        assert sorted([i["type"] for i in errors]) == sorted(
-            [
-                "control_field_length_invalid",
-                "invalid_indicator",
-                "invalid_indicator",
-                "invalid_indicator",
-                "invalid_indicator",
-                "subfield_not_allowed",
-                "subfield_not_allowed",
-                "subfield_not_allowed",
-                "subfield_not_allowed",
-            ]
-        )
-        assert sorted([i["loc"] for i in errors]) == sorted(
-            [
-                ("fields", "008"),
-                ("fields", "245", "ind1"),
-                ("fields", "245", "ind2"),
-                ("fields", "245", "a"),
-                ("fields", "245", "b"),
-                ("fields", "245", "c"),
-                ("fields", "300", "ind1"),
-                ("fields", "300", "ind2"),
-                ("fields", "300", "h"),
-            ]
-        )
+        assert {
+            "ctx": {
+                "input": "190306s2017    ht a   j      000 1 hat d",
+                "length": 40,
+                "tag": "008",
+                "valid": 30,
+            },
+            "input": "190306s2017    ht a   j      000 1 hat d",
+            "loc": ("fields", "008"),
+            "msg": "008: Length appears to be invalid. Reported length is: 40. Expected length is: 30",
+            "type": "control_field_length_invalid",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": "0",
+                "loc": ("245", "ind1"),
+                "tag": "245",
+                "valid": [" ", ""],
+            },
+            "input": "0",
+            "loc": ("fields", "245", "ind1"),
+            "msg": "245 ind1: Invalid data (0). Indicator should be [' ', ''].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": "0",
+                "loc": ("245", "ind2"),
+                "tag": "245",
+                "valid": [" ", ""],
+            },
+            "input": "0",
+            "loc": ("fields", "245", "ind2"),
+            "msg": "245 ind2: Invalid data (0). Indicator should be [' ', ''].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "a",
+                "input": [
+                    PydanticSubfield(code="a", value="Title :"),
+                ],
+                "loc": ("245", "a"),
+                "tag": "245",
+            },
+            "input": [
+                PydanticSubfield(code="a", value="Title :"),
+            ],
+            "loc": ("fields", "245", "a"),
+            "msg": "245 $a: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "b",
+                "input": [
+                    PydanticSubfield(code="b", value="subtitle /"),
+                ],
+                "loc": ("245", "b"),
+                "tag": "245",
+            },
+            "input": [
+                PydanticSubfield(code="b", value="subtitle /"),
+            ],
+            "loc": ("fields", "245", "b"),
+            "msg": "245 $b: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "c",
+                "input": [
+                    PydanticSubfield(code="c", value="Author"),
+                ],
+                "loc": ("245", "c"),
+                "tag": "245",
+            },
+            "input": [
+                PydanticSubfield(code="c", value="Author"),
+            ],
+            "loc": ("fields", "245", "c"),
+            "msg": "245 $c: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": "1",
+                "loc": ("300", "ind1"),
+                "tag": "300",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "300", "ind1"),
+            "msg": "300 ind1: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": "0",
+                "loc": ("300", "ind2"),
+                "tag": "300",
+                "valid": ["", " "],
+            },
+            "input": "0",
+            "loc": ("fields", "300", "ind2"),
+            "msg": "300 ind2: Invalid data (0). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "h",
+                "input": [
+                    PydanticSubfield(code="h", value="foo"),
+                ],
+                "loc": ("300", "h"),
+                "tag": "300",
+            },
+            "input": [
+                PydanticSubfield(code="h", value="foo"),
+            ],
+            "loc": ("fields", "300", "h"),
+            "msg": "300 $h: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
 
     def test_custom_rules_replace_all_true(self, stub_record_invalid_300):
         custom_rules = {
@@ -293,10 +631,18 @@ class TestMarcRecordCustomRulesAsContext:
             MarcRecord.model_validate(stub_record_invalid_300, context=custom_rules)
         errors = e.value.errors()
         assert len(errors) == 1
-        assert sorted([i["type"] for i in errors]) == sorted(
-            ["control_field_length_invalid"]
-        )
-        assert sorted([i["loc"] for i in errors]) == sorted([("fields", "008")])
+        assert {
+            "ctx": {
+                "input": "190306s2017    ht a   j      000 1 hat d",
+                "length": 40,
+                "tag": "008",
+                "valid": 30,
+            },
+            "input": "190306s2017    ht a   j      000 1 hat d",
+            "loc": ("fields", "008"),
+            "msg": "008: Length appears to be invalid. Reported length is: 40. Expected length is: 30",
+            "type": "control_field_length_invalid",
+        } in errors
 
 
 class TestMarcRecordCustomRulesPassedToModel:
@@ -400,10 +746,18 @@ class TestMarcRecordCustomRulesPassedToModel:
             MarcRecord.model_validate(data)
         errors = e.value.errors()
         assert len(errors) == 1
-        assert sorted([i["type"] for i in errors]) == sorted(
-            ["control_field_length_invalid"]
-        )
-        assert sorted([i["loc"] for i in errors]) == sorted([("fields", "008")])
+        assert {
+            "ctx": {
+                "input": "190306s2017    ht a   j      000 1 hat d",
+                "length": 40,
+                "tag": "008",
+                "valid": 30,
+            },
+            "input": "190306s2017    ht a   j      000 1 hat d",
+            "loc": ("fields", "008"),
+            "msg": "008: Length appears to be invalid. Reported length is: 40. Expected length is: 30",
+            "type": "control_field_length_invalid",
+        } in errors
 
     def test_no_marc_rules(self, stub_record_invalid_300):
         data = {
