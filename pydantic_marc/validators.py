@@ -117,12 +117,6 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     return raise_validation_errors(errors=all_errors, data=data)
 
 
-def validate_fixed_field(data: Any, info: ValidationInfo) -> Any:
-    """ """
-    errors = get_leader_errors(data=str(data), info=info)
-    return raise_validation_errors(errors=errors, data=str(data))
-
-
 def validate_leader(data: Any, info: ValidationInfo) -> Any:
     """
     Confirm that the value passed to the `MarcRecord.leader` attribute conforms to the
