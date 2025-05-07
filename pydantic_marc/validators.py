@@ -12,6 +12,7 @@ from pydantic import ValidationInfo
 from pydantic_marc.error_handlers import (
     get_control_field_errors,
     get_indicator_errors,
+    get_leader_errors,
     get_marc_field_errors,
     get_subfield_errors,
 )
@@ -114,3 +115,34 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     all_errors.extend(errors)
 
     return raise_validation_errors(errors=all_errors, data=data)
+
+
+def validate_fixed_field(data: Any, info: ValidationInfo) -> Any:
+    """ """
+    errors = get_leader_errors(data=str(data), info=info)
+    return raise_validation_errors(errors=errors, data=str(data))
+
+
+def validate_leader(data: Any, info: ValidationInfo) -> Any:
+    """
+    Confirm that the value passed to the `MarcRecord.leader` attribute conforms to the
+    rules passed to the `MarcRecord.rules` attribute. If the values do not match the rules for that field, one or more `InvalidLeaderByte` errors will be raised.
+
+    This is a the `BeforeValidator` on the `leader` field and runs before validating
+    the model. These errors will be collected and raised with any other errors identified while validating the `MarcRecord`.
+
+    Args:
+
+        data: The input data passed to the `MarcRecord.leader` attribute.
+        info: A `ValidationInfo` object.
+
+    Returns:
+
+        A list of `MarcCustomError` objects.
+
+
+    Raises:
+        `ValidationError` if the there are any MARC validation errors
+    """
+    errors = get_leader_errors(data=str(data), info=info)
+    return raise_validation_errors(errors=errors, data=str(data))

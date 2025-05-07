@@ -23,6 +23,7 @@ from pydantic_core import InitErrorDetails
 from pydantic_marc.errors import (
     ControlFieldLength,
     InvalidIndicator,
+    InvalidLeader,
     InvalidSubfield,
     MissingRequiredField,
     MultipleMainEntryValues,
@@ -170,4 +171,40 @@ def get_marc_field_errors(
             errors.append(MissingRequiredField({"input": tag}).error_details)
     if len(main_entries) > 1:
         errors.append(MultipleMainEntryValues({"input": main_entries}).error_details)
+    return errors
+
+
+def get_leader_errors(data: Any, info: ValidationInfo) -> List[InitErrorDetails]:
+    """
+    Validate each character in a string against the allowed values each byte in a
+    MARC leader.
+
+    If the value does not match the rules for the leader, an `InvalidLeader`
+    error will be added to the list of errors and returned.
+
+    Args:
+        data: A string passed to the `MarcRecord.leader` attribute.
+        info: A `ValidationInfo` context used to extract applicable rules.
+
+    Returns:
+
+        A list of `MarcCustomError` objects.
+    """
+    errors: list = []
+    rules = info.data["rules"]
+    if not rules or not rules.rules:
+        return errors
+    rule = rules.rules.get("LDR")
+    if not rule or not rule.values:
+        return errors
+    data = str(data)
+    for i, c in enumerate(data):
+        position = str(i).zfill(2)
+        valid = rule.values.get(f"{position}", [])
+        if c not in valid:
+            errors.append(
+                InvalidLeader(
+                    {"input": c, "loc": f"{position}", "valid": valid}
+                ).error_details
+            )
     return errors

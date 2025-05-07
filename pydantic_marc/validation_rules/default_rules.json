@@ -1,4 +1,39 @@
 {
+"LDR": {
+    "tag": "LDR",
+    "repeatable": false,
+    "ind1": null,
+    "ind2": null,
+    "subfields": null,
+    "length": null,
+    "required": null,
+    "values": {
+        "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "03": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "04": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "05": ["a", "c", "d", "n", "p"],
+        "06": ["a", "c", "d", "e", "f", "g", "i", "j", "k", "m", "o", "p", "r", "t"],
+        "07": ["a", "b", "c", "d", "i", "m", "s"],
+        "08": [" ", "a"],
+        "09": [" ", "a"],
+        "10": ["2"],
+        "11": ["2"],
+        "12": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "13": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "14": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "15": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "16": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        "17": [" ", "1", "2", "3", "4", "5", "6", "7", "8","u","z", "I", "K", "L", "M"],
+        "18": [" ", "a", "c", "i", "n", "u"],
+        "19": [" ", "a", "b", "c"],
+        "20": ["4"],
+        "21": ["5"],
+        "22": ["0"],
+        "23": ["0"]
+    }
+},
     "001": {
         "tag": "001",
         "repeatable": false,
@@ -6,7 +41,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "003": {
         "tag": "003",
@@ -15,7 +51,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "005": {
         "tag": "005",
@@ -24,7 +61,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "006": {
         "tag": "006",
@@ -33,7 +71,8 @@
         "ind2": null,
         "subfields": null,
         "length": 18,
-        "required": false
+        "required": false,
+        "values": null
     },
     "007": {
         "tag": "007",
@@ -58,7 +97,8 @@
             "v": 9,
             "z": 2
         },
-        "required": false
+        "required": false,
+        "values": null
     },
     "008": {
         "tag": "008",
@@ -67,7 +107,8 @@
         "ind2": null,
         "subfields": null,
         "length": 40,
-        "required": true
+        "required": true,
+        "values": null
     },
     "010": {
         "tag": "010",
@@ -80,7 +121,8 @@
             "non_repeatable": ["a"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "013": {
         "tag": "013",
@@ -93,7 +135,8 @@
             "non_repeatable": ["a", "b", "c", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "015": {
         "tag": "015",
@@ -106,7 +149,8 @@
             "non_repeatable": ["2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "016": {
         "tag": "016",
@@ -119,7 +163,8 @@
             "non_repeatable": ["a", "2"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "017": {
         "tag": "017",
@@ -132,7 +177,8 @@
             "non_repeatable": ["b", "d", "i", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "018": {
         "tag": "018",
@@ -145,7 +191,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "020": {
         "tag": "020",
@@ -158,7 +205,8 @@
             "non_repeatable": ["a", "c", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "022": {
         "tag": "022",
@@ -171,7 +219,8 @@
             "non_repeatable": ["a", "l", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "024": {
         "tag": "024",
@@ -184,7 +233,8 @@
             "non_repeatable": ["a", "c", "d", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "025": {
         "tag": "025",
@@ -197,7 +247,8 @@
             "non_repeatable": []
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "026": {
         "tag": "026",
@@ -210,7 +261,8 @@
             "non_repeatable": ["c", "e", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "027": {
         "tag": "027",
@@ -223,7 +275,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "028": {
         "tag": "028",
@@ -236,7 +289,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "030": {
         "tag": "030",
@@ -249,7 +303,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "031": {
         "tag": "031",
@@ -296,7 +351,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "032": {
         "tag": "032",
@@ -309,7 +365,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "033": {
         "tag": "033",
@@ -322,7 +379,8 @@
             "non_repeatable": ["3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "034": {
         "tag": "034",
@@ -376,7 +434,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "035": {
         "tag": "035",
@@ -389,7 +448,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "036": {
         "tag": "036",
@@ -402,7 +462,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "037": {
         "tag": "037",
@@ -415,7 +476,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "038": {
         "tag": "038",
@@ -428,7 +490,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "040": {
         "tag": "040",
@@ -441,7 +504,8 @@
             "non_repeatable": ["a", "b", "c", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "041": {
         "tag": "041",
@@ -492,7 +556,8 @@
             "non_repeatable": ["2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "042": {
         "tag": "042",
@@ -501,7 +566,8 @@
         "ind2": ["", " "],
         "subfields": {"valid": ["a"], "repeatable": ["a"], "non_repeatable": []},
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "043": {
         "tag": "043",
@@ -514,7 +580,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "044": {
         "tag": "044",
@@ -527,7 +594,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "045": {
         "tag": "045",
@@ -540,7 +608,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "046": {
         "tag": "046",
@@ -566,7 +635,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "047": {
         "tag": "047",
@@ -579,7 +649,8 @@
             "non_repeatable": ["2"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "048": {
         "tag": "048",
@@ -592,7 +663,8 @@
             "non_repeatable": ["2"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "050": {
         "tag": "050",
@@ -605,7 +677,8 @@
             "non_repeatable": ["b", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "051": {
         "tag": "051",
@@ -618,7 +691,8 @@
             "non_repeatable": ["a", "b", "c"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "052": {
         "tag": "052",
@@ -631,7 +705,8 @@
             "non_repeatable": ["a", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "055": {
         "tag": "055",
@@ -644,7 +719,8 @@
             "non_repeatable": ["a", "b", "2"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "060": {
         "tag": "060",
@@ -657,7 +733,8 @@
             "non_repeatable": ["b"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "061": {
         "tag": "061",
@@ -670,7 +747,8 @@
             "non_repeatable": ["b", "c"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "066": {
         "tag": "066",
@@ -683,7 +761,8 @@
             "non_repeatable": ["a", "b"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "070": {
         "tag": "070",
@@ -696,7 +775,8 @@
             "non_repeatable": ["b"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "071": {
         "tag": "071",
@@ -709,7 +789,8 @@
             "non_repeatable": ["b", "c"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "072": {
         "tag": "072",
@@ -722,7 +803,8 @@
             "non_repeatable": ["a", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "074": {
         "tag": "074",
@@ -735,7 +817,8 @@
             "non_repeatable": ["a"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "080": {
         "tag": "080",
@@ -748,7 +831,8 @@
             "non_repeatable": ["a", "b", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "082": {
         "tag": "082",
@@ -761,7 +845,8 @@
             "non_repeatable": ["b", "m", "q", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "083": {
         "tag": "083",
@@ -774,7 +859,8 @@
             "non_repeatable": ["m", "q", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "084": {
         "tag": "084",
@@ -787,7 +873,8 @@
             "non_repeatable": ["b", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "085": {
         "tag": "085",
@@ -833,7 +920,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "086": {
         "tag": "086",
@@ -846,7 +934,8 @@
             "non_repeatable": ["a", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "088": {
         "tag": "088",
@@ -859,7 +948,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "100": {
         "tag": "100",
@@ -894,7 +984,8 @@
             "non_repeatable": ["a", "b", "d", "f", "g", "l", "q", "t", "u", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "110": {
         "tag": "110",
@@ -927,7 +1018,8 @@
             "non_repeatable": ["a", "c", "f", "g", "l", "t", "u", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "111": {
         "tag": "111",
@@ -961,7 +1053,8 @@
             "non_repeatable": ["a", "c", "d", "f", "g", "l", "q", "t", "u", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "130": {
         "tag": "130",
@@ -994,7 +1087,8 @@
             "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "t", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "210": {
         "tag": "210",
@@ -1007,7 +1101,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "222": {
         "tag": "222",
@@ -1020,7 +1115,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "240": {
         "tag": "240",
@@ -1052,7 +1148,8 @@
             "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "242": {
         "tag": "242",
@@ -1065,7 +1162,8 @@
             "non_repeatable": ["a", "b", "c", "h", "y", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "243": {
         "tag": "243",
@@ -1094,7 +1192,8 @@
             "non_repeatable": ["a", "f", "g", "h", "l", "o", "r", "s", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "245": {
         "tag": "245",
@@ -1107,7 +1206,8 @@
             "non_repeatable": ["a", "b", "c", "f", "g", "h", "s", "6"]
         },
         "length": null,
-        "required": true
+        "required": true,
+        "values": null
     },
     "246": {
         "tag": "246",
@@ -1120,7 +1220,8 @@
             "non_repeatable": ["a", "b", "f", "g", "h", "i", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "247": {
         "tag": "247",
@@ -1133,7 +1234,8 @@
             "non_repeatable": ["a", "b", "f", "g", "h", "x", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "250": {
         "tag": "250",
@@ -1146,7 +1248,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "251": {
         "tag": "251",
@@ -1159,7 +1262,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "254": {
         "tag": "254",
@@ -1172,7 +1276,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "255": {
         "tag": "255",
@@ -1185,7 +1290,8 @@
             "non_repeatable": ["a", "b", "c", "d", "e", "f", "g", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "256": {
         "tag": "256",
@@ -1198,7 +1304,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "257": {
         "tag": "257",
@@ -1211,7 +1318,8 @@
             "non_repeatable": ["2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "258": {
         "tag": "258",
@@ -1224,7 +1332,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "260": {
         "tag": "260",
@@ -1237,7 +1346,8 @@
             "non_repeatable": ["d", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "261": {
         "tag": "261",
@@ -1250,7 +1360,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "262": {
         "tag": "262",
@@ -1263,7 +1374,8 @@
             "non_repeatable": ["a", "b", "c", "k", "l", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "263": {
         "tag": "263",
@@ -1276,7 +1388,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "264": {
         "tag": "264",
@@ -1289,7 +1402,8 @@
             "non_repeatable": ["3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "270": {
         "tag": "270",
@@ -1324,7 +1438,8 @@
             "non_repeatable": ["b", "c", "d", "e", "f", "g", "h", "i", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "300": {
         "tag": "300",
@@ -1337,7 +1452,8 @@
             "non_repeatable": ["b", "e", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "306": {
         "tag": "306",
@@ -1350,7 +1466,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "307": {
         "tag": "307",
@@ -1363,7 +1480,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "310": {
         "tag": "310",
@@ -1376,7 +1494,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "321": {
         "tag": "321",
@@ -1389,7 +1508,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "336": {
         "tag": "336",
@@ -1402,7 +1522,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "337": {
         "tag": "337",
@@ -1415,7 +1536,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "338": {
         "tag": "338",
@@ -1428,7 +1550,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "340": {
         "tag": "340",
@@ -1480,7 +1603,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "342": {
         "tag": "342",
@@ -1542,7 +1666,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "343": {
         "tag": "343",
@@ -1555,7 +1680,8 @@
             "non_repeatable": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "344": {
         "tag": "344",
@@ -1583,7 +1709,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "345": {
         "tag": "345",
@@ -1596,7 +1723,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "346": {
         "tag": "346",
@@ -1609,7 +1737,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "347": {
         "tag": "347",
@@ -1622,7 +1751,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "348": {
         "tag": "348",
@@ -1635,7 +1765,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "351": {
         "tag": "351",
@@ -1648,7 +1779,8 @@
             "non_repeatable": ["c", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "352": {
         "tag": "352",
@@ -1661,7 +1793,8 @@
             "non_repeatable": ["a", "d", "e", "f", "g", "i", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "355": {
         "tag": "355",
@@ -1674,7 +1807,8 @@
             "non_repeatable": ["a", "d", "e", "f", "g", "h", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "357": {
         "tag": "357",
@@ -1687,7 +1821,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "362": {
         "tag": "362",
@@ -1700,7 +1835,8 @@
             "non_repeatable": ["a", "z", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "363": {
         "tag": "363",
@@ -1751,7 +1887,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "365": {
         "tag": "365",
@@ -1795,7 +1932,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "366": {
         "tag": "366",
@@ -1821,7 +1959,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "370": {
         "tag": "370",
@@ -1834,7 +1973,8 @@
             "non_repeatable": ["s", "t", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "377": {
         "tag": "377",
@@ -1847,7 +1987,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "380": {
         "tag": "380",
@@ -1860,7 +2001,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "381": {
         "tag": "381",
@@ -1873,7 +2015,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "382": {
         "tag": "382",
@@ -1903,7 +2046,8 @@
             "non_repeatable": ["r", "s", "t", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "383": {
         "tag": "383",
@@ -1916,7 +2060,8 @@
             "non_repeatable": ["d", "e", "2", "6", "8"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "384": {
         "tag": "384",
@@ -1929,7 +2074,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "385": {
         "tag": "385",
@@ -1942,7 +2088,8 @@
             "non_repeatable": ["m", "n", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "386": {
         "tag": "386",
@@ -1955,7 +2102,8 @@
             "non_repeatable": ["m", "n", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "388": {
         "tag": "388",
@@ -1968,7 +2116,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "400": {
         "tag": "400",
@@ -2000,7 +2149,8 @@
             "non_repeatable": ["a", "b", "d", "f", "g", "l", "t", "u", "v", "x", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "410": {
         "tag": "410",
@@ -2032,7 +2182,8 @@
             "non_repeatable": ["a", "c", "f", "g", "l", "t", "u", "v", "x", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "411": {
         "tag": "411",
@@ -2077,7 +2228,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "440": {
         "tag": "440",
@@ -2090,7 +2242,8 @@
             "non_repeatable": ["a", "v", "x", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "490": {
         "tag": "490",
@@ -2103,7 +2256,8 @@
             "non_repeatable": ["l", "x", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "500": {
         "tag": "500",
@@ -2116,7 +2270,8 @@
             "non_repeatable": ["a", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "501": {
         "tag": "501",
@@ -2129,7 +2284,8 @@
             "non_repeatable": ["a", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "502": {
         "tag": "502",
@@ -2142,7 +2298,8 @@
             "non_repeatable": ["a", "b", "c", "d", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "504": {
         "tag": "504",
@@ -2155,7 +2312,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "505": {
         "tag": "505",
@@ -2168,7 +2326,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "506": {
         "tag": "506",
@@ -2181,7 +2340,8 @@
             "non_repeatable": ["a", "2", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "507": {
         "tag": "507",
@@ -2194,7 +2354,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "508": {
         "tag": "508",
@@ -2207,7 +2368,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "510": {
         "tag": "510",
@@ -2220,7 +2382,8 @@
             "non_repeatable": ["a", "b", "c", "x", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "511": {
         "tag": "511",
@@ -2233,7 +2396,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "513": {
         "tag": "513",
@@ -2246,7 +2410,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "514": {
         "tag": "514",
@@ -2276,7 +2441,8 @@
             "non_repeatable": ["a", "d", "e", "f", "i", "m", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "515": {
         "tag": "515",
@@ -2289,7 +2455,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "516": {
         "tag": "516",
@@ -2302,7 +2469,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "518": {
         "tag": "518",
@@ -2315,7 +2483,8 @@
             "non_repeatable": ["a", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "520": {
         "tag": "520",
@@ -2328,7 +2497,8 @@
             "non_repeatable": ["a", "b", "c", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "521": {
         "tag": "521",
@@ -2341,7 +2511,8 @@
             "non_repeatable": ["b", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "522": {
         "tag": "522",
@@ -2354,7 +2525,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "524": {
         "tag": "524",
@@ -2367,7 +2539,8 @@
             "non_repeatable": ["a", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "525": {
         "tag": "525",
@@ -2380,7 +2553,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "526": {
         "tag": "526",
@@ -2393,7 +2567,8 @@
             "non_repeatable": ["a", "b", "c", "d", "i", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "530": {
         "tag": "530",
@@ -2406,7 +2581,8 @@
             "non_repeatable": ["a", "b", "c", "d", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "533": {
         "tag": "533",
@@ -2419,7 +2595,8 @@
             "non_repeatable": ["a", "d", "e", "3", "5", "6", "7"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "534": {
         "tag": "534",
@@ -2449,7 +2626,8 @@
             "non_repeatable": ["a", "b", "c", "e", "l", "m", "p", "t", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "535": {
         "tag": "535",
@@ -2462,7 +2640,8 @@
             "non_repeatable": ["a", "g", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "536": {
         "tag": "536",
@@ -2475,7 +2654,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "538": {
         "tag": "538",
@@ -2488,7 +2668,8 @@
             "non_repeatable": ["a", "i", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "540": {
         "tag": "540",
@@ -2501,7 +2682,8 @@
             "non_repeatable": ["a", "b", "c", "d", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "541": {
         "tag": "541",
@@ -2514,7 +2696,8 @@
             "non_repeatable": ["a", "b", "c", "d", "e", "f", "h", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "542": {
         "tag": "542",
@@ -2565,7 +2748,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "544": {
         "tag": "544",
@@ -2578,7 +2762,8 @@
             "non_repeatable": ["3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "545": {
         "tag": "545",
@@ -2591,7 +2776,8 @@
             "non_repeatable": ["a", "b", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "546": {
         "tag": "546",
@@ -2604,7 +2790,8 @@
             "non_repeatable": ["a", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "547": {
         "tag": "547",
@@ -2617,7 +2804,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "550": {
         "tag": "550",
@@ -2630,7 +2818,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "552": {
         "tag": "552",
@@ -2678,7 +2867,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "555": {
         "tag": "555",
@@ -2691,7 +2881,8 @@
             "non_repeatable": ["a", "c", "d", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "556": {
         "tag": "556",
@@ -2704,7 +2895,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "561": {
         "tag": "561",
@@ -2717,7 +2909,8 @@
             "non_repeatable": ["a", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "562": {
         "tag": "562",
@@ -2730,7 +2923,8 @@
             "non_repeatable": ["3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "563": {
         "tag": "563",
@@ -2743,7 +2937,8 @@
             "non_repeatable": ["a", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "565": {
         "tag": "565",
@@ -2756,7 +2951,8 @@
             "non_repeatable": ["a", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "567": {
         "tag": "567",
@@ -2769,7 +2965,8 @@
             "non_repeatable": ["a", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "580": {
         "tag": "580",
@@ -2782,7 +2979,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "581": {
         "tag": "581",
@@ -2795,7 +2993,8 @@
             "non_repeatable": ["a", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "583": {
         "tag": "583",
@@ -2847,7 +3046,8 @@
             "non_repeatable": ["a", "2", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "584": {
         "tag": "584",
@@ -2860,7 +3060,8 @@
             "non_repeatable": ["3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "585": {
         "tag": "585",
@@ -2873,7 +3074,8 @@
             "non_repeatable": ["a", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "586": {
         "tag": "586",
@@ -2886,7 +3088,8 @@
             "non_repeatable": ["a", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "588": {
         "tag": "588",
@@ -2899,7 +3102,8 @@
             "non_repeatable": ["a", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "600": {
         "tag": "600",
@@ -2977,7 +3181,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "610": {
         "tag": "610",
@@ -3051,7 +3256,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "611": {
         "tag": "611",
@@ -3121,7 +3327,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "630": {
         "tag": "630",
@@ -3189,7 +3396,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "647": {
         "tag": "647",
@@ -3217,7 +3425,8 @@
             "non_repeatable": ["a", "d", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "648": {
         "tag": "648",
@@ -3230,7 +3439,8 @@
             "non_repeatable": ["a", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "650": {
         "tag": "650",
@@ -3260,7 +3470,8 @@
             "non_repeatable": ["a", "b", "c", "d", "e", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "651": {
         "tag": "651",
@@ -3273,7 +3484,8 @@
             "non_repeatable": ["a", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "653": {
         "tag": "653",
@@ -3286,7 +3498,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "654": {
         "tag": "654",
@@ -3314,7 +3527,8 @@
             "non_repeatable": ["2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "655": {
         "tag": "655",
@@ -3342,7 +3556,8 @@
             "non_repeatable": ["a", "2", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "656": {
         "tag": "656",
@@ -3355,7 +3570,8 @@
             "non_repeatable": ["a", "k", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "657": {
         "tag": "657",
@@ -3368,7 +3584,8 @@
             "non_repeatable": ["a", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "658": {
         "tag": "658",
@@ -3381,7 +3598,8 @@
             "non_repeatable": ["a", "c", "d", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "662": {
         "tag": "662",
@@ -3409,7 +3627,8 @@
             "non_repeatable": ["b", "d", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "700": {
         "tag": "700",
@@ -3471,7 +3690,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "710": {
         "tag": "710",
@@ -3529,7 +3749,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "711": {
         "tag": "711",
@@ -3585,7 +3806,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "720": {
         "tag": "720",
@@ -3598,7 +3820,8 @@
             "non_repeatable": ["a", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "730": {
         "tag": "730",
@@ -3650,7 +3873,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "740": {
         "tag": "740",
@@ -3663,7 +3887,8 @@
             "non_repeatable": ["a", "h", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "751": {
         "tag": "751",
@@ -3676,7 +3901,8 @@
             "non_repeatable": ["a", "2", "3", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "752": {
         "tag": "752",
@@ -3689,7 +3915,8 @@
             "non_repeatable": ["a", "b", "c", "d", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "753": {
         "tag": "753",
@@ -3702,7 +3929,8 @@
             "non_repeatable": ["a", "b", "c", "2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "754": {
         "tag": "754",
@@ -3715,7 +3943,8 @@
             "non_repeatable": ["2", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "758": {
         "tag": "758",
@@ -3728,7 +3957,8 @@
             "non_repeatable": ["a", "2", "3", "5", "6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "760": {
         "tag": "760",
@@ -3774,7 +4004,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "762": {
         "tag": "762",
@@ -3820,7 +4051,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "765": {
         "tag": "765",
@@ -3871,7 +4103,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "767": {
         "tag": "767",
@@ -3922,7 +4155,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "770": {
         "tag": "770",
@@ -3973,7 +4207,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "772": {
         "tag": "772",
@@ -4024,7 +4259,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "773": {
         "tag": "773",
@@ -4079,7 +4315,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "774": {
         "tag": "774",
@@ -4130,7 +4367,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "775": {
         "tag": "775",
@@ -4185,7 +4423,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "776": {
         "tag": "776",
@@ -4236,7 +4475,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "777": {
         "tag": "777",
@@ -4283,7 +4523,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "780": {
         "tag": "780",
@@ -4334,7 +4575,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "785": {
         "tag": "785",
@@ -4385,7 +4627,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "786": {
         "tag": "786",
@@ -4442,7 +4685,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "787": {
         "tag": "787",
@@ -4493,7 +4737,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "800": {
         "tag": "800",
@@ -4556,7 +4801,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "810": {
         "tag": "810",
@@ -4615,7 +4861,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "811": {
         "tag": "811",
@@ -4672,7 +4919,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "830": {
         "tag": "830",
@@ -4724,7 +4972,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "841": {
         "tag": "841",
@@ -4733,7 +4982,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "842": {
         "tag": "842",
@@ -4742,7 +4992,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "843": {
         "tag": "843",
@@ -4751,7 +5002,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "844": {
         "tag": "844",
@@ -4760,7 +5012,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "845": {
         "tag": "845",
@@ -4769,7 +5022,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "850": {
         "tag": "850",
@@ -4782,7 +5036,8 @@
             "non_repeatable": []
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "852": {
         "tag": "852",
@@ -4848,7 +5103,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "853": {
         "tag": "853",
@@ -4857,7 +5113,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "854": {
         "tag": "854",
@@ -4866,7 +5123,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "855": {
         "tag": "855",
@@ -4875,7 +5133,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "856": {
         "tag": "856",
@@ -4947,7 +5206,8 @@
             ]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "863": {
         "tag": "863",
@@ -4956,7 +5216,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "864": {
         "tag": "864",
@@ -4965,7 +5226,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "865": {
         "tag": "865",
@@ -4974,7 +5236,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "866": {
         "tag": "866",
@@ -4983,7 +5246,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "867": {
         "tag": "867",
@@ -4992,7 +5256,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "868": {
         "tag": "868",
@@ -5001,7 +5266,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "876": {
         "tag": "876",
@@ -5010,7 +5276,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "877": {
         "tag": "877",
@@ -5019,7 +5286,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "878": {
         "tag": "878",
@@ -5028,7 +5296,8 @@
         "ind2": null,
         "subfields": null,
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "880": {
         "tag": "880",
@@ -5114,7 +5383,8 @@
             "non_repeatable": ["2"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "882": {
         "tag": "882",
@@ -5127,7 +5397,8 @@
             "non_repeatable": ["6"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "883": {
         "tag": "883",
@@ -5140,7 +5411,8 @@
             "non_repeatable": ["a", "c", "d", "q", "x", "u"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "884": {
         "tag": "884",
@@ -5153,7 +5425,8 @@
             "non_repeatable": ["a", "g", "k", "q"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "885": {
         "tag": "885",
@@ -5166,7 +5439,8 @@
             "non_repeatable": ["a", "b", "c", "d", "2", "5"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "886": {
         "tag": "886",
@@ -5253,7 +5527,8 @@
             "non_repeatable": []
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     },
     "887": {
         "tag": "887",
@@ -5266,6 +5541,7 @@
             "non_repeatable": ["a", "2"]
         },
         "length": null,
-        "required": false
+        "required": false,
+        "values": null
     }
 }

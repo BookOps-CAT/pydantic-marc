@@ -38,13 +38,14 @@ class Rule(BaseModel, frozen=True):
 
     _default: ClassVar[Mapping] = MappingProxyType(_DefaultRules.rules_from_json())
 
-    tag: Annotated[str, Field(pattern=r"\d\d\d")]
+    tag: Annotated[str, Field(pattern=r"\d\d\d|LDR")]
     repeatable: Union[bool, None] = None
     ind1: Union[List[str], None] = None
     ind2: Union[List[str], None] = None
     subfields: Union[Dict[str, List[str]], None] = None
     length: Union[int, Dict[str, Union[int, List[int]]], None] = None
     required: Union[bool, None] = None
+    values: Union[Dict[str, List[str]], None] = None
 
     @classmethod
     def create_default(cls, tag: str) -> Optional[Rule]:
