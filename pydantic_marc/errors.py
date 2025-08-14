@@ -62,6 +62,28 @@ class InvalidIndicator(MarcCustomError):
         return instance
 
 
+class InvalidFixedField(MarcCustomError):
+    def __new__(cls, context: Dict[str, Any]) -> InvalidFixedField:
+        """
+        Create a new `InvalidLeader` object.
+
+        Args:
+            context: A dictionary containing:
+                loc:
+                    The leader position where the error was found
+                input:
+                    The value passed to the leader.
+
+        """
+        instance = super().__new__(
+            cls,
+            "invalid_leader",
+            "{tag}: Invalid character '{input}' at position '{tag}/{loc}'. Byte should be: {valid}.",
+            context,
+        )
+        return instance
+
+
 class InvalidLeader(MarcCustomError):
     def __new__(cls, context: Dict[str, Any]) -> InvalidLeader:
         """
