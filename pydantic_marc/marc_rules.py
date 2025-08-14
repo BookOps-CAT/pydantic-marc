@@ -45,7 +45,7 @@ class Rule(BaseModel, frozen=True):
     subfields: Union[Dict[str, List[str]], None] = None
     length: Union[int, Dict[str, Union[int, List[int]]], None] = None
     required: Union[bool, None] = None
-    values: Union[Dict[str, List[str]], None] = None
+    values: Union[Dict[str, Any], None] = None
 
     @classmethod
     def create_default(cls, tag: str) -> Optional[Rule]:
