@@ -33,6 +33,8 @@ def make_mock_info():
     def _make_mock_info(
         data: Dict[str, Any], field_name: str, context: Optional[Dict[str, Any]] = None
     ):
+        if "leader" not in data:
+            data["leader"] = "00454cam a22001575i 4500"
         return MockInfo(data=data, context=context, field_name=field_name)
 
     return _make_mock_info
