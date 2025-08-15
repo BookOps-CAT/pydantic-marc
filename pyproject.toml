@@ -29,6 +29,7 @@ addopts = "--cov=pydantic_marc"
 [tool.coverage.run]
 relative_files = true
 source = ["."]
+omit = ["tests/*"]
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
