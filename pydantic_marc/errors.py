@@ -59,7 +59,7 @@ class InvalidIndicator(MarcCustomError):
 class InvalidFixedField(MarcCustomError):
     def __new__(cls, context: Dict[str, Any]) -> InvalidFixedField:
         """
-        Create a new `InvalidLeader` object.
+        Create a new `InvalidFixedField` object.
 
         Args:
             context: A dictionary containing:
@@ -70,7 +70,7 @@ class InvalidFixedField(MarcCustomError):
         """
         instance = super().__new__(
             cls,
-            "invalid_leader",
+            "invalid_fixed_field",
             "{tag}: Invalid character '{input}' at position '{tag}/{loc}'. Byte should be: {valid}.",
             context,
         )
