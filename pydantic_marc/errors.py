@@ -71,7 +71,7 @@ class InvalidFixedField(MarcCustomError):
         instance = super().__new__(
             cls,
             "invalid_fixed_field",
-            "{tag}: Invalid character '{input}' at position '{tag}/{loc}'. "
+            "{tag}: Invalid character(s) '{input}' at position '{tag}/{loc}'. "
             "Byte should be: {valid}.",
             context,
         )

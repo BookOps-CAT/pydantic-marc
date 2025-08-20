@@ -14,7 +14,10 @@ reporting.
 
 from __future__ import annotations
 
+import json
+import os
 from collections import Counter
+from functools import lru_cache
 from typing import Any, List
 
 from pydantic import ValidationInfo
@@ -32,6 +35,26 @@ from pydantic_marc.errors import (
     NonRepeatableSubfield,
 )
 from pydantic_marc.marc_rules import Rule, RuleSet
+
+
+@lru_cache
+def language_rules() -> dict[str, Any]:
+    rules = {}
+    base_dir = os.path.dirname(__file__)
+    json_path = os.path.join(base_dir, "validation_rules", "language_codes.json")
+    with open(json_path, "r", encoding="utf-8") as fh:
+        rules.update({k: v for k, v in json.load(fh).items()})
+    return rules
+
+
+@lru_cache
+def country_rules() -> dict[str, Any]:
+    rules = {}
+    base_dir = os.path.dirname(__file__)
+    json_path = os.path.join(base_dir, "validation_rules", "country_codes.json")
+    with open(json_path, "r", encoding="utf-8") as fh:
+        rules.update({k: v for k, v in json.load(fh).items()})
+    return rules
 
 
 def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetails]:
@@ -62,16 +85,46 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
         return errors
     value_rules = rule.values
     if value_rules:
-        for i, char in enumerate(data):
-            values = value_rules[f"{i:02d}"]
-            if char not in values:
+        data_dict = {f"{i:02d}": char for i, char in enumerate(data)}
+        for position in value_rules.keys():
+            if "-" in position:
+                start, end = position.split("-")
+                keys_in_range = [f"{i:02d}" for i in range(int(start), int(end) + 1)]
+                data_dict[position] = "".join([data_dict[i] for i in keys_in_range])
+                for pos in range(int(start), int(end) + 1):
+                    data_dict.pop(f"{pos:02d}")
+        for loc, char in data_dict.items():
+            values = value_rules.get(loc)
+            if values and char not in values:
                 error_data = {
                     "tag": tag,
                     "input": char,
                     "valid": values,
-                    "loc": f"{i:02d}",
+                    "loc": loc,
                 }
                 errors.append(InvalidFixedField(error_data).error_details)
+    if tag == "008":
+        language_codes = {f"{k.ljust(3, ' ')}": v for k, v in language_rules().items()}
+        if data[35:38] not in language_codes.keys():
+            error_data = {
+                "tag": tag,
+                "input": data[35:38],
+                "valid": "see https://id.loc.gov/vocabulary/languages.html for "
+                "list of valid language codes",
+                "loc": "35-37",
+            }
+            errors.append(InvalidFixedField(error_data).error_details)
+        country_codes = {f"{k.ljust(3, ' ')}": v for k, v in country_rules().items()}
+        if data[15:18] not in country_codes.keys():
+            error_data = {
+                "tag": tag,
+                "input": data[15:18],
+                "valid": "see https://id.loc.gov/vocabulary/countries.html for "
+                "list of valid country codes",
+                "loc": "15-17",
+            }
+            errors.append(InvalidFixedField(error_data).error_details)
+
     return errors
 
 

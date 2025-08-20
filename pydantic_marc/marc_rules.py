@@ -43,6 +43,7 @@ class Rule(BaseModel, frozen=True, extra="allow"):
     length: Union[int, Dict[str, Union[int, List[int]]], None] = None
     required: Union[bool, None] = None
     values: Union[Dict[str, Any], None] = None
+    material_type: Union[str, None] = None
 
 
 class RuleSet(BaseModel, frozen=True):

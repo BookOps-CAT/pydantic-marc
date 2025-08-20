@@ -81,94 +81,124 @@ class TestMarcRecord:
             "type": "invalid_indicator",
         } in errors
 
-    def test_MarcRecord_006_errors(self, stub_record):
-        stub_record.add_field(PymarcField(tag="006", data="a||||||||||||||||z"))
+    @pytest.mark.parametrize(
+        "field_value,leader,error_msg",
+        [
+            (
+                "a|||||||||||||||||",
+                "00454nam a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+            ),
+            (
+                "a|| |||||||||  |||",
+                "00454nas a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+            ),
+            (
+                "cax|||||||||||| | ",
+                "00454ncm a22000005i 4500",
+                "006: Invalid character(s) 'ax' at position '006/01-02'. Byte should be: ['an', 'bd', 'bg', 'bl', 'bt', 'ca', 'cb', 'cc', 'cg', 'ch', 'cl', 'cn', 'co', 'cp', 'cr', 'cs', 'ct', 'cy', 'cz', 'df', 'dv', 'fg', 'fl', 'fm', 'ft', 'gm', 'hy', 'jz', 'mc', 'md', 'mi', 'mo', 'mp', 'mr', 'ms', 'mu', 'mz', 'nc', 'nn', 'op', 'or', 'ov', 'pg', 'pm', 'po', 'pp', 'pr', 'ps', 'pt', 'pv', 'rc', 'rd', 'rg', 'ri', 'rp', 'rq', 'sd', 'sg', 'sn', 'sp', 'st', 'su', 'sy', 'tc', 'tl', 'ts', 'uu', 'vi', 'vr', 'wz', 'za', 'zz', '||'].",
+            ),
+            (
+                "e||||ay |  || | ||",
+                "00454nem a22000005i 4500",
+                "006: Invalid character(s) 'ay' at position '006/05-06'. Byte should be: ['  ', 'aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'am', 'an', 'ap', 'au', 'az', 'ba', 'bb', 'bc', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bk', 'bl', 'bo', 'br', 'bs', 'bu', 'bz', 'ca', 'cb', 'cc', 'ce', 'cp', 'cu', 'cz', 'da', 'db', 'dc', 'dd', 'de', 'df', 'dg', 'dh', 'dl', 'zz', '||'].",
+            ),
+            (
+                "g||| |     ||  |||",
+                "00454ngm a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+            ),
+            (
+                "m||||||||||||||||a",
+                "00454nmm a22000005i 4500",
+                "006: Invalid character(s) 'a' at position '006/17'. Byte should be: [' ', '|'].",
+            ),
+            (
+                "p     |        |  ",
+                "00454npm a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+            ),
+        ],
+    )
+    def test_MarcRecord_006_errors(self, stub_record, field_value, leader, error_msg):
+        stub_record.remove_fields("006", "008")
+        stub_record.leader = leader
+        stub_record.add_field(PymarcField(tag="006", data=field_value))
+        stub_record.add_field(
+            PymarcField(tag="008", data=f"200101s2020    nyu{field_value[1:]}|||||")
+        )
         with pytest.raises(ValidationError) as e:
             MarcRecord.model_validate(stub_record, from_attributes=True)
         errors = e.value.errors()
         assert len(errors) == 2
-        assert {
-            "type": "invalid_fixed_field",
-            "loc": ("fields", "17"),
-            "msg": "006: Invalid character 'z' at position '006/17'. Byte should be: [' ', 'a', 'b', 'c', 'd', '|'].",
-            "input": "z",
-            "ctx": {
-                "tag": "006",
-                "input": "z",
-                "valid": [" ", "a", "b", "c", "d", "|"],
-                "loc": "17",
-            },
-        } in errors
-        assert {
-            "type": "invalid_fixed_field",
-            "loc": ("fields", "15"),
-            "msg": "006: Invalid character '|' at position '006/15'. Byte should be: [' '].",
-            "input": "|",
-            "ctx": {"tag": "006", "input": "|", "valid": [" "], "loc": "15"},
-        } in errors
+        assert errors[0]["type"] == "invalid_fixed_field"
+        assert errors[0]["msg"] == error_msg
+        assert errors[1]["type"] == "invalid_fixed_field"
+        assert "008: Invalid character(s) " in errors[1]["msg"]
 
     @pytest.mark.parametrize(
         "field_value, error_msg",
         [
             (
                 "ad aauuz",
-                "007: Invalid character 'z' at position '007/07'. Byte should be: ['a', 'b', 'm', 'n', '|'].",
+                "007: Invalid character(s) 'z' at position '007/07'. Byte should be: ['a', 'b', 'm', 'n', '|'].",
             ),
             (
                 "c| ||||||||||z",
-                "007: Invalid character 'z' at position '007/13'. Byte should be: ['a', 'n', 'p', 'r', 'u', '|'].",
+                "007: Invalid character(s) 'z' at position '007/13'. Byte should be: ['a', 'n', 'p', 'r', 'u', '|'].",
             ),
             (
                 "d| z||",
-                "007: Invalid character 'z' at position '007/03'. Byte should be: ['a', 'c', '|'].",
+                "007: Invalid character(s) 'z' at position '007/03'. Byte should be: ['a', 'c', '|'].",
             ),
             (
                 "f|z|||||||",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "g|z||||||",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "h|z|||000||||",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "k|z|||",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "m|z||||||||||||||000000",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "oz",
-                "007: Invalid character 'z' at position '007/01'. Byte should be: ['u', '|'].",
+                "007: Invalid character(s) 'z' at position '007/01'. Byte should be: ['u', '|'].",
             ),
             (
                 "qz",
-                "007: Invalid character 'z' at position '007/01'. Byte should be: ['u', '|'].",
+                "007: Invalid character(s) 'z' at position '007/01'. Byte should be: ['u', '|'].",
             ),
             (
                 "r|z||||||||",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "s|z|||||||||||",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "tt",
-                "007: Invalid character 't' at position '007/01'. Byte should be: ['a', 'b', 'c', 'd', 'u', 'z', '|'].",
+                "007: Invalid character(s) 't' at position '007/01'. Byte should be: ['a', 'b', 'c', 'd', 'u', 'z', '|'].",
             ),
             (
                 "v|z||||||",
-                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
             ),
             (
                 "za",
-                "007: Invalid character 'a' at position '007/01'. Byte should be: ['m', 'u', 'z', '|'].",
+                "007: Invalid character(s) 'a' at position '007/01'. Byte should be: ['m', 'u', 'z', '|'].",
             ),
         ],
     )
@@ -187,37 +217,47 @@ class TestMarcRecord:
             (
                 "250101s2020    nyu||||||||||||||||||||||",
                 "00454nam a22000005i 4500",
-                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
             ),
             (
                 "250101s2020    nyu|| |||||||||  ||||||||",
                 "00454nas a22000005i 4500",
-                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
             ),
             (
                 "250101s2020    nyu|||||||||||||||| |||||",
                 "00454ncm a22000005i 4500",
-                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
             ),
             (
                 "250101s2020    nyu|||||| |  || |||||||||",
                 "00454nem a22000005i 4500",
-                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
             ),
             (
                 "250101s2020    nyu||| |     ||  ||||||||",
                 "00454ngm a22000005i 4500",
-                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
             ),
             (
                 "250101s2020    nyu||||||||||||||||a|||||",
                 "00454nmm a22000005i 4500",
-                "008: Invalid character 'a' at position '008/34'. Byte should be: [' ', '|'].",
+                "008: Invalid character(s) 'a' at position '008/34'. Byte should be: [' ', '|'].",
             ),
             (
                 "250101s2020    nyu     |        |  |||||",
                 "00454npm a22000005i 4500",
-                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
+            ),
+            (
+                "250101s2020    nyy|||||||||||||| |||||||",
+                "00454nam a22000005i 4500",
+                "008: Invalid character(s) 'nyy' at position '008/15-17'. Byte should be: see https://id.loc.gov/vocabulary/countries.html for list of valid country codes.",
+            ),
+            (
+                "250101s2020    nyu|||||||||||||| ||zzz||",
+                "00454nam a22000005i 4500",
+                "008: Invalid character(s) 'zzz' at position '008/35-37'. Byte should be: see https://id.loc.gov/vocabulary/languages.html for list of valid language codes.",
             ),
         ],
     )
