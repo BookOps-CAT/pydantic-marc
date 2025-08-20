@@ -295,6 +295,27 @@ class TestMarcRecord:
             ("leader", "04"),
         ]
 
+    def test_MarcRecord_invalid_leader_model_validate(self, stub_record):
+        stub_record.leader = "xxxxxcam a22001575i 4500"
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 5
+        assert [i["type"] for i in errors] == [
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+        ]
+        assert [i["loc"] for i in errors] == [
+            ("leader", "00"),
+            ("leader", "01"),
+            ("leader", "02"),
+            ("leader", "03"),
+            ("leader", "04"),
+        ]
+
     def test_MarcRecord_nr_field_error(self, stub_record):
         stub_record.add_field(PymarcField(tag="001", data="foo"))
         with pytest.raises(ValidationError) as e:
@@ -369,6 +390,143 @@ class TestMarcRecord:
         record = next(reader)
         with pytest.raises(ValidationError) as e:
             MarcRecord(leader=record.leader, fields=record.fields)
+        errors = e.value.errors()
+        assert len(errors) == 12
+        assert {
+            "ctx": {
+                "input": "245",
+            },
+            "input": "245",
+            "loc": (
+                "fields",
+                "245",
+            ),
+            "msg": "One 245 field must be present in a MARC21 record.",
+            "type": "missing_required_field",
+        } in errors
+        assert {
+            "ctx": {
+                "input": "p|||||",
+                "length": 6,
+                "tag": "006",
+                "valid": 18,
+            },
+            "input": "p|||||",
+            "loc": ("fields", "006"),
+            "msg": "006: Length appears to be invalid. Reported length is: 6. Expected length is: 18",
+            "type": "control_field_length_invalid",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": "1",
+                "loc": ("336", "ind1"),
+                "tag": "336",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "336", "ind1"),
+            "msg": "336 ind1: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": "1",
+                "loc": ("336", "ind2"),
+                "tag": "336",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "336", "ind2"),
+            "msg": "336 ind2: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "z",
+                "input": [
+                    PydanticSubfield(code="z", value="foo"),
+                ],
+                "loc": ("336", "z"),
+                "tag": "336",
+            },
+            "input": [
+                PydanticSubfield(code="z", value="foo"),
+            ],
+            "loc": ("fields", "336", "z"),
+            "msg": "336 $z: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
+        assert {
+            "type": "non_repeatable_field",
+            "loc": ("fields", "001"),
+            "msg": "001: Has been marked as a non-repeating field.",
+            "input": "001",
+            "ctx": {"input": "001"},
+        } in errors
+        assert {
+            "ctx": {
+                "input": ["100", "110"],
+            },
+            "input": ["100", "110"],
+            "loc": ("fields", "100", "110"),
+            "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
+            "type": "multiple_1xx_fields",
+        } in errors
+        assert {
+            "type": "non_repeatable_subfield",
+            "loc": ("fields", "600", "a"),
+            "msg": "600 $a: Subfield cannot repeat.",
+            "input": [
+                PydanticSubfield(code="a", value="Foo, Bar,"),
+                PydanticSubfield(code="a", value="Foo, Bar,"),
+            ],
+            "ctx": {
+                "loc": ("600", "a"),
+                "input": [
+                    PydanticSubfield(code="a", value="Foo, Bar,"),
+                    PydanticSubfield(code="a", value="Foo, Bar,"),
+                ],
+                "tag": "600",
+                "code": "a",
+            },
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "20"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Byte should be: ['4'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "21"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Byte should be: ['5'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "22"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Byte should be: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "23"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Byte should be: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
+        } in errors
+
+    def test_MarcRecord_multiple_errors_model_validate(self, stub_invalid_record):
+        record = stub_invalid_record.as_marc21()
+        reader = MARCReader(record)
+        record = next(reader)
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(record, from_attributes=True)
         errors = e.value.errors()
         assert len(errors) == 12
         assert {
