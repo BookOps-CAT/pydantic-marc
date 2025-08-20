@@ -59,7 +59,8 @@ class RuleSet(BaseModel, frozen=True):
         within it.
 
         The function identifies which rules to use in validation by checking two places
-        for MARC rules: the model's validation context, and the model's `rules` attribute.
+        for MARC rules: the model's validation context, and the model's `rules`
+        attribute.
 
         This function first checks if MARC rules were passed to the model via validation
         context (indentified in the `ValidationInfo.context`attribute). It then checks

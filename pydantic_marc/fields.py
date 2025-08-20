@@ -31,7 +31,8 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
     a three-digit string and the `data` attribute is a string that represents the
     value of the control field. The `rules` attribute contains the custom validation
     logic the particular MARC field and is computed passed to the `ControlField` model
-    when it is called within a `MarcRecord` model. The `rules` attribute is not validated nor is it included in serialization.
+    when it is called within a `MarcRecord` model. The `rules` attribute is not
+    validated nor is it included in serialization.
 
     Attributes:
         rules:
@@ -77,8 +78,8 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
         tag:
             A three-digit string that represents the data field's tag.
         indicators:
-            A `PydanticIndicators` object or a `Sequence` object representing the field's
-            indicators.
+            A `PydanticIndicators` object or a `Sequence` object representing the
+            field's indicators.
         subfields:
             A list of `PydanticSubfield` objects.
 
@@ -132,7 +133,8 @@ class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attribute
 class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
     A class that defines a single subfield within  a `DataField` object. Each subfield
-    must contain a `code` attribute as a single character string and a `value` attribute.
+    must contain a `code` attribute as a single character string and a `value`
+    attribute.
 
     Args:
         code: The subfield's code. Must be a single character string.

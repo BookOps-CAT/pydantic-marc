@@ -34,7 +34,8 @@ def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[An
     This function creates a `RuleSet` from the provided `ValidationInfo` and uses it
     to add each field in the `data` list with the appropriate `Rule` based on the
     field's tag. The function constructs a list of dicts representing the fields,
-    each enriched with its tag, rule, and either control field data or indicators/subfields.
+    each enriched with its tag, rule, and either control field data or
+    indicators/subfields.
 
     Args:
         data:

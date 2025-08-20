@@ -1,6 +1,7 @@
 """Custom validation functions for `ControlField`, `DataField`, and `MarcRecord` models.
 
-The validator functions in this module are used as either after or wrap validators depending on the field and model.
+The validator functions in this module are used as either after or wrap validators
+depending on the field and model.
 """
 
 from __future__ import annotations
@@ -56,7 +57,8 @@ def validate_field(data: Any, info: ValidationInfo) -> Any:
 def validate_marc_data(data: Any, info: ValidationInfo) -> Any:
     """
     Confirm that the values passed to the `MarcRecord.fields` attribute conform to the
-    rules passed to the `MarcRecord.rules` attribute. If the values do not match the rules for that field, a `NonRepeatableField` error, a `MissingRequiredField`
+    rules passed to the `MarcRecord.rules` attribute. If the values do not match the
+    rules for that field, a `NonRepeatableField` error, a `MissingRequiredField`
     error and/or a `MultipleMainEntryValues` error will be raised.
 
     This is a part of the `WrapValidator` on the `fields` field and runs before
@@ -85,7 +87,8 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     """
     Confirm that the values passed to the `MarcRecord.fields` attribute conforms to the
     defined for the record. If the values do not match the rules for
-    the record, a `NonRepeatableField` error, a `MissingRequiredField` error and/or a `MultipleMainEntryValues` error will be raised.
+    the record, a `NonRepeatableField` error, a `MissingRequiredField` error and/or a
+    `MultipleMainEntryValues` error will be raised.
 
 
     This function is called before validation of the `MarcRecord` model within the
@@ -120,10 +123,12 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
 def validate_leader(data: Any, info: ValidationInfo) -> Any:
     """
     Confirm that the value passed to the `MarcRecord.leader` attribute conforms to the
-    rules passed to the `MarcRecord.rules` attribute. If the values do not match the rules for that field, one or more `InvalidLeaderByte` errors will be raised.
+    rules passed to the `MarcRecord.rules` attribute. If the values do not match the
+    rules for that field, one or more `InvalidLeaderByte` errors will be raised.
 
     This is a the `BeforeValidator` on the `leader` field and runs before validating
-    the model. These errors will be collected and raised with any other errors identified while validating the `MarcRecord`.
+    the model. These errors will be collected and raised with any other errors
+    identified while validating the `MarcRecord`.
 
     Args:
 
