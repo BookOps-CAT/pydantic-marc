@@ -66,7 +66,7 @@ class InvalidFixedField(MarcCustomError):
                 input (str): Value passed to the control field's data attribute.
                 loc (str): The position where the error was found
                 tag (str): The field's tag.
-                valid (str): The valid character for that position.
+                valid (list[str]): The valid character values for that position.
         """
         instance = super().__new__(
             cls,
@@ -87,7 +87,7 @@ class InvalidLeader(MarcCustomError):
             context: A dictionary containing:
                 loc (str): The leader position where the error was found.
                 input (str): The value passed to the leader.
-                valid (str): The valid character for that position.
+                valid (list[str]): The valid character for that position.
         """
         instance = super().__new__(
             cls,
@@ -156,7 +156,7 @@ class MultipleMainEntryValues(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                input (str): The field's tag.
+                input (list[str]): The field's tag.
         """
         instance = super().__new__(
             cls,
