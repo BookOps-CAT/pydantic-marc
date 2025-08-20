@@ -39,3 +39,6 @@ disallow_untyped_defs = true
 [[tool.mypy.overrides]]
 module = ["tests.*"]
 disallow_untyped_defs = false
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]
