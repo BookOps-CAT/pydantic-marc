@@ -46,8 +46,8 @@ def field_discriminator(data: Any) -> str:
 class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
     A class that defines a MARC record. The `leader` attribute will validate that the
-    record's leader is either a string and that it matches the pattern defined by the
-    MARC standard. The `fields` attribute is a list of `ControlField` and `DataField`
+    record's leader is a string and that it matches the pattern defined by the MARC
+    standard. The `fields` attribute is a list of `ControlField` and `DataField`
     objects.
 
     Attributes:

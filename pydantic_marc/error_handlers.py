@@ -79,8 +79,8 @@ def get_indicator_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetai
     """
     Validate the indicator values of a `DataField` against the allowed values in a rule.
 
-    Each indicator is checked against the corresponding `ind1` or `ind2` list in the rule.
-    If an indicator is invalid, an `InvalidIndicator` error is returned.
+    Each indicator is checked against the corresponding `ind1` or `ind2` list in the
+    rule. If an indicator is invalid, an `InvalidIndicator` error is returned.
 
     Args:
         rule: the `Rule` object defining the expected length for the field.
