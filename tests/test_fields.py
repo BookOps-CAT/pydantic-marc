@@ -13,19 +13,31 @@ from pydantic_marc.fields import (
 
 class TestControlField:
     @pytest.mark.parametrize(
-        "tag, data",
+        "tag, subtype, data",
         [
-            ("001", "ocn123456789"),
-            ("003", "OCoLC"),
-            ("005", "20241111111111.0"),
-            ("006", "a|||||||||||||||||"),
-            ("007", "cr |||||||||||"),
-            ("008", "210505s2021    nyu           000 0 eng d"),
+            ("001", None, "ocn123456789"),
+            ("003", None, "OCoLC"),
+            ("005", None, "20241111111111.0"),
+            ("006", "BK", "a|||||||||||||| ||"),
+            ("007", "c", "cr |||||||||||"),
+            ("008", "BK", "210505s2021    nyu           000 0 eng d"),
+            ("009", None, "foo"),
         ],
     )
-    def test_ControlField_valid(self, tag, data, get_default_rule):
-        model = ControlField(tag=tag, data=data, rules=get_default_rule(tag))
+    def test_ControlField_valid(self, tag, data, subtype, get_default_rule):
+        model = ControlField(tag=tag, data=data, rules=get_default_rule(tag, subtype))
         assert model.model_dump(by_alias=True) == {tag: data}
+        assert model.model_json_schema()["properties"]["rules"].get("default") is None
+
+    @pytest.mark.parametrize(
+        "data",
+        ["cr |||||||||||", "ad |||||"],
+    )
+    def test_ControlField_007(self, data, get_default_rule):
+        model = ControlField(
+            tag="007", data=data, rules=get_default_rule("007", data[0])
+        )
+        assert model.model_dump(by_alias=True) == {"007": data}
         assert model.model_json_schema()["properties"]["rules"].get("default") is None
 
     def test_ControlField_valid_with_rules(self):
@@ -64,7 +76,7 @@ class TestControlField:
         self, tag, field_value, get_default_rule
     ):
         with pytest.raises(ValidationError) as e:
-            ControlField(tag=tag, data=field_value, rules=get_default_rule(tag))
+            ControlField(tag=tag, data=field_value, rules=get_default_rule(tag, None))
         assert e.value.errors()[0]["type"] == "string_type"
         assert e.value.errors()[0]["loc"] == ("data",)
         assert len(e.value.errors()) == 1
@@ -81,7 +93,9 @@ class TestControlField:
         self, field_value, error_type, get_default_rule
     ):
         with pytest.raises(ValidationError) as e:
-            ControlField(tag="006", data=field_value, rules=get_default_rule("006"))
+            ControlField(
+                tag="006", data=field_value, rules=get_default_rule("006", "BK")
+            )
         assert e.value.errors()[0]["type"] == error_type
         assert e.value.errors()[0]["loc"] == ("data", "006")
         assert len(e.value.errors()) == 1
@@ -95,7 +109,7 @@ class TestControlField:
             ),
             (
                 "c||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: [6, 14]",
+                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 14",
             ),
             (
                 "d||",
@@ -155,7 +169,11 @@ class TestControlField:
         self, field_value, error_msg, get_default_rule
     ):
         with pytest.raises(ValidationError) as e:
-            ControlField(tag="007", data=field_value, rules=get_default_rule("007"))
+            ControlField(
+                tag="007",
+                data=field_value,
+                rules=get_default_rule("007", field_value[0]),
+            )
         assert e.value.errors()[0]["type"] == "control_field_length_invalid"
         assert e.value.errors()[0]["msg"] == error_msg
         assert len(e.value.errors()) == 1
@@ -174,7 +192,9 @@ class TestControlField:
         self, field_value, error_type, get_default_rule
     ):
         with pytest.raises(ValidationError) as e:
-            ControlField(tag="008", data=field_value, rules=get_default_rule("008"))
+            ControlField(
+                tag="008", data=field_value, rules=get_default_rule("008", "BK")
+            )
         assert e.value.errors()[0]["type"] == error_type
         assert e.value.errors()[0]["loc"] == ("data", "008")
         assert len(e.value.errors()) == 1
@@ -189,7 +209,7 @@ class TestDataField:
                 PymarcSubfield(code="a", value="2024111111"),
                 PymarcSubfield(code="z", value="2020111111"),
             ],
-            rules=get_default_rule("010"),
+            rules=get_default_rule("010", None),
         )
         assert model.model_dump() == {
             "010": {
@@ -226,7 +246,7 @@ class TestDataField:
                 tag="010",
                 indicators=PymarcIndicators(ind1_value, ind2_value),
                 subfields=[PymarcSubfield(code="a", value="2024111111")],
-                rules=get_default_rule("010"),
+                rules=get_default_rule("010", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert len(e.value.errors()) == 2
@@ -249,7 +269,7 @@ class TestDataField:
                 subfields=[
                     PymarcSubfield(code="a", value=field_value),
                 ],
-                rules=get_default_rule("010"),
+                rules=get_default_rule("010", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert "string_type" in error_types
@@ -266,7 +286,7 @@ class TestDataField:
                     PymarcSubfield(code="a", value="2024111111"),
                     PymarcSubfield(code="a", value="2025111111"),
                 ],
-                rules=get_default_rule("010"),
+                rules=get_default_rule("010", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert sorted(error_types) == sorted(["non_repeatable_subfield"])
@@ -281,7 +301,7 @@ class TestDataField:
                     "",
                 ),
                 subfields=[PymarcSubfield(code="c", value="2024111111")],
-                rules=get_default_rule("010"),
+                rules=get_default_rule("010", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         error_locs = [i["loc"] for i in e.value.errors()]
@@ -296,7 +316,7 @@ class TestDataField:
             subfields=[
                 PymarcSubfield(code="a", value="2024111111"),
             ],
-            rules=get_default_rule("020"),
+            rules=get_default_rule("020", None),
         )
         assert model.model_dump() == {
             "020": {"ind1": "", "ind2": "", "subfields": [{"a": "2024111111"}]}
@@ -329,7 +349,7 @@ class TestDataField:
                 tag="020",
                 indicators=PymarcIndicators(ind1_value, ind2_value),
                 subfields=[PymarcSubfield(code="a", value="2024111111")],
-                rules=get_default_rule("020"),
+                rules=get_default_rule("020", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert len(e.value.errors()) == 2
@@ -352,7 +372,7 @@ class TestDataField:
                 subfields=[
                     PymarcSubfield(code="a", value=field_value),
                 ],
-                rules=get_default_rule("020"),
+                rules=get_default_rule("020", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert "string_type" in error_types
@@ -369,7 +389,7 @@ class TestDataField:
                     PymarcSubfield(code="a", value="2024111111"),
                     PymarcSubfield(code="a", value="2024111111"),
                 ],
-                rules=get_default_rule("020"),
+                rules=get_default_rule("020", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert sorted(error_types) == sorted(["non_repeatable_subfield"])
@@ -384,7 +404,7 @@ class TestDataField:
                     "",
                 ),
                 subfields=[PymarcSubfield(code="t", value="2024111111")],
-                rules=get_default_rule("020"),
+                rules=get_default_rule("020", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         error_locs = [i["loc"] for i in e.value.errors()]
@@ -399,7 +419,7 @@ class TestDataField:
             subfields=[
                 PymarcSubfield(code="a", value="F00"),
             ],
-            rules=get_default_rule("050"),
+            rules=get_default_rule("050", None),
         )
         assert model.model_dump() == {
             "050": {"ind1": "0", "ind2": "4", "subfields": [{"a": "F00"}]}
@@ -432,7 +452,7 @@ class TestDataField:
                 tag="050",
                 indicators=PymarcIndicators(ind1_value, ind2_value),
                 subfields=[PymarcSubfield(code="a", value="F00")],
-                rules=get_default_rule("050"),
+                rules=get_default_rule("050", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert len(e.value.errors()) == 2
@@ -455,7 +475,7 @@ class TestDataField:
                 subfields=[
                     PymarcSubfield(code="a", value=field_value),
                 ],
-                rules=get_default_rule("050"),
+                rules=get_default_rule("050", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert "string_type" in error_types
@@ -474,7 +494,7 @@ class TestDataField:
                     PymarcSubfield(code="b", value="B11"),
                     PymarcSubfield(code="b", value="B11"),
                 ],
-                rules=get_default_rule("050"),
+                rules=get_default_rule("050", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert sorted(error_types) == sorted(["non_repeatable_subfield"])
@@ -489,7 +509,7 @@ class TestDataField:
                     "4",
                 ),
                 subfields=[PymarcSubfield(code="t", value="F00")],
-                rules=get_default_rule("050"),
+                rules=get_default_rule("050", None),
             )
         error_types = [i["type"] for i in e.value.errors()]
         error_locs = [i["loc"] for i in e.value.errors()]
@@ -504,7 +524,7 @@ class TestDataField:
             subfields=[
                 PymarcSubfield(code="a", value="Foo"),
             ],
-            rules=get_default_rule("900"),
+            rules=get_default_rule("900", None),
         )
         assert model.model_dump() == {
             "900": {"ind1": "", "ind2": "", "subfields": [{"a": "Foo"}]}

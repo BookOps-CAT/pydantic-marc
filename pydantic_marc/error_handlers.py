@@ -15,13 +15,14 @@ reporting.
 from __future__ import annotations
 
 from collections import Counter
-from typing import Any, List, Union
+from typing import Any, List
 
 from pydantic import ValidationInfo
 from pydantic_core import InitErrorDetails
 
 from pydantic_marc.errors import (
     ControlFieldLength,
+    InvalidFixedField,
     InvalidIndicator,
     InvalidLeader,
     InvalidSubfield,
@@ -38,10 +39,11 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
     Validate the length of a control field's `data` string against the expected rule.
 
     If the `data` string length does not match the expected length specified in
-    the rule, a `ControlFieldLength` error is returned.
+    the rule, a `ControlFieldLength` error is returned. If a character does not match
+    the expected value at a specific position, an `InvalidFixedField` error is returned.
 
     Args:
-        rule: the `Rule` object defining the expected length for the field.
+        rule: the `Rule` object defining the expected length and values for the field.
         data: data passed to the `ControlField.data` attribute.
         tag: the MARC field tag being validated.
 
@@ -50,18 +52,26 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
         A list of `MarcCustomError` objects.
     """
     errors: List[InitErrorDetails] = []
-    if isinstance(rule.length, dict):
-        valid_length: Union[int, List[int], None] = rule.length.get(data[0])
-    else:
-        valid_length = rule.length
-    match = None
-    if isinstance(valid_length, list):
-        match = any(len(data) == i for i in valid_length)
-    elif isinstance(valid_length, int):
-        match = len(data) == valid_length
+    valid_length = rule.length
+    if not valid_length:
+        return errors
+    match = len(data) == valid_length
     if match is False:
         error = ControlFieldLength({"tag": tag, "valid": valid_length, "input": data})
         errors.append(error.error_details)
+        return errors
+    value_rules = rule.values
+    if value_rules:
+        for i, char in enumerate(data):
+            values = value_rules[f"{i:02d}"]
+            if char not in values:
+                error_data = {
+                    "tag": tag,
+                    "input": char,
+                    "valid": values,
+                    "loc": f"{i:02d}",
+                }
+                errors.append(InvalidFixedField(error_data).error_details)
     return errors
 
 

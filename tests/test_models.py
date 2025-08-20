@@ -81,6 +81,157 @@ class TestMarcRecord:
             "type": "invalid_indicator",
         } in errors
 
+    def test_MarcRecord_006_errors(self, stub_record):
+        stub_record.add_field(PymarcField(tag="006", data="a||||||||||||||||z"))
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 2
+        assert {
+            "type": "invalid_fixed_field",
+            "loc": ("fields", "17"),
+            "msg": "006: Invalid character 'z' at position '006/17'. Byte should be: [' ', 'a', 'b', 'c', 'd', '|'].",
+            "input": "z",
+            "ctx": {
+                "tag": "006",
+                "input": "z",
+                "valid": [" ", "a", "b", "c", "d", "|"],
+                "loc": "17",
+            },
+        } in errors
+        assert {
+            "type": "invalid_fixed_field",
+            "loc": ("fields", "15"),
+            "msg": "006: Invalid character '|' at position '006/15'. Byte should be: [' '].",
+            "input": "|",
+            "ctx": {"tag": "006", "input": "|", "valid": [" "], "loc": "15"},
+        } in errors
+
+    @pytest.mark.parametrize(
+        "field_value, error_msg",
+        [
+            (
+                "ad aauuz",
+                "007: Invalid character 'z' at position '007/07'. Byte should be: ['a', 'b', 'm', 'n', '|'].",
+            ),
+            (
+                "c| ||||||||||z",
+                "007: Invalid character 'z' at position '007/13'. Byte should be: ['a', 'n', 'p', 'r', 'u', '|'].",
+            ),
+            (
+                "d| z||",
+                "007: Invalid character 'z' at position '007/03'. Byte should be: ['a', 'c', '|'].",
+            ),
+            (
+                "f|z|||||||",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "g|z||||||",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "h|z|||000||||",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "k|z|||",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "m|z||||||||||||||000000",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "oz",
+                "007: Invalid character 'z' at position '007/01'. Byte should be: ['u', '|'].",
+            ),
+            (
+                "qz",
+                "007: Invalid character 'z' at position '007/01'. Byte should be: ['u', '|'].",
+            ),
+            (
+                "r|z||||||||",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "s|z|||||||||||",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "tt",
+                "007: Invalid character 't' at position '007/01'. Byte should be: ['a', 'b', 'c', 'd', 'u', 'z', '|'].",
+            ),
+            (
+                "v|z||||||",
+                "007: Invalid character 'z' at position '007/02'. Byte should be: [' '].",
+            ),
+            (
+                "za",
+                "007: Invalid character 'a' at position '007/01'. Byte should be: ['m', 'u', 'z', '|'].",
+            ),
+        ],
+    )
+    def test_MarcRecord_007_errors(self, stub_record, field_value, error_msg):
+        stub_record.add_field(PymarcField(tag="007", data=field_value))
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 1
+        assert errors[0]["type"] == "invalid_fixed_field"
+        assert errors[0]["msg"] == error_msg
+
+    @pytest.mark.parametrize(
+        "field_value,leader,error_msg",
+        [
+            (
+                "250101s2020    nyu||||||||||||||||||||||",
+                "00454nam a22000005i 4500",
+                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+            ),
+            (
+                "250101s2020    nyu|| |||||||||  ||||||||",
+                "00454nas a22000005i 4500",
+                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+            ),
+            (
+                "250101s2020    nyu|||||||||||||||| |||||",
+                "00454ncm a22000005i 4500",
+                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+            ),
+            (
+                "250101s2020    nyu|||||| |  || |||||||||",
+                "00454nem a22000005i 4500",
+                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+            ),
+            (
+                "250101s2020    nyu||| |     ||  ||||||||",
+                "00454ngm a22000005i 4500",
+                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+            ),
+            (
+                "250101s2020    nyu||||||||||||||||a|||||",
+                "00454nmm a22000005i 4500",
+                "008: Invalid character 'a' at position '008/34'. Byte should be: [' ', '|'].",
+            ),
+            (
+                "250101s2020    nyu     |        |  |||||",
+                "00454npm a22000005i 4500",
+                "008: Invalid character '|' at position '008/32'. Byte should be: [' '].",
+            ),
+        ],
+    )
+    def test_MarcRecord_008_errors(self, stub_record, field_value, leader, error_msg):
+        stub_record.remove_fields("008")
+        stub_record.leader = leader
+        stub_record.add_field(PymarcField(tag="008", data=field_value))
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 1
+        assert errors[0]["type"] == "invalid_fixed_field"
+        assert errors[0]["msg"] == error_msg
+
     def test_MarcRecord_050_errors(self, stub_record):
         stub_record["050"].add_subfield("b", "foo")
         stub_record["050"].add_subfield("b", "bar")

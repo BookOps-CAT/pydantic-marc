@@ -27,15 +27,17 @@ class TestFieldValidators:
         assert validated_fields == data
 
     @pytest.mark.parametrize(
-        "tag, data",
+        "tag, subtype, data",
         [
-            ("007", "d|"),
-            ("007", "a"),
-            ("008", "190306s2017    ht a   j"),
+            ("007", "d", "d|"),
+            ("007", "a", "a"),
+            ("008", "BK", "190306s2017    ht a   j"),
         ],
     )
-    def test_validate_control_field_invalid(self, make_mock_info, tag, data):
-        rules = RuleSet().rules.get(tag, None)
+    def test_validate_control_field_invalid(
+        self, make_mock_info, tag, data, subtype, get_default_rule
+    ):
+        rules = get_default_rule(tag, subtype)
         info = make_mock_info(data={"rules": rules, "tag": tag}, field_name="data")
         with pytest.raises(ValidationError) as e:
             validate_field(data, info=info)

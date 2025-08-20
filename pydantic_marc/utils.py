@@ -58,9 +58,15 @@ def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[An
         field_dict = {"rules": rule, "tag": field.tag}
         if getattr(field, "control_field") is True:
             field_dict["data"] = field.data
-        elif getattr(field, "control_field") is False:
+        else:
             field_dict["indicators"] = field.indicators
             field_dict["subfields"] = field.subfields
+        if field.tag == "007":
+            rule_dict = field_dict["rules"].__dict__
+            material_types = field_dict["rules"].model_extra["material_types"]
+            rule_dict["length"] = material_types[field_dict["data"][0]]["length"]
+            rule_dict["values"] = material_types[field_dict["data"][0]]["values"]
+            field_dict["rules"] = rule_dict
         field_list.append(field_dict)
     return field_list
 
