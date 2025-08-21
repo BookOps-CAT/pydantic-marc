@@ -72,7 +72,7 @@ class InvalidFixedField(MarcCustomError):
             cls,
             "invalid_fixed_field",
             "{tag}: Invalid character(s) '{input}' at position '{tag}/{loc}'. "
-            "Byte should be: {valid}.",
+            "Valid characters are: {valid}.",
             context,
         )
         return instance
@@ -93,7 +93,7 @@ class InvalidLeader(MarcCustomError):
             cls,
             "invalid_leader",
             "LDR: Invalid character '{input}' at position 'leader/{loc}'. "
-            "Byte should be: {valid}.",
+            "Valid characters are: {valid}.",
             context,
         )
         return instance

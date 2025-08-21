@@ -87,37 +87,37 @@ class TestMarcRecord:
             (
                 "a|||||||||||||||||",
                 "00454nam a22000005i 4500",
-                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
             ),
             (
                 "a|| |||||||||  |||",
                 "00454nas a22000005i 4500",
-                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
             ),
             (
                 "cax|||||||||||| | ",
                 "00454ncm a22000005i 4500",
-                "006: Invalid character(s) 'ax' at position '006/01-02'. Byte should be: ['an', 'bd', 'bg', 'bl', 'bt', 'ca', 'cb', 'cc', 'cg', 'ch', 'cl', 'cn', 'co', 'cp', 'cr', 'cs', 'ct', 'cy', 'cz', 'df', 'dv', 'fg', 'fl', 'fm', 'ft', 'gm', 'hy', 'jz', 'mc', 'md', 'mi', 'mo', 'mp', 'mr', 'ms', 'mu', 'mz', 'nc', 'nn', 'op', 'or', 'ov', 'pg', 'pm', 'po', 'pp', 'pr', 'ps', 'pt', 'pv', 'rc', 'rd', 'rg', 'ri', 'rp', 'rq', 'sd', 'sg', 'sn', 'sp', 'st', 'su', 'sy', 'tc', 'tl', 'ts', 'uu', 'vi', 'vr', 'wz', 'za', 'zz', '||'].",
+                "006: Invalid character(s) 'ax' at position '006/01-02'. Valid characters are: ['an', 'bd', 'bg', 'bl', 'bt', 'ca', 'cb', 'cc', 'cg', 'ch', 'cl', 'cn', 'co', 'cp', 'cr', 'cs', 'ct', 'cy', 'cz', 'df', 'dv', 'fg', 'fl', 'fm', 'ft', 'gm', 'hy', 'jz', 'mc', 'md', 'mi', 'mo', 'mp', 'mr', 'ms', 'mu', 'mz', 'nc', 'nn', 'op', 'or', 'ov', 'pg', 'pm', 'po', 'pp', 'pr', 'ps', 'pt', 'pv', 'rc', 'rd', 'rg', 'ri', 'rp', 'rq', 'sd', 'sg', 'sn', 'sp', 'st', 'su', 'sy', 'tc', 'tl', 'ts', 'uu', 'vi', 'vr', 'wz', 'za', 'zz', '||'].",
             ),
             (
                 "e||||ay |  || | ||",
                 "00454nem a22000005i 4500",
-                "006: Invalid character(s) 'ay' at position '006/05-06'. Byte should be: ['  ', 'aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'am', 'an', 'ap', 'au', 'az', 'ba', 'bb', 'bc', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bk', 'bl', 'bo', 'br', 'bs', 'bu', 'bz', 'ca', 'cb', 'cc', 'ce', 'cp', 'cu', 'cz', 'da', 'db', 'dc', 'dd', 'de', 'df', 'dg', 'dh', 'dl', 'zz', '||'].",
+                "006: Invalid character(s) 'ay' at position '006/05-06'. Valid characters are: ['  ', 'aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'am', 'an', 'ap', 'au', 'az', 'ba', 'bb', 'bc', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bk', 'bl', 'bo', 'br', 'bs', 'bu', 'bz', 'ca', 'cb', 'cc', 'ce', 'cp', 'cu', 'cz', 'da', 'db', 'dc', 'dd', 'de', 'df', 'dg', 'dh', 'dl', 'zz', '||'].",
             ),
             (
                 "g||| |     ||  |||",
                 "00454ngm a22000005i 4500",
-                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
             ),
             (
                 "m||||||||||||||||a",
                 "00454nmm a22000005i 4500",
-                "006: Invalid character(s) 'a' at position '006/17'. Byte should be: [' ', '|'].",
+                "006: Invalid character(s) 'a' at position '006/17'. Valid characters are: [' ', '|'].",
             ),
             (
                 "p     |        |  ",
                 "00454npm a22000005i 4500",
-                "006: Invalid character(s) '|' at position '006/15'. Byte should be: [' '].",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
             ),
         ],
     )
@@ -142,63 +142,63 @@ class TestMarcRecord:
         [
             (
                 "ad aauuz",
-                "007: Invalid character(s) 'z' at position '007/07'. Byte should be: ['a', 'b', 'm', 'n', '|'].",
+                "007: Invalid character(s) 'z' at position '007/07'. Valid characters are: ['a', 'b', 'm', 'n', '|'].",
             ),
             (
                 "c| ||||||||||z",
-                "007: Invalid character(s) 'z' at position '007/13'. Byte should be: ['a', 'n', 'p', 'r', 'u', '|'].",
+                "007: Invalid character(s) 'z' at position '007/13'. Valid characters are: ['a', 'n', 'p', 'r', 'u', '|'].",
             ),
             (
                 "d| z||",
-                "007: Invalid character(s) 'z' at position '007/03'. Byte should be: ['a', 'c', '|'].",
+                "007: Invalid character(s) 'z' at position '007/03'. Valid characters are: ['a', 'c', '|'].",
             ),
             (
                 "f|z|||||||",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "g|z||||||",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "h|z|||000||||",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "k|z|||",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "m|z||||||||||||||000000",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "oz",
-                "007: Invalid character(s) 'z' at position '007/01'. Byte should be: ['u', '|'].",
+                "007: Invalid character(s) 'z' at position '007/01'. Valid characters are: ['u', '|'].",
             ),
             (
                 "qz",
-                "007: Invalid character(s) 'z' at position '007/01'. Byte should be: ['u', '|'].",
+                "007: Invalid character(s) 'z' at position '007/01'. Valid characters are: ['u', '|'].",
             ),
             (
                 "r|z||||||||",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "s|z|||||||||||",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "tt",
-                "007: Invalid character(s) 't' at position '007/01'. Byte should be: ['a', 'b', 'c', 'd', 'u', 'z', '|'].",
+                "007: Invalid character(s) 't' at position '007/01'. Valid characters are: ['a', 'b', 'c', 'd', 'u', 'z', '|'].",
             ),
             (
                 "v|z||||||",
-                "007: Invalid character(s) 'z' at position '007/02'. Byte should be: [' '].",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
             ),
             (
                 "za",
-                "007: Invalid character(s) 'a' at position '007/01'. Byte should be: ['m', 'u', 'z', '|'].",
+                "007: Invalid character(s) 'a' at position '007/01'. Valid characters are: ['m', 'u', 'z', '|'].",
             ),
         ],
     )
@@ -217,47 +217,47 @@ class TestMarcRecord:
             (
                 "250101s2020    nyu||||||||||||||||||||||",
                 "00454nam a22000005i 4500",
-                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
             ),
             (
                 "250101s2020    nyu|| |||||||||  ||||||||",
                 "00454nas a22000005i 4500",
-                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
             ),
             (
                 "250101s2020    nyu|||||||||||||||| |||||",
                 "00454ncm a22000005i 4500",
-                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
             ),
             (
                 "250101s2020    nyu|||||| |  || |||||||||",
                 "00454nem a22000005i 4500",
-                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
             ),
             (
                 "250101s2020    nyu||| |     ||  ||||||||",
                 "00454ngm a22000005i 4500",
-                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
             ),
             (
                 "250101s2020    nyu||||||||||||||||a|||||",
                 "00454nmm a22000005i 4500",
-                "008: Invalid character(s) 'a' at position '008/34'. Byte should be: [' ', '|'].",
+                "008: Invalid character(s) 'a' at position '008/34'. Valid characters are: [' ', '|'].",
             ),
             (
                 "250101s2020    nyu     |        |  |||||",
                 "00454npm a22000005i 4500",
-                "008: Invalid character(s) '|' at position '008/32'. Byte should be: [' '].",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
             ),
             (
                 "250101s2020    nyy|||||||||||||| |||||||",
                 "00454nam a22000005i 4500",
-                "008: Invalid character(s) 'nyy' at position '008/15-17'. Byte should be: see https://id.loc.gov/vocabulary/countries.html for list of valid country codes.",
+                "008: Invalid character(s) 'nyy' at position '008/15-17'. Valid characters are: see https://id.loc.gov/vocabulary/countries.html for list of valid country codes.",
             ),
             (
                 "250101s2020    nyu|||||||||||||| ||zzz||",
                 "00454nam a22000005i 4500",
-                "008: Invalid character(s) 'zzz' at position '008/35-37'. Byte should be: see https://id.loc.gov/vocabulary/languages.html for list of valid language codes.",
+                "008: Invalid character(s) 'zzz' at position '008/35-37'. Valid characters are: see https://id.loc.gov/vocabulary/languages.html for list of valid language codes.",
             ),
         ],
     )
@@ -535,28 +535,28 @@ class TestMarcRecord:
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "20"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Byte should be: ['4'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "21"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Byte should be: ['5'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "22"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Byte should be: ['0'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "23"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Byte should be: ['0'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
         } in errors
@@ -672,28 +672,28 @@ class TestMarcRecord:
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "20"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Byte should be: ['4'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "21"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Byte should be: ['5'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "22"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Byte should be: ['0'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "23"),
-            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Byte should be: ['0'].",
+            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
             "input": " ",
             "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
         } in errors

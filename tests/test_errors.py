@@ -194,11 +194,11 @@ def test_invalid_leader():
     assert error.context.get("input") == "c"
     assert (
         error.message()
-        == "LDR: Invalid character 'c' at position 'leader/00'. Byte should be: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']."
+        == "LDR: Invalid character 'c' at position 'leader/00'. Valid characters are: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']."
     )
     assert (
         error.message_template
-        == "LDR: Invalid character '{input}' at position 'leader/{loc}'. Byte should be: {valid}."
+        == "LDR: Invalid character '{input}' at position 'leader/{loc}'. Valid characters are: {valid}."
     )
     assert error.error_details.get("loc") == ("00",)
     assert error.error_details.get("input") == "c"
