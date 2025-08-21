@@ -104,7 +104,7 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
                 }
                 errors.append(InvalidFixedField(error_data).error_details)
     if tag == "008":
-        language_codes = {f"{k.ljust(3, ' ')}": v for k, v in language_rules().items()}
+        language_codes = language_rules()
         if data[35:38] not in language_codes.keys():
             error_data = {
                 "tag": tag,
