@@ -124,7 +124,7 @@ def validate_leader(data: Any, info: ValidationInfo) -> Any:
     """
     Confirm that the value passed to the `MarcRecord.leader` attribute conforms to the
     rules passed to the `MarcRecord.rules` attribute. If the values do not match the
-    rules for that field, one or more `InvalidLeaderByte` errors will be raised.
+    rules for that field, one or more `InvalidLeader` errors will be raised.
 
     This is a the `BeforeValidator` on the `leader` field and runs before validating
     the model. These errors will be collected and raised with any other errors
