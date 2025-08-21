@@ -11,7 +11,8 @@ from typing import Any, Callable
 from pydantic import ValidationInfo
 
 from pydantic_marc.error_handlers import (
-    get_control_field_errors,
+    get_control_field_length_errors,
+    get_control_field_value_errors,
     get_indicator_errors,
     get_leader_errors,
     get_marc_field_errors,
@@ -24,10 +25,25 @@ from pydantic_marc.utils import (
 )
 
 FIELD_VALIDATION_RULES = {
-    "data": get_control_field_errors,
     "indicators": get_indicator_errors,
     "subfields": get_subfield_errors,
 }
+
+
+def validate_length(data: Any, info: ValidationInfo) -> Any:
+    rule = info.data.get("rules", None)
+    if not rule:
+        return data
+    errors = get_control_field_length_errors(rule=rule, data=data, tag=info.data["tag"])
+    return raise_validation_errors(errors=errors, data=data)
+
+
+def validate_values(data: Any, info: ValidationInfo) -> Any:
+    rule = info.data.get("rules", None)
+    if not rule:
+        return data
+    errors = get_control_field_value_errors(rule=rule, data=data, tag=info.data["tag"])
+    return raise_validation_errors(errors=errors, data=data)
 
 
 def validate_field(data: Any, info: ValidationInfo) -> Any:

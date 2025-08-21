@@ -38,32 +38,24 @@ from pydantic_marc.marc_rules import Rule, RuleSet
 
 
 @lru_cache
-def language_rules() -> dict[str, Any]:
+def marc_codes() -> dict[str, Any]:
     rules = {}
     base_dir = os.path.dirname(__file__)
-    json_path = os.path.join(base_dir, "validation_rules", "language_codes.json")
+    json_path = os.path.join(base_dir, "validation_rules", "marc_codes.json")
     with open(json_path, "r", encoding="utf-8") as fh:
         rules.update({k: v for k, v in json.load(fh).items()})
     return rules
 
 
-@lru_cache
-def country_rules() -> dict[str, Any]:
-    rules = {}
-    base_dir = os.path.dirname(__file__)
-    json_path = os.path.join(base_dir, "validation_rules", "country_codes.json")
-    with open(json_path, "r", encoding="utf-8") as fh:
-        rules.update({k: v for k, v in json.load(fh).items()})
-    return rules
-
-
-def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetails]:
+def get_control_field_value_errors(
+    rule: Rule, data: Any, tag: str
+) -> List[InitErrorDetails]:
     """
-    Validate the length of a control field's `data` string against the expected rule.
+    Validate the values within a control field's `data` string against the
+    expected rule.
 
-    If the `data` string length does not match the expected length specified in
-    the rule, a `ControlFieldLength` error is returned. If a character does not match
-    the expected value at a specific position, an `InvalidFixedField` error is returned.
+    If a character does not match the expected value at a specific position, an
+    `InvalidFixedField` error is returned.
 
     Args:
         rule: the `Rule` object defining the expected length and values for the field.
@@ -75,14 +67,6 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
         A list of `MarcCustomError` objects.
     """
     errors: List[InitErrorDetails] = []
-    valid_length = rule.length
-    if not valid_length:
-        return errors
-    match = len(data) == valid_length
-    if match is False:
-        error = ControlFieldLength({"tag": tag, "valid": valid_length, "input": data})
-        errors.append(error.error_details)
-        return errors
     value_rules = rule.values
     if value_rules:
         data_dict = {f"{i:02d}": char for i, char in enumerate(data)}
@@ -104,8 +88,8 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
                 }
                 errors.append(InvalidFixedField(error_data).error_details)
     if tag == "008":
-        language_codes = language_rules()
-        if data[35:38] not in language_codes.keys():
+        codes = marc_codes()
+        if data[35:38] not in codes["language_codes"].keys():
             error_data = {
                 "tag": tag,
                 "input": data[35:38],
@@ -114,8 +98,8 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
                 "loc": "35-37",
             }
             errors.append(InvalidFixedField(error_data).error_details)
-        country_codes = {f"{k.ljust(3, ' ')}": v for k, v in country_rules().items()}
-        if data[15:18] not in country_codes.keys():
+        country_codes = [f"{i.ljust(3, ' ')}" for i in codes["country_codes"].keys()]
+        if data[15:18] not in country_codes:
             error_data = {
                 "tag": tag,
                 "input": data[15:18],
@@ -125,6 +109,35 @@ def get_control_field_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorD
             }
             errors.append(InvalidFixedField(error_data).error_details)
 
+    return errors
+
+
+def get_control_field_length_errors(
+    rule: Rule, data: Any, tag: str
+) -> List[InitErrorDetails]:
+    """
+    Validate the length of a control field's `data` string against the expected rule.
+
+    If the `data` string length does not match the expected length specified in
+    the rule, a `ControlFieldLength` error is returned.
+
+    Args:
+        rule: the `Rule` object defining the expected length and values for the field.
+        data: data passed to the `ControlField.data` attribute.
+        tag: the MARC field tag being validated.
+
+    Returns:
+
+        A list of `MarcCustomError` objects.
+    """
+    errors: List[InitErrorDetails] = []
+    valid_length = rule.length
+    if not valid_length:
+        return errors
+    match = len(data) == valid_length
+    if match is False:
+        error = ControlFieldLength({"tag": tag, "valid": valid_length, "input": data})
+        errors.append(error.error_details)
     return errors
 
 
