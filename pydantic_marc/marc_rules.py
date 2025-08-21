@@ -50,7 +50,6 @@ class RuleSet(BaseModel, frozen=True):
     _default: ClassVar[Mapping] = MappingProxyType(_DefaultRules.rules_from_json())
 
     rules: Dict[str, Union[Rule, Any]] = {k: Rule(**v) for k, v in _default.items()}
-    replace: bool = False
 
     @classmethod
     def from_validation_info(cls, info: ValidationInfo) -> Union[RuleSet, None]:
