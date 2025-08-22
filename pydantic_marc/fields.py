@@ -22,7 +22,12 @@ from typing import Annotated, Any, Dict, List, Literal, Sequence, Union
 from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
 from pydantic_marc.marc_rules import Rule
-from pydantic_marc.validators import validate_field, validate_length, validate_values
+from pydantic_marc.validators import (
+    validate_indicators,
+    validate_length,
+    validate_subfields,
+    validate_values,
+)
 
 
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
@@ -91,9 +96,9 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
     indicators: Annotated[
-        Union[PydanticIndicators, Sequence], AfterValidator(validate_field)
+        Union[PydanticIndicators, Sequence], AfterValidator(validate_indicators)
     ]
-    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_field)]
+    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_subfields)]
 
     @model_serializer
     def serialize_data_field(

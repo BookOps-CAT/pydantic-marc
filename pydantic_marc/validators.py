@@ -21,53 +21,29 @@ from pydantic_marc.error_handlers import (
 from pydantic_marc.utils import (
     add_rules_to_pymarc_fields,
     handle_errors,
+    marc_field_validator,
     raise_validation_errors,
 )
 
-FIELD_VALIDATION_RULES = {
-    "indicators": get_indicator_errors,
-    "subfields": get_subfield_errors,
-}
 
-
+@marc_field_validator(get_control_field_length_errors)
 def validate_length(data: Any, info: ValidationInfo) -> Any:
-    rule = info.data.get("rules", None)
-    if not rule:
-        return data
-    errors = get_control_field_length_errors(rule=rule, data=data, tag=info.data["tag"])
-    return raise_validation_errors(errors=errors, data=data)
+    return data
 
 
+@marc_field_validator(get_control_field_value_errors)
 def validate_values(data: Any, info: ValidationInfo) -> Any:
-    rule = info.data.get("rules", None)
-    if not rule:
-        return data
-    errors = get_control_field_value_errors(rule=rule, data=data, tag=info.data["tag"])
-    return raise_validation_errors(errors=errors, data=data)
+    return data
 
 
-def validate_field(data: Any, info: ValidationInfo) -> Any:
-    """
-    Run field-level validation for a MARC field using rules from the model.
+@marc_field_validator(get_indicator_errors)
+def validate_indicators(data: Any, info: ValidationInfo) -> Any:
+    return data
 
-    This function looks up a validation function based on the field name and applies
-    it if a corresponding rule and validator are found. If no rule or validator is
-    found, the input `data` is returned unchanged. If validation errors are found,
-    they are raised using `raise_validation_errors`.
 
-    Args:
-        data: the data passed to the field being validated
-        info: A `ValidationInfo` object.
-
-    Returns:
-        The validated field data, or raises a `ValidationError` if rules are violated.
-    """
-    rule = info.data.get("rules", None)
-    validator_func = FIELD_VALIDATION_RULES.get(str(info.field_name))
-    if not rule or not validator_func:
-        return data
-    errors = validator_func(rule=rule, data=data, tag=info.data["tag"])
-    return raise_validation_errors(errors=errors, data=data)
+@marc_field_validator(get_subfield_errors)
+def validate_subfields(data: Any, info: ValidationInfo) -> Any:
+    return data
 
 
 def validate_marc_data(data: Any, info: ValidationInfo) -> Any:
