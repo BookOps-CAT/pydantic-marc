@@ -24,7 +24,7 @@ from pydantic import ValidationError, ValidationInfo
 from pydantic_core import InitErrorDetails
 
 from pydantic_marc.errors import MarcCustomError
-from pydantic_marc.marc_rules import RuleSet
+from pydantic_marc.marc_rules import Rule, RuleSet
 
 
 def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[Any]:
@@ -34,7 +34,8 @@ def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[An
     This function creates a `RuleSet` from the provided `ValidationInfo` and uses it
     to add each field in the `data` list with the appropriate `Rule` based on the
     field's tag. The function constructs a list of dicts representing the fields,
-    each enriched with its tag, rule, and either control field data or indicators/subfields.
+    each enriched with its tag, rule, and either control field data or
+    indicators/subfields.
 
     Args:
         data:
@@ -58,9 +59,20 @@ def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[An
         field_dict = {"rules": rule, "tag": field.tag}
         if getattr(field, "control_field") is True:
             field_dict["data"] = field.data
-        elif getattr(field, "control_field") is False:
+        else:
             field_dict["indicators"] = field.indicators
             field_dict["subfields"] = field.subfields
+        if field.tag == "007" and rule:
+            types = field_dict["rules"].model_extra["material_types"][field.data[0]]
+            rule_dict = {
+                "length": types["length"],
+                "values": types["values"],
+                "tag": rule.tag,
+                "repeatable": rule.repeatable,
+                "required": rule.required,
+                "material_type": field.data[0],
+            }
+            field_dict["rules"] = Rule(**rule_dict)
         field_list.append(field_dict)
     return field_list
 
@@ -90,6 +102,37 @@ def handle_errors(
     except ValidationError as exc:
         errors = [MarcCustomError(e["type"], e["msg"], e["ctx"]) for e in exc.errors()]
         return data, [i.error_details for i in errors]
+
+
+def marc_field_validator(error_checker_func: Callable) -> Callable:
+    """
+    Wrapper function to run field-level validation for a MARC field using
+    rules from the model.
+
+    This function looks up a validation function based on the field name and applies
+    it if a corresponding rule and validator are found. If no rule or validator is
+    found, the input `data` is returned unchanged. If validation errors are found,
+    they are raised using `raise_validation_errors`.
+
+    Args:
+        data: the data passed to the field being validated
+        info: A `ValidationInfo` object.
+
+    Returns:
+        The validated field data, or raises a `ValidationError` if rules are violated.
+    """
+
+    def decorator(func: Callable) -> Callable:
+        def wrapper(data: Any, info: ValidationInfo) -> Any:
+            rule = info.data.get("rules", None)
+            if not rule:
+                return data
+            errors = error_checker_func(rule=rule, data=data, tag=info.data["tag"])
+            return raise_validation_errors(errors=errors, data=data)
+
+        return wrapper
+
+    return decorator
 
 
 def raise_validation_errors(errors: List[InitErrorDetails], data: Any) -> Any:

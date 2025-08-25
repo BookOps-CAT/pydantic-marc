@@ -4,15 +4,24 @@ import pytest
 from pymarc import Field as PymarcField
 from pymarc import Indicators, Record, Subfield
 
-from pydantic_marc.marc_rules import RuleSet
+from pydantic_marc.marc_rules import Rule, RuleSet
 
 
 @pytest.fixture
 def get_default_rule():
     rules = RuleSet()
 
-    def _get_default_rule(tag):
-        return rules.rules.get(tag)
+    def _get_default_rule(tag: str, subtype: Optional[str] = None):
+        if subtype is None:
+            return rules.rules.get(tag)
+        rule = rules.rules.get(tag, {})
+        return Rule(
+            tag=tag,
+            length=rule.material_types.get(subtype, {}).get("length"),
+            values=rule.material_types.get(subtype, {}).get("values"),
+            repeatable=rule.repeatable,
+            required=rule.required,
+        )
 
     return _get_default_rule
 
@@ -33,6 +42,8 @@ def make_mock_info():
     def _make_mock_info(
         data: Dict[str, Any], field_name: str, context: Optional[Dict[str, Any]] = None
     ):
+        if "leader" not in data:
+            data["leader"] = "00454cam a22001575i 4500"
         return MockInfo(data=data, context=context, field_name=field_name)
 
     return _make_mock_info

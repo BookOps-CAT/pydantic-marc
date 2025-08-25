@@ -20,7 +20,7 @@ from pydantic import (
 
 from pydantic_marc.fields import ControlField, DataField
 from pydantic_marc.marc_rules import RuleSet
-from pydantic_marc.validators import validate_marc_fields
+from pydantic_marc.validators import validate_leader, validate_marc_fields
 
 
 def field_discriminator(data: Any) -> str:
@@ -46,8 +46,8 @@ def field_discriminator(data: Any) -> str:
 class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
     A class that defines a MARC record. The `leader` attribute will validate that the
-    record's leader is either a string and that it matches the pattern defined by the
-    MARC standard. The `fields` attribute is a list of `ControlField` and `DataField`
+    record's leader is a string and that it matches the pattern defined by the MARC
+    standard. The `fields` attribute is a list of `ControlField` and `DataField`
     objects.
 
     Attributes:
@@ -60,15 +60,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
         Union[RuleSet, Dict[str, Any], None],
         Field(default_factory=RuleSet, exclude=True),
     ]
-    leader: Annotated[
-        str,
-        Field(
-            min_length=24,
-            max_length=24,
-            pattern=r"^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\sa][\sa]22[0-9]{5}[\s12345678uzIKLM][\sacinu][\sabc]4500$",  # noqa E501
-        ),
-        BeforeValidator(lambda x: str(x)),
-    ]
+    leader: Annotated[str, BeforeValidator(validate_leader)]
     fields: Annotated[
         List[
             Annotated[

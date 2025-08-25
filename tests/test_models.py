@@ -81,6 +81,197 @@ class TestMarcRecord:
             "type": "invalid_indicator",
         } in errors
 
+    @pytest.mark.parametrize(
+        "field_value,leader,error_msg",
+        [
+            (
+                "a|||||||||||||||||",
+                "00454nam a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
+            ),
+            (
+                "a|| |||||||||  |||",
+                "00454nas a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
+            ),
+            (
+                "cax|||||||||||| | ",
+                "00454ncm a22000005i 4500",
+                "006: Invalid character(s) 'ax' at position '006/01-02'. Valid characters are: ['an', 'bd', 'bg', 'bl', 'bt', 'ca', 'cb', 'cc', 'cg', 'ch', 'cl', 'cn', 'co', 'cp', 'cr', 'cs', 'ct', 'cy', 'cz', 'df', 'dv', 'fg', 'fl', 'fm', 'ft', 'gm', 'hy', 'jz', 'mc', 'md', 'mi', 'mo', 'mp', 'mr', 'ms', 'mu', 'mz', 'nc', 'nn', 'op', 'or', 'ov', 'pg', 'pm', 'po', 'pp', 'pr', 'ps', 'pt', 'pv', 'rc', 'rd', 'rg', 'ri', 'rp', 'rq', 'sd', 'sg', 'sn', 'sp', 'st', 'su', 'sy', 'tc', 'tl', 'ts', 'uu', 'vi', 'vr', 'wz', 'za', 'zz', '||'].",
+            ),
+            (
+                "e||||ay |  || | ||",
+                "00454nem a22000005i 4500",
+                "006: Invalid character(s) 'ay' at position '006/05-06'. Valid characters are: ['  ', 'aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'am', 'an', 'ap', 'au', 'az', 'ba', 'bb', 'bc', 'bd', 'be', 'bf', 'bg', 'bh', 'bi', 'bj', 'bk', 'bl', 'bo', 'br', 'bs', 'bu', 'bz', 'ca', 'cb', 'cc', 'ce', 'cp', 'cu', 'cz', 'da', 'db', 'dc', 'dd', 'de', 'df', 'dg', 'dh', 'dl', 'zz', '||'].",
+            ),
+            (
+                "g||| |     ||  |||",
+                "00454ngm a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
+            ),
+            (
+                "m||||||||||||||||a",
+                "00454nmm a22000005i 4500",
+                "006: Invalid character(s) 'a' at position '006/17'. Valid characters are: [' ', '|'].",
+            ),
+            (
+                "p     |        |  ",
+                "00454npm a22000005i 4500",
+                "006: Invalid character(s) '|' at position '006/15'. Valid characters are: [' '].",
+            ),
+        ],
+    )
+    def test_MarcRecord_006_errors(self, stub_record, field_value, leader, error_msg):
+        stub_record.remove_fields("006", "008")
+        stub_record.leader = leader
+        stub_record.add_field(PymarcField(tag="006", data=field_value))
+        stub_record.add_field(
+            PymarcField(tag="008", data=f"200101s2020    nyu{field_value[1:]}|||||")
+        )
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 2
+        assert errors[0]["type"] == "invalid_fixed_field"
+        assert errors[0]["msg"] == error_msg
+        assert errors[1]["type"] == "invalid_fixed_field"
+        assert "008: Invalid character(s) " in errors[1]["msg"]
+
+    @pytest.mark.parametrize(
+        "field_value, error_msg",
+        [
+            (
+                "ad aauuz",
+                "007: Invalid character(s) 'z' at position '007/07'. Valid characters are: ['a', 'b', 'm', 'n', '|'].",
+            ),
+            (
+                "c| ||||||||||z",
+                "007: Invalid character(s) 'z' at position '007/13'. Valid characters are: ['a', 'n', 'p', 'r', 'u', '|'].",
+            ),
+            (
+                "d| z||",
+                "007: Invalid character(s) 'z' at position '007/03'. Valid characters are: ['a', 'c', '|'].",
+            ),
+            (
+                "f|z|||||||",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "g|z||||||",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "h|z|||000||||",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "k|z|||",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "m|z||||||||||||||000000",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "oz",
+                "007: Invalid character(s) 'z' at position '007/01'. Valid characters are: ['u', '|'].",
+            ),
+            (
+                "qz",
+                "007: Invalid character(s) 'z' at position '007/01'. Valid characters are: ['u', '|'].",
+            ),
+            (
+                "r|z||||||||",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "s|z|||||||||||",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "tt",
+                "007: Invalid character(s) 't' at position '007/01'. Valid characters are: ['a', 'b', 'c', 'd', 'u', 'z', '|'].",
+            ),
+            (
+                "v|z||||||",
+                "007: Invalid character(s) 'z' at position '007/02'. Valid characters are: [' '].",
+            ),
+            (
+                "za",
+                "007: Invalid character(s) 'a' at position '007/01'. Valid characters are: ['m', 'u', 'z', '|'].",
+            ),
+        ],
+    )
+    def test_MarcRecord_007_errors(self, stub_record, field_value, error_msg):
+        stub_record.add_field(PymarcField(tag="007", data=field_value))
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 1
+        assert errors[0]["type"] == "invalid_fixed_field"
+        assert errors[0]["msg"] == error_msg
+
+    @pytest.mark.parametrize(
+        "field_value,leader,error_msg",
+        [
+            (
+                "250101s2020    nyu||||||||||||||||||||||",
+                "00454nam a22000005i 4500",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
+            ),
+            (
+                "250101s2020    nyu|| |||||||||  ||||||||",
+                "00454nas a22000005i 4500",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
+            ),
+            (
+                "250101s2020    nyu|||||||||||||||| |||||",
+                "00454ncm a22000005i 4500",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
+            ),
+            (
+                "250101s2020    nyu|||||| |  || |||||||||",
+                "00454nem a22000005i 4500",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
+            ),
+            (
+                "250101s2020    nyu||| |     ||  ||||||||",
+                "00454ngm a22000005i 4500",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
+            ),
+            (
+                "250101s2020    nyu||||||||||||||||a|||||",
+                "00454nmm a22000005i 4500",
+                "008: Invalid character(s) 'a' at position '008/34'. Valid characters are: [' ', '|'].",
+            ),
+            (
+                "250101s2020    nyu     |        |  |||||",
+                "00454npm a22000005i 4500",
+                "008: Invalid character(s) '|' at position '008/32'. Valid characters are: [' '].",
+            ),
+            (
+                "250101s2020    nyy|||||||||||||| |||||||",
+                "00454nam a22000005i 4500",
+                "008: Invalid character(s) 'nyy' at position '008/15-17'. Valid characters are: see https://id.loc.gov/vocabulary/countries.html for list of valid country codes.",
+            ),
+            (
+                "250101s2020    nyu|||||||||||||| ||zzz||",
+                "00454nam a22000005i 4500",
+                "008: Invalid character(s) 'zzz' at position '008/35-37'. Valid characters are: see https://id.loc.gov/vocabulary/languages.html for list of valid language codes.",
+            ),
+        ],
+    )
+    def test_MarcRecord_008_errors(self, stub_record, field_value, leader, error_msg):
+        stub_record.remove_fields("008")
+        stub_record.leader = leader
+        stub_record.add_field(PymarcField(tag="008", data=field_value))
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 1
+        assert errors[0]["type"] == "invalid_fixed_field"
+        assert errors[0]["msg"] == error_msg
+
     def test_MarcRecord_050_errors(self, stub_record):
         stub_record["050"].add_subfield("b", "foo")
         stub_record["050"].add_subfield("b", "bar")
@@ -123,6 +314,47 @@ class TestMarcRecord:
                 "code": "b",
             },
         } in errors
+
+    def test_MarcRecord_invalid_leader(self, stub_record):
+        with pytest.raises(ValidationError) as e:
+            MarcRecord(leader="xxxxxcam a22001575i 4500", fields=stub_record.fields)
+        errors = e.value.errors()
+        assert len(errors) == 5
+        assert [i["type"] for i in errors] == [
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+        ]
+        assert [i["loc"] for i in errors] == [
+            ("leader", "00"),
+            ("leader", "01"),
+            ("leader", "02"),
+            ("leader", "03"),
+            ("leader", "04"),
+        ]
+
+    def test_MarcRecord_invalid_leader_model_validate(self, stub_record):
+        stub_record.leader = "xxxxxcam a22001575i 4500"
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(stub_record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 5
+        assert [i["type"] for i in errors] == [
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+            "invalid_leader",
+        ]
+        assert [i["loc"] for i in errors] == [
+            ("leader", "00"),
+            ("leader", "01"),
+            ("leader", "02"),
+            ("leader", "03"),
+            ("leader", "04"),
+        ]
 
     def test_MarcRecord_nr_field_error(self, stub_record):
         stub_record.add_field(PymarcField(tag="001", data="foo"))
@@ -199,7 +431,7 @@ class TestMarcRecord:
         with pytest.raises(ValidationError) as e:
             MarcRecord(leader=record.leader, fields=record.fields)
         errors = e.value.errors()
-        assert len(errors) == 9
+        assert len(errors) == 12
         assert {
             "ctx": {
                 "input": "245",
@@ -301,14 +533,169 @@ class TestMarcRecord:
             },
         } in errors
         assert {
-            "type": "string_pattern_mismatch",
-            "loc": ("leader",),
-            "msg": "String should match pattern '^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\\sa][\\sa]22[0-9]{5}[\\s12345678uzIKLM][\\sacinu][\\sabc]4500$'",
-            "input": "00327cam a2200133       ",
+            "type": "invalid_leader",
+            "loc": ("leader", "20"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "21"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "22"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "23"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
+        } in errors
+
+    def test_MarcRecord_multiple_errors_model_validate(self, stub_invalid_record):
+        record = stub_invalid_record.as_marc21()
+        reader = MARCReader(record)
+        record = next(reader)
+        with pytest.raises(ValidationError) as e:
+            MarcRecord.model_validate(record, from_attributes=True)
+        errors = e.value.errors()
+        assert len(errors) == 12
+        assert {
             "ctx": {
-                "pattern": "^[0-9]{5}[acdnp][acdefgijkmoprt][abcdims][\\sa][\\sa]22[0-9]{5}[\\s12345678uzIKLM][\\sacinu][\\sabc]4500$"
+                "input": "245",
             },
-            "url": "https://errors.pydantic.dev/2.10/v/string_pattern_mismatch",
+            "input": "245",
+            "loc": (
+                "fields",
+                "245",
+            ),
+            "msg": "One 245 field must be present in a MARC21 record.",
+            "type": "missing_required_field",
+        } in errors
+        assert {
+            "ctx": {
+                "input": "p|||||",
+                "length": 6,
+                "tag": "006",
+                "valid": 18,
+            },
+            "input": "p|||||",
+            "loc": ("fields", "006"),
+            "msg": "006: Length appears to be invalid. Reported length is: 6. Expected length is: 18",
+            "type": "control_field_length_invalid",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind1",
+                "input": "1",
+                "loc": ("336", "ind1"),
+                "tag": "336",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "336", "ind1"),
+            "msg": "336 ind1: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "ind": "ind2",
+                "input": "1",
+                "loc": ("336", "ind2"),
+                "tag": "336",
+                "valid": ["", " "],
+            },
+            "input": "1",
+            "loc": ("fields", "336", "ind2"),
+            "msg": "336 ind2: Invalid data (1). Indicator should be ['', ' '].",
+            "type": "invalid_indicator",
+        } in errors
+        assert {
+            "ctx": {
+                "code": "z",
+                "input": [
+                    PydanticSubfield(code="z", value="foo"),
+                ],
+                "loc": ("336", "z"),
+                "tag": "336",
+            },
+            "input": [
+                PydanticSubfield(code="z", value="foo"),
+            ],
+            "loc": ("fields", "336", "z"),
+            "msg": "336 $z: Subfield cannot be defined in this field.",
+            "type": "subfield_not_allowed",
+        } in errors
+        assert {
+            "type": "non_repeatable_field",
+            "loc": ("fields", "001"),
+            "msg": "001: Has been marked as a non-repeating field.",
+            "input": "001",
+            "ctx": {"input": "001"},
+        } in errors
+        assert {
+            "ctx": {
+                "input": ["100", "110"],
+            },
+            "input": ["100", "110"],
+            "loc": ("fields", "100", "110"),
+            "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
+            "type": "multiple_1xx_fields",
+        } in errors
+        assert {
+            "type": "non_repeatable_subfield",
+            "loc": ("fields", "600", "a"),
+            "msg": "600 $a: Subfield cannot repeat.",
+            "input": [
+                PydanticSubfield(code="a", value="Foo, Bar,"),
+                PydanticSubfield(code="a", value="Foo, Bar,"),
+            ],
+            "ctx": {
+                "loc": ("600", "a"),
+                "input": [
+                    PydanticSubfield(code="a", value="Foo, Bar,"),
+                    PydanticSubfield(code="a", value="Foo, Bar,"),
+                ],
+                "tag": "600",
+                "code": "a",
+            },
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "20"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "21"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "22"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+        } in errors
+        assert {
+            "type": "invalid_leader",
+            "loc": ("leader", "23"),
+            "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
+            "input": " ",
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
         } in errors
 
 

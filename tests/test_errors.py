@@ -4,6 +4,7 @@ from pymarc import Subfield as PymarcSubfield
 from pydantic_marc.errors import (
     ControlFieldLength,
     InvalidIndicator,
+    InvalidLeader,
     InvalidSubfield,
     MissingRequiredField,
     MultipleMainEntryValues,
@@ -179,3 +180,25 @@ def test_non_repeatable_subfield(tag, code, subfields):
     assert error.message_template == "{tag} ${code}: Subfield cannot repeat."
     assert error.error_details.get("loc") == (tag, code)
     assert error.error_details.get("input") == subfields
+
+
+def test_invalid_leader():
+    error = InvalidLeader(
+        {
+            "input": "c",
+            "loc": "00",
+            "valid": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        }
+    )
+    assert error.type == "invalid_leader"
+    assert error.context.get("input") == "c"
+    assert (
+        error.message()
+        == "LDR: Invalid character 'c' at position 'leader/00'. Valid characters are: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']."
+    )
+    assert (
+        error.message_template
+        == "LDR: Invalid character '{input}' at position 'leader/{loc}'. Valid characters are: {valid}."
+    )
+    assert error.error_details.get("loc") == ("00",)
+    assert error.error_details.get("input") == "c"

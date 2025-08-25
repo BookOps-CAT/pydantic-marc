@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping
 from types import MappingProxyType
-from typing import Annotated, Any, ClassVar, Dict, List, Optional, Union
+from typing import Annotated, Any, ClassVar, Dict, List, Union
 
 from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
@@ -25,42 +25,31 @@ class _DefaultRules:
 
     @classmethod
     def rules_from_json(cls) -> Dict[str, Any]:
-        if cls._cached_rules is None:
-            with open("pydantic_marc/validation_rules/default_rules.json", "r") as fh:
-                cls._cached_rules = json.load(fh)
+        with open("pydantic_marc/validation_rules/default_rules.json", "r") as fh:
+            cls._cached_rules = json.load(fh)
         return cls._cached_rules
 
 
-class Rule(BaseModel, frozen=True):
+class Rule(BaseModel, frozen=True, extra="allow"):
     """
     A collection of rules used to validate the content of an individual MARC field.
     """
 
-    _default: ClassVar[Mapping] = MappingProxyType(_DefaultRules.rules_from_json())
-
-    tag: Annotated[str, Field(pattern=r"\d\d\d")]
+    tag: Annotated[str, Field(pattern=r"\d\d\d|LDR")]
     repeatable: Union[bool, None] = None
     ind1: Union[List[str], None] = None
     ind2: Union[List[str], None] = None
     subfields: Union[Dict[str, List[str]], None] = None
     length: Union[int, Dict[str, Union[int, List[int]]], None] = None
     required: Union[bool, None] = None
-
-    @classmethod
-    def create_default(cls, tag: str) -> Optional[Rule]:
-        """Get the default MARC rule for a specified tag"""
-        data = cls._default.get(tag, None)
-        if data is not None:
-            return Rule(**data)
-        else:
-            return data
+    values: Union[Dict[str, Any], None] = None
+    material_type: Union[str, None] = None
 
 
 class RuleSet(BaseModel, frozen=True):
     _default: ClassVar[Mapping] = MappingProxyType(_DefaultRules.rules_from_json())
 
     rules: Dict[str, Union[Rule, Any]] = {k: Rule(**v) for k, v in _default.items()}
-    replace: bool = False
 
     @classmethod
     def from_validation_info(cls, info: ValidationInfo) -> Union[RuleSet, None]:
@@ -70,7 +59,8 @@ class RuleSet(BaseModel, frozen=True):
         within it.
 
         The function identifies which rules to use in validation by checking two places
-        for MARC rules: the model's validation context, and the model's `rules` attribute.
+        for MARC rules: the model's validation context, and the model's `rules`
+        attribute.
 
         This function first checks if MARC rules were passed to the model via validation
         context (indentified in the `ValidationInfo.context`attribute). It then checks
@@ -89,7 +79,33 @@ class RuleSet(BaseModel, frozen=True):
         record_rules = info.data["rules"]
         if not record_rules and not rules:
             return None
-        rules.update({k: v for k, v in record_rules.rules.items() if k not in rules})
+        record_type = info.data.get("leader")
+        if not record_type:
+            material_type = None
+        else:
+            record_type = record_type[6:7]
+        if record_type == "a" and info.data["leader"][7:8] in ["b", "i", "s"]:
+            material_type = "CR"
+        elif record_type in ["c", "d", "i", "j"]:
+            material_type = "MU"
+        elif record_type in ["e", "f"]:
+            material_type = "MP"
+        elif record_type in ["g", "k", "o", "r"]:
+            material_type = "VM"
+        elif record_type in ["m"]:
+            material_type = "CF"
+        elif record_type in ["p"]:
+            material_type = "MM"
+        else:
+            material_type = "BK"
+        for k, v in record_rules.rules.items():
+            if material_type and k in ["006", "008"] and v.model_extra:
+                rule_dict = v.__dict__
+                type_vals = v.model_extra.get("material_types", {}).get(material_type)
+                rule_dict.update(type_vals)
+                v = Rule(**rule_dict)
+            if k not in rules:
+                rules[k] = v
         return RuleSet(rules=rules)
 
     @field_validator("rules", mode="before")

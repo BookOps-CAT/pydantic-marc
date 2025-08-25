@@ -13,19 +13,31 @@ from pydantic_marc.fields import (
 
 class TestControlField:
     @pytest.mark.parametrize(
-        "tag, data",
+        "tag, subtype, data",
         [
-            ("001", "ocn123456789"),
-            ("003", "OCoLC"),
-            ("005", "20241111111111.0"),
-            ("006", "a|||||||||||||||||"),
-            ("007", "cr |||||||||||"),
-            ("008", "210505s2021    nyu           000 0 eng d"),
+            ("001", None, "ocn123456789"),
+            ("003", None, "OCoLC"),
+            ("005", None, "20241111111111.0"),
+            ("006", "BK", "a|||||||||||||| ||"),
+            ("007", "c", "cr |||||||||||"),
+            ("008", "BK", "210505s2021    nyu           000 0 eng d"),
+            ("009", None, "foo"),
         ],
     )
-    def test_ControlField_valid(self, tag, data, get_default_rule):
-        model = ControlField(tag=tag, data=data, rules=get_default_rule(tag))
+    def test_ControlField_valid(self, tag, data, subtype, get_default_rule):
+        model = ControlField(tag=tag, data=data, rules=get_default_rule(tag, subtype))
         assert model.model_dump(by_alias=True) == {tag: data}
+        assert model.model_json_schema()["properties"]["rules"].get("default") is None
+
+    @pytest.mark.parametrize(
+        "data",
+        ["cr |||||||||||", "ad |||||"],
+    )
+    def test_ControlField_007(self, data, get_default_rule):
+        model = ControlField(
+            tag="007", data=data, rules=get_default_rule("007", data[0])
+        )
+        assert model.model_dump(by_alias=True) == {"007": data}
         assert model.model_json_schema()["properties"]["rules"].get("default") is None
 
     def test_ControlField_valid_with_rules(self):
@@ -81,7 +93,9 @@ class TestControlField:
         self, field_value, error_type, get_default_rule
     ):
         with pytest.raises(ValidationError) as e:
-            ControlField(tag="006", data=field_value, rules=get_default_rule("006"))
+            ControlField(
+                tag="006", data=field_value, rules=get_default_rule("006", "BK")
+            )
         assert e.value.errors()[0]["type"] == error_type
         assert e.value.errors()[0]["loc"] == ("data", "006")
         assert len(e.value.errors()) == 1
@@ -95,7 +109,7 @@ class TestControlField:
             ),
             (
                 "c||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: [6, 14]",
+                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 14",
             ),
             (
                 "d||",
@@ -155,7 +169,11 @@ class TestControlField:
         self, field_value, error_msg, get_default_rule
     ):
         with pytest.raises(ValidationError) as e:
-            ControlField(tag="007", data=field_value, rules=get_default_rule("007"))
+            ControlField(
+                tag="007",
+                data=field_value,
+                rules=get_default_rule("007", field_value[0]),
+            )
         assert e.value.errors()[0]["type"] == "control_field_length_invalid"
         assert e.value.errors()[0]["msg"] == error_msg
         assert len(e.value.errors()) == 1
@@ -174,7 +192,9 @@ class TestControlField:
         self, field_value, error_type, get_default_rule
     ):
         with pytest.raises(ValidationError) as e:
-            ControlField(tag="008", data=field_value, rules=get_default_rule("008"))
+            ControlField(
+                tag="008", data=field_value, rules=get_default_rule("008", "BK")
+            )
         assert e.value.errors()[0]["type"] == error_type
         assert e.value.errors()[0]["loc"] == ("data", "008")
         assert len(e.value.errors()) == 1

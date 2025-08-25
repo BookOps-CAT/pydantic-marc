@@ -38,19 +38,62 @@ class InvalidIndicator(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                loc:
-                    A tuple with the tag and indicator number. example: (100, ind1).
-                input:
+                loc (tuple[str, str]):
+                    A tuple containing the tag (context['tag']) and indicator
+                    number (context['ind']). example: (100, ind1).
+                input (str):
                     The value passed to the indicator.
-                valid:
+                valid (list[str]):
                     A list of valid values for the indicator.
-
         """
         context["tag"], context["ind"] = context["loc"]
         instance = super().__new__(
             cls,
             "invalid_indicator",
             "{tag} {ind}: Invalid data ({input}). Indicator should be {valid}.",
+            context,
+        )
+        return instance
+
+
+class InvalidFixedField(MarcCustomError):
+    def __new__(cls, context: Dict[str, Any]) -> InvalidFixedField:
+        """
+        Create a new `InvalidFixedField` object.
+
+        Args:
+            context: A dictionary containing:
+                input (str): Value passed to the control field's data attribute.
+                loc (str): The position where the error was found
+                tag (str): The field's tag.
+                valid (list[str]): The valid character values for that position.
+        """
+        instance = super().__new__(
+            cls,
+            "invalid_fixed_field",
+            "{tag}: Invalid character(s) '{input}' at position '{tag}/{loc}'. "
+            "Valid characters are: {valid}.",
+            context,
+        )
+        return instance
+
+
+class InvalidLeader(MarcCustomError):
+    def __new__(cls, context: Dict[str, Any]) -> InvalidLeader:
+        """
+        Create a new `InvalidLeader` object.
+
+        Args:
+            context: A dictionary containing:
+                loc (str): The leader position where the error was found.
+                input (str): The value passed to the leader.
+                valid (list[str]): The valid character for that position.
+        """
+        instance = super().__new__(
+            cls,
+            "invalid_leader",
+            "LDR: Invalid character '{input}' at position 'leader/{loc}'. "
+            "Valid characters are: {valid}.",
             context,
         )
         return instance
@@ -65,9 +108,10 @@ class InvalidSubfield(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                loc:
-                    A tuple containing the tag and subfield code. example: (100, a).
-                input:
+                loc (tuple[str, str]):
+                    A tuple containing the tag (context['tag']) and subfield code
+                    (context['code']). example: (100, a).
+                input (list[PydanticSubfield]):
                     A list of subfields with the invalid subfield code.
         """
         context["tag"], context["code"] = context["loc"]
@@ -89,9 +133,9 @@ class ControlFieldLength(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                tag: The field's tag.
-                input: Value passed to the control field's data attribute.
-                valid: The valid length for the field.
+                tag (str): The field's tag.
+                input (str): Value passed to the control field's data attribute.
+                valid (int): The valid length for the field.
         """
         context["length"] = len(context["input"])
         instance = super().__new__(
@@ -112,7 +156,7 @@ class MultipleMainEntryValues(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                input: The field's tag.
+                input (list[str]): The field's tag.
         """
         instance = super().__new__(
             cls,
@@ -132,7 +176,7 @@ class MissingRequiredField(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                input: The field's tag.
+                input (str): The field's tag.
         """
         instance = super().__new__(
             cls,
@@ -152,7 +196,7 @@ class NonRepeatableField(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                input: The field's tag.
+                input (str): The field's tag.
         """
         instance = super().__new__(
             cls,
@@ -172,10 +216,11 @@ class NonRepeatableSubfield(MarcCustomError):
 
         Args:
             context: A dictionary containing:
-                loc:
-                    A tuple containing the tag and subfield code. example: (100, a).
-                input:
-                    A list of subfields with the invalid subfield code.
+                input (list[PydanticSubfield]):
+                    A list of subfields with the non-repeatable subfield code.
+                loc (tuple[str, str]):
+                    A tuple containing the tag (context['tag']) and subfield code
+                    (context['ind']). example: (245, a).
         """
         context["tag"], context["code"] = context["loc"]
         instance = super().__new__(

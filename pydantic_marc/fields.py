@@ -22,7 +22,12 @@ from typing import Annotated, Any, Dict, List, Literal, Sequence, Union
 from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
 from pydantic_marc.marc_rules import Rule
-from pydantic_marc.validators import validate_field
+from pydantic_marc.validators import (
+    validate_indicators,
+    validate_length,
+    validate_subfields,
+    validate_values,
+)
 
 
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
@@ -31,7 +36,8 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
     a three-digit string and the `data` attribute is a string that represents the
     value of the control field. The `rules` attribute contains the custom validation
     logic the particular MARC field and is computed passed to the `ControlField` model
-    when it is called within a `MarcRecord` model. The `rules` attribute is not validated nor is it included in serialization.
+    when it is called within a `MarcRecord` model. The `rules` attribute is not
+    validated nor is it included in serialization.
 
     Attributes:
         rules:
@@ -48,7 +54,9 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
     rules: Annotated[Union[Rule, Dict[str, Any], None], Field(exclude=True)]
 
     tag: Literal["001", "002", "003", "004", "005", "006", "007", "008", "009"]
-    data: Annotated[str, AfterValidator(validate_field)]
+    data: Annotated[
+        str, AfterValidator(validate_length), AfterValidator(validate_values)
+    ]
 
     @model_serializer(when_used="unless-none")
     def serialize_control_field(self) -> Dict[str, str]:
@@ -77,8 +85,8 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
         tag:
             A three-digit string that represents the data field's tag.
         indicators:
-            A `PydanticIndicators` object or a `Sequence` object representing the field's
-            indicators.
+            A `PydanticIndicators` object or a `Sequence` object representing the
+            field's indicators.
         subfields:
             A list of `PydanticSubfield` objects.
 
@@ -88,9 +96,9 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
     indicators: Annotated[
-        Union[PydanticIndicators, Sequence], AfterValidator(validate_field)
+        Union[PydanticIndicators, Sequence], AfterValidator(validate_indicators)
     ]
-    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_field)]
+    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_subfields)]
 
     @model_serializer
     def serialize_data_field(
@@ -132,7 +140,8 @@ class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attribute
 class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
     A class that defines a single subfield within  a `DataField` object. Each subfield
-    must contain a `code` attribute as a single character string and a `value` attribute.
+    must contain a `code` attribute as a single character string and a `value`
+    attribute.
 
     Args:
         code: The subfield's code. Must be a single character string.

@@ -1,6 +1,7 @@
 """Custom validation functions for `ControlField`, `DataField`, and `MarcRecord` models.
 
-The validator functions in this module are used as either after or wrap validators depending on the field and model.
+The validator functions in this module are used as either after or wrap validators
+depending on the field and model.
 """
 
 from __future__ import annotations
@@ -10,52 +11,46 @@ from typing import Any, Callable
 from pydantic import ValidationInfo
 
 from pydantic_marc.error_handlers import (
-    get_control_field_errors,
+    get_control_field_length_errors,
+    get_control_field_value_errors,
     get_indicator_errors,
+    get_leader_errors,
     get_marc_field_errors,
     get_subfield_errors,
 )
 from pydantic_marc.utils import (
     add_rules_to_pymarc_fields,
     handle_errors,
+    marc_field_validator,
     raise_validation_errors,
 )
 
-FIELD_VALIDATION_RULES = {
-    "data": get_control_field_errors,
-    "indicators": get_indicator_errors,
-    "subfields": get_subfield_errors,
-}
+
+@marc_field_validator(get_control_field_length_errors)
+def validate_length(data: Any, info: ValidationInfo) -> Any:
+    return data
 
 
-def validate_field(data: Any, info: ValidationInfo) -> Any:
-    """
-    Run field-level validation for a MARC field using rules from the model.
+@marc_field_validator(get_control_field_value_errors)
+def validate_values(data: Any, info: ValidationInfo) -> Any:
+    return data
 
-    This function looks up a validation function based on the field name and applies
-    it if a corresponding rule and validator are found. If no rule or validator is
-    found, the input `data` is returned unchanged. If validation errors are found,
-    they are raised using `raise_validation_errors`.
 
-    Args:
-        data: the data passed to the field being validated
-        info: A `ValidationInfo` object.
+@marc_field_validator(get_indicator_errors)
+def validate_indicators(data: Any, info: ValidationInfo) -> Any:
+    return data
 
-    Returns:
-        The validated field data, or raises a `ValidationError` if rules are violated.
-    """
-    rule = info.data.get("rules", None)
-    validator_func = FIELD_VALIDATION_RULES.get(str(info.field_name))
-    if not rule or not validator_func:
-        return data
-    errors = validator_func(rule=rule, data=data, tag=info.data["tag"])
-    return raise_validation_errors(errors=errors, data=data)
+
+@marc_field_validator(get_subfield_errors)
+def validate_subfields(data: Any, info: ValidationInfo) -> Any:
+    return data
 
 
 def validate_marc_data(data: Any, info: ValidationInfo) -> Any:
     """
     Confirm that the values passed to the `MarcRecord.fields` attribute conform to the
-    rules passed to the `MarcRecord.rules` attribute. If the values do not match the rules for that field, a `NonRepeatableField` error, a `MissingRequiredField`
+    rules passed to the `MarcRecord.rules` attribute. If the values do not match the
+    rules for that field, a `NonRepeatableField` error, a `MissingRequiredField`
     error and/or a `MultipleMainEntryValues` error will be raised.
 
     This is a part of the `WrapValidator` on the `fields` field and runs before
@@ -84,7 +79,8 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     """
     Confirm that the values passed to the `MarcRecord.fields` attribute conforms to the
     defined for the record. If the values do not match the rules for
-    the record, a `NonRepeatableField` error, a `MissingRequiredField` error and/or a `MultipleMainEntryValues` error will be raised.
+    the record, a `NonRepeatableField` error, a `MissingRequiredField` error and/or a
+    `MultipleMainEntryValues` error will be raised.
 
 
     This function is called before validation of the `MarcRecord` model within the
@@ -114,3 +110,30 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     all_errors.extend(errors)
 
     return raise_validation_errors(errors=all_errors, data=data)
+
+
+def validate_leader(data: Any, info: ValidationInfo) -> Any:
+    """
+    Confirm that the value passed to the `MarcRecord.leader` attribute conforms to the
+    rules passed to the `MarcRecord.rules` attribute. If the values do not match the
+    rules for that field, one or more `InvalidLeader` errors will be raised.
+
+    This is a the `BeforeValidator` on the `leader` field and runs before validating
+    the model. These errors will be collected and raised with any other errors
+    identified while validating the `MarcRecord`.
+
+    Args:
+
+        data: The input data passed to the `MarcRecord.leader` attribute.
+        info: A `ValidationInfo` object.
+
+    Returns:
+
+        A list of `MarcCustomError` objects.
+
+
+    Raises:
+        `ValidationError` if the there are any MARC validation errors
+    """
+    errors = get_leader_errors(data=str(data), info=info)
+    return raise_validation_errors(errors=errors, data=str(data))

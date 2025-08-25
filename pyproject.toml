@@ -24,17 +24,21 @@ pymarc = "^5.2.3"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "--cov=pydantic_marc"
 
 [tool.coverage.run]
 relative_files = true
 source = ["."]
+omit = ["tests/*"]
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
-
 warn_unused_ignores = true
 disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = "tests.*"
+module = ["tests.*"]
 disallow_untyped_defs = false
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]
