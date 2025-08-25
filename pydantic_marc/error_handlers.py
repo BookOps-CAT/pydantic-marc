@@ -51,11 +51,13 @@ def get_control_field_value_errors(
     rule: Rule, data: Any, tag: str
 ) -> List[InitErrorDetails]:
     """
-    Validate the values within a control field's `data` string against the
-    expected rule.
+    Validate the values of each character of a control field's `data` string
+    against the expected rule.
 
-    If a character does not match the expected value at a specific position, an
-    `InvalidFixedField` error is returned.
+    If a character does not match the expected value at a specific position,
+    an `InvalidFixedField` error is returned. The values are validated after
+    the length of the `ControlField` has been validated in order
+    to avoid misleading error messages due to missing or extra values.
 
     Args:
         rule: the `Rule` object defining the expected length and values for the field.
@@ -80,12 +82,7 @@ def get_control_field_value_errors(
         for loc, char in data_dict.items():
             values = value_rules.get(loc)
             if values and char not in values:
-                error_data = {
-                    "tag": tag,
-                    "input": char,
-                    "valid": values,
-                    "loc": loc,
-                }
+                error_data = {"tag": tag, "input": char, "valid": values, "loc": loc}
                 errors.append(InvalidFixedField(error_data).error_details)
     if tag == "008":
         codes = marc_codes()
