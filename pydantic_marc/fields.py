@@ -22,7 +22,12 @@ from typing import Annotated, Any, Dict, List, Literal, Sequence, Union
 from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
 from pydantic_marc.marc_rules import Rule
-from pydantic_marc.validators import validate_field
+from pydantic_marc.validators import (
+    validate_indicators,
+    validate_length,
+    validate_subfields,
+    validate_values,
+)
 
 
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
@@ -49,7 +54,9 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
     rules: Annotated[Union[Rule, Dict[str, Any], None], Field(exclude=True)]
 
     tag: Literal["001", "002", "003", "004", "005", "006", "007", "008", "009"]
-    data: Annotated[str, AfterValidator(validate_field)]
+    data: Annotated[
+        str, AfterValidator(validate_length), AfterValidator(validate_values)
+    ]
 
     @model_serializer(when_used="unless-none")
     def serialize_control_field(self) -> Dict[str, str]:
@@ -89,9 +96,9 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
     indicators: Annotated[
-        Union[PydanticIndicators, Sequence], AfterValidator(validate_field)
+        Union[PydanticIndicators, Sequence], AfterValidator(validate_indicators)
     ]
-    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_field)]
+    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_subfields)]
 
     @model_serializer
     def serialize_data_field(
