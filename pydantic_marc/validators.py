@@ -27,23 +27,19 @@ from pydantic_marc.utils import (
 
 
 @marc_field_validator(get_control_field_length_errors)
-def validate_length(data: Any, info: ValidationInfo) -> Any:
-    return data
+def validate_length(data: Any, info: ValidationInfo) -> None: ...
 
 
 @marc_field_validator(get_control_field_value_errors)
-def validate_values(data: Any, info: ValidationInfo) -> Any:
-    return data
+def validate_values(data: Any, info: ValidationInfo) -> None: ...
 
 
 @marc_field_validator(get_indicator_errors)
-def validate_indicators(data: Any, info: ValidationInfo) -> Any:
-    return data
+def validate_indicators(data: Any, info: ValidationInfo) -> None: ...
 
 
 @marc_field_validator(get_subfield_errors)
-def validate_subfields(data: Any, info: ValidationInfo) -> Any:
-    return data
+def validate_subfields(data: Any, info: ValidationInfo) -> None: ...
 
 
 def validate_marc_data(data: Any, info: ValidationInfo) -> Any:
