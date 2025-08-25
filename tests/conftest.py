@@ -11,7 +11,7 @@ from pydantic_marc.marc_rules import Rule, RuleSet
 def get_default_rule():
     rules = RuleSet()
 
-    def _get_default_rule(tag, subtype):
+    def _get_default_rule(tag: str, subtype: Optional[str] = None):
         if subtype is None:
             return rules.rules.get(tag)
         rule = rules.rules.get(tag, {})
