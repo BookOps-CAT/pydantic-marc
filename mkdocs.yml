@@ -1,0 +1,80 @@
+site_name: Pydantic-Marc Documentation
+site_description: Documentation for the pydantic-marc library
+site_url: https://bookops-cat.github.io/pydantic-marc/
+repo_name: pydantic-marc
+repo_url: https://github.com/BookOps-CAT/pydantic-marc
+
+theme:
+  name: material
+  palette:
+    scheme: NYPL
+  features:
+    - content.tabs.link
+    - content.code.copy
+    - content.code.annotate
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.footer
+    - navigation.sections
+    - navigation.expand
+
+nav:
+- Home:
+  - Overview: index.md
+  - Usage:
+    - Get Started: start.md
+  - About:
+    - About BookOps: about.md
+    - Changelog: changelog.md
+- API Documentation: 
+    - pydantic_marc:
+      - pydantic_marc.fields: api/fields.md
+      - pydantic_marc.models: api/models.md
+      - pydantic_marc.errors: api/errors.md
+      - pydantic_marc.utils: api/utils.md
+      - pydantic_marc.marc_rules: api/marc_rules.md      
+      - pydantic_marc.error_handlers: api/error_handlers.md     
+      - pydantic_marc.validators: api/validators.md       
+- Tutorials: tutorials.md
+
+
+markdown_extensions:
+- admonition
+- pymdownx.details
+- pymdownx.superfences
+- pymdownx.highlight:
+    pygments_lang_class: true
+- pymdownx.extra
+- pymdownx.tabbed:
+    alternate_style: true
+- tables
+- md_in_html
+- attr_list
+
+watch:
+- pydantic_marc
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            separate_signature: true
+            filters: ["!^_"]
+            docstring_options:
+              ignore_init_summary: true
+            docstring_section_style: spacy
+            merge_init_into_class: true
+            show_signature_annotations: true
+          import:
+            - https://docs.python.org/3/objects.inv
+  - mike:
+      canonical_version: latest
+extra:
+  version:
+    provider: mike
+extra_css:
+  - stylesheets/extra.css
