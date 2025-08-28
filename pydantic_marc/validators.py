@@ -65,7 +65,7 @@ def validate_marc_data(data: Any, info: ValidationInfo) -> Any:
 
 
     Raises:
-        `ValidationError` if the there are any MARC validation errors
+        `ValidationError`: if the there are any MARC validation errors
     """
     errors = get_marc_field_errors(data=data, info=info)
     return raise_validation_errors(errors, data=data)
@@ -92,7 +92,7 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
         A list representing the validated `fields` attribute.
 
     Raises:
-        `ValidationError` if the there are any MARC validation errors
+        `ValidationError`: if the there are any MARC validation errors
     """
     # Running BeforeValidator for `MarcRecord`
     all_errors = []
@@ -129,7 +129,7 @@ def validate_leader(data: Any, info: ValidationInfo) -> Any:
 
 
     Raises:
-        `ValidationError` if the there are any MARC validation errors
+        `ValidationError`: if the there are any MARC validation errors
     """
     errors = get_leader_errors(data=str(data), info=info)
     return raise_validation_errors(errors=errors, data=str(data))
