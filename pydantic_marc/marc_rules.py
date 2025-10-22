@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
+from importlib import resources
 from types import MappingProxyType
 from typing import Annotated, Any, ClassVar, Dict, List, Union
 
@@ -25,9 +26,12 @@ class _DefaultRules:
 
     @classmethod
     def rules_from_json(cls) -> Dict[str, Any]:
-        with open("pydantic_marc/validation_rules/default_rules.json", "r") as fh:
-            cls._cached_rules = json.load(fh)
-        return cls._cached_rules
+        data = (
+            resources.files("pydantic_marc")
+            .joinpath("validation_rules/default_rules.json")
+            .read_text(encoding="utf-8")
+        )
+        return json.loads(data)
 
 
 class Rule(BaseModel, frozen=True, extra="allow"):
