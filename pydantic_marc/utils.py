@@ -57,7 +57,6 @@ def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[An
     for field in data:
         rule = rules.get(field.tag, None)
         field_dict = {"rules": rule, "tag": field.tag}
-        print(field)
         if getattr(field, "control_field", field.is_control_field()) is True:
             field_dict["data"] = field.data
         else:
