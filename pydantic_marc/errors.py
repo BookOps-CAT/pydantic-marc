@@ -10,7 +10,7 @@ within a `pydantic.ValidationError` object.
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from pydantic_core import InitErrorDetails, PydanticCustomError
 
@@ -32,7 +32,7 @@ class MarcCustomError(PydanticCustomError):
 class InvalidIndicator(MarcCustomError):
     """Exception raised if an indicator does not match the field's rules."""
 
-    def __new__(cls, context: Dict[str, Any]) -> InvalidIndicator:
+    def __new__(cls, context: dict[str, Any]) -> InvalidIndicator:
         """
         Create a new `InvalidIndicator` object.
 
@@ -57,7 +57,7 @@ class InvalidIndicator(MarcCustomError):
 
 
 class InvalidFixedField(MarcCustomError):
-    def __new__(cls, context: Dict[str, Any]) -> InvalidFixedField:
+    def __new__(cls, context: dict[str, Any]) -> InvalidFixedField:
         """
         Create a new `InvalidFixedField` object.
 
@@ -79,7 +79,7 @@ class InvalidFixedField(MarcCustomError):
 
 
 class InvalidLeader(MarcCustomError):
-    def __new__(cls, context: Dict[str, Any]) -> InvalidLeader:
+    def __new__(cls, context: dict[str, Any]) -> InvalidLeader:
         """
         Create a new `InvalidLeader` object.
 
@@ -102,7 +102,7 @@ class InvalidLeader(MarcCustomError):
 class InvalidSubfield(MarcCustomError):
     """Exception raised if a subfield is not defined for the field is it a part of."""
 
-    def __new__(cls, context: Dict[str, Any]) -> InvalidSubfield:
+    def __new__(cls, context: dict[str, Any]) -> InvalidSubfield:
         """
         Create a new `InvalidIndicator` object.
 
@@ -127,7 +127,7 @@ class InvalidSubfield(MarcCustomError):
 class ControlFieldLength(MarcCustomError):
     """Exception raised if the a control field does not match its expected length."""
 
-    def __new__(cls, context: Dict[str, Any]) -> ControlFieldLength:
+    def __new__(cls, context: dict[str, Any]) -> ControlFieldLength:
         """
         Create a new `InvalidIndicator` object.
 
@@ -150,7 +150,7 @@ class ControlFieldLength(MarcCustomError):
 class MultipleMainEntryValues(MarcCustomError):
     """Exception raised if a record contains multiple main entry (1xx) values."""
 
-    def __new__(cls, context: Dict[str, Any]) -> MultipleMainEntryValues:
+    def __new__(cls, context: dict[str, Any]) -> MultipleMainEntryValues:
         """
         Create a new `InvalidIndicator` object.
 
@@ -170,7 +170,7 @@ class MultipleMainEntryValues(MarcCustomError):
 class MissingRequiredField(MarcCustomError):
     """Exception raised if a record is missing a required field (245)."""
 
-    def __new__(cls, context: Dict[str, Any]) -> MissingRequiredField:
+    def __new__(cls, context: dict[str, Any]) -> MissingRequiredField:
         """
         Create a new `InvalidIndicator` object.
 
@@ -190,7 +190,7 @@ class MissingRequiredField(MarcCustomError):
 class NonRepeatableField(MarcCustomError):
     """Exception raised if a non-repeatable field is repeated in a record."""
 
-    def __new__(cls, context: Dict[str, Any]) -> NonRepeatableField:
+    def __new__(cls, context: dict[str, Any]) -> NonRepeatableField:
         """
         Create a new `InvalidIndicator` object.
 
@@ -210,7 +210,7 @@ class NonRepeatableField(MarcCustomError):
 class NonRepeatableSubfield(MarcCustomError):
     """Exception raised if a non-repeatable subfield is repeated in a field."""
 
-    def __new__(cls, context: Dict[str, Any]) -> NonRepeatableSubfield:
+    def __new__(cls, context: dict[str, Any]) -> NonRepeatableSubfield:
         """
         Create a new `InvalidIndicator` object.
 

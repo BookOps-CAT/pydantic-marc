@@ -18,7 +18,7 @@ import json
 import os
 from collections import Counter
 from functools import lru_cache
-from typing import Any, List
+from typing import TYPE_CHECKING, Any, Sequence, Union
 
 from pydantic import ValidationInfo
 from pydantic_core import InitErrorDetails
@@ -36,6 +36,9 @@ from pydantic_marc.errors import (
 )
 from pydantic_marc.marc_rules import Rule, RuleSet
 
+if TYPE_CHECKING:  # pragma: no cover
+    from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
+
 
 @lru_cache
 def marc_codes() -> dict[str, Any]:
@@ -48,8 +51,8 @@ def marc_codes() -> dict[str, Any]:
 
 
 def get_control_field_value_errors(
-    rule: Rule, data: Any, tag: str
-) -> List[InitErrorDetails]:
+    rule: Rule, data: str, tag: str
+) -> list[InitErrorDetails]:
     """
     Validate the values of each character of a control field's `data` string
     against the expected rule.
@@ -68,7 +71,7 @@ def get_control_field_value_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: List[InitErrorDetails] = []
+    errors: list[InitErrorDetails] = []
     value_rules = rule.values
     if value_rules:
         data_dict = {f"{i:02d}": char for i, char in enumerate(data)}
@@ -110,8 +113,8 @@ def get_control_field_value_errors(
 
 
 def get_control_field_length_errors(
-    rule: Rule, data: Any, tag: str
-) -> List[InitErrorDetails]:
+    rule: Rule, data: str, tag: str
+) -> list[InitErrorDetails]:
     """
     Validate the length of a control field's `data` string against the expected rule.
 
@@ -127,7 +130,7 @@ def get_control_field_length_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: List[InitErrorDetails] = []
+    errors: list[InitErrorDetails] = []
     valid_length = rule.length
     if not valid_length:
         return errors
@@ -138,7 +141,9 @@ def get_control_field_length_errors(
     return errors
 
 
-def get_indicator_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetails]:
+def get_indicator_errors(
+    rule: Rule, data: Union[PydanticIndicators, Sequence], tag: str
+) -> list[InitErrorDetails]:
     """
     Validate the indicator values of a `DataField` against the allowed values in a rule.
 
@@ -154,7 +159,7 @@ def get_indicator_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetai
 
         A list of `MarcCustomError` objects.
     """
-    errors: List[InitErrorDetails] = []
+    errors: list[InitErrorDetails] = []
     for n, indicator in enumerate(data):
         ind = f"ind{n + 1}"
         valid_inds = getattr(rule, ind)
@@ -164,7 +169,9 @@ def get_indicator_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetai
     return errors
 
 
-def get_subfield_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetails]:
+def get_subfield_errors(
+    rule: Rule, data: list[PydanticSubfield], tag: str
+) -> list[InitErrorDetails]:
     """
     Validate the subfields in a `DataField` against the allowed and repeatable values
     in a rule.
@@ -186,7 +193,7 @@ def get_subfield_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetail
 
         A list of `MarcCustomError` objects.
     """
-    errors: List[InitErrorDetails] = []
+    errors: list[InitErrorDetails] = []
     if not rule.subfields:
         return errors
 
@@ -206,8 +213,8 @@ def get_subfield_errors(rule: Rule, data: Any, tag: str) -> List[InitErrorDetail
 
 
 def get_marc_field_errors(
-    data: List[Any], info: ValidationInfo
-) -> List[InitErrorDetails]:
+    data: list[Any], info: ValidationInfo
+) -> list[InitErrorDetails]:
     """
     Validate rules across all fields in a `MarcRecord`.
 
@@ -227,7 +234,7 @@ def get_marc_field_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: List[InitErrorDetails] = []
+    errors: list[InitErrorDetails] = []
     rules = RuleSet.from_validation_info(info=info)
     if not rules:
         return errors
@@ -247,7 +254,7 @@ def get_marc_field_errors(
     return errors
 
 
-def get_leader_errors(data: Any, info: ValidationInfo) -> List[InitErrorDetails]:
+def get_leader_errors(data: Any, info: ValidationInfo) -> list[InitErrorDetails]:
     """
     Validate each character in a string against the allowed values each byte in a
     MARC leader.

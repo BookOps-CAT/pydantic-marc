@@ -17,7 +17,7 @@ Models defined in this module include:
 
 from __future__ import annotations
 
-from typing import Annotated, Any, Dict, List, Literal, Sequence, Union
+from typing import Annotated, Any, Literal, Sequence, Union
 
 from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
@@ -51,7 +51,7 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
             length.
     """
 
-    rules: Annotated[Union[Rule, Dict[str, Any], None], Field(exclude=True)]
+    rules: Annotated[Union[Rule, dict[str, Any], None], Field(exclude=True)]
 
     tag: Literal["001", "002", "003", "004", "005", "006", "007", "008", "009"]
     data: Annotated[
@@ -59,7 +59,7 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
     ]
 
     @model_serializer(when_used="unless-none")
-    def serialize_control_field(self) -> Dict[str, str]:
+    def serialize_control_field(self) -> dict[str, str]:
         """Serialize the control field into a dictionary with the correct format."""
         return {self.tag: self.data}
 
@@ -92,18 +92,18 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     """
 
-    rules: Annotated[Union[Rule, Dict[str, Any], None], Field(exclude=True)]
+    rules: Annotated[Union[Rule, dict[str, Any], None], Field(exclude=True)]
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
     indicators: Annotated[
         Union[PydanticIndicators, Sequence], AfterValidator(validate_indicators)
     ]
-    subfields: Annotated[List[PydanticSubfield], AfterValidator(validate_subfields)]
+    subfields: Annotated[list[PydanticSubfield], AfterValidator(validate_subfields)]
 
     @model_serializer
     def serialize_data_field(
         self,
-    ) -> Dict[str, Dict[str, Union[str, List[Dict[str, str]]]]]:
+    ) -> dict[str, dict[str, Union[str, list[dict[str, str]]]]]:
         """Serialize the data field into a dictionary with the correct format."""
         return {
             self.tag: {
@@ -153,6 +153,6 @@ class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=
     value: str
 
     @model_serializer(when_used="unless-none")
-    def serialize_subfield(self) -> Dict[str, str]:
+    def serialize_subfield(self) -> dict[str, str]:
         """Serialize a subfield into a dict with the correct format."""
         return {self.code: self.value}
