@@ -6,7 +6,7 @@ to the MARC21 format for bibliographic data.
 
 from __future__ import annotations
 
-from typing import Annotated, Any, Dict, List, Union
+from typing import Annotated, Any, Union
 
 from pydantic import (
     BaseModel,
@@ -57,12 +57,12 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     """
 
     rules: Annotated[
-        Union[RuleSet, Dict[str, Any], None],
+        Union[RuleSet, dict[str, Any], None],
         Field(default_factory=RuleSet, exclude=True),
     ]
     leader: Annotated[str, BeforeValidator(validate_leader)]
     fields: Annotated[
-        List[
+        list[
             Annotated[
                 Union[
                     Annotated[ControlField, Tag("control_field")],
@@ -75,7 +75,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     ]
 
     @model_serializer
-    def serialize_marc_record(self) -> Dict[str, Union[str, List[Any]]]:
+    def serialize_marc_record(self) -> dict[str, Union[str, list[Any]]]:
         """Serialize a MARC record using the custom serializers for nested models"""
         return {
             "leader": str(self.leader),

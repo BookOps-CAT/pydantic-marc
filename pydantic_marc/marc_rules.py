@@ -14,7 +14,7 @@ import json
 from collections.abc import Mapping
 from importlib import resources
 from types import MappingProxyType
-from typing import Annotated, Any, ClassVar, Dict, List, Union
+from typing import Annotated, Any, ClassVar, Union
 
 from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
@@ -25,7 +25,7 @@ class _DefaultRules:
     _cached_rules = None
 
     @classmethod
-    def rules_from_json(cls) -> Dict[str, Any]:
+    def rules_from_json(cls) -> dict[str, Any]:
         data = (
             resources.files("pydantic_marc")
             .joinpath("validation_rules/default_rules.json")
@@ -41,19 +41,19 @@ class Rule(BaseModel, frozen=True, extra="allow"):
 
     tag: Annotated[str, Field(pattern=r"\d\d\d|LDR")]
     repeatable: Union[bool, None] = None
-    ind1: Union[List[str], None] = None
-    ind2: Union[List[str], None] = None
-    subfields: Union[Dict[str, List[str]], None] = None
-    length: Union[int, Dict[str, Union[int, List[int]]], None] = None
+    ind1: Union[list[str], None] = None
+    ind2: Union[list[str], None] = None
+    subfields: Union[dict[str, list[str]], None] = None
+    length: Union[int, dict[str, Union[int, list[int]]], None] = None
     required: Union[bool, None] = None
-    values: Union[Dict[str, Any], None] = None
+    values: Union[dict[str, Any], None] = None
     material_type: Union[str, None] = None
 
 
 class RuleSet(BaseModel, frozen=True):
     _default: ClassVar[Mapping] = MappingProxyType(_DefaultRules.rules_from_json())
 
-    rules: Dict[str, Union[Rule, Any]] = {k: Rule(**v) for k, v in _default.items()}
+    rules: dict[str, Union[Rule, Any]] = {k: Rule(**v) for k, v in _default.items()}
 
     @classmethod
     def from_validation_info(cls, info: ValidationInfo) -> Union[RuleSet, None]:
@@ -114,7 +114,7 @@ class RuleSet(BaseModel, frozen=True):
 
     @field_validator("rules", mode="before")
     @classmethod
-    def get_rules(cls, data: Dict[str, Union[Rule, Dict[str, Any]]]) -> Dict[str, Rule]:
+    def get_rules(cls, data: dict[str, Union[Rule, dict[str, Any]]]) -> dict[str, Rule]:
         """Convert dictionary passed to `RuleSet.rules` attribute if needed"""
         rules = {}
         for k, v in data.items():

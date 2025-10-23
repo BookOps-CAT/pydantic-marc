@@ -18,7 +18,7 @@ raise_validation_errors:
 
 from __future__ import annotations
 
-from typing import Any, Callable, List
+from typing import Any, Callable
 
 from pydantic import ValidationError, ValidationInfo
 from pydantic_core import InitErrorDetails
@@ -27,7 +27,7 @@ from pydantic_marc.errors import MarcCustomError
 from pydantic_marc.marc_rules import Rule, RuleSet
 
 
-def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[Any]:
+def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[Any]:
     """
     Add rules to each MARC field in a record.
 
@@ -79,7 +79,7 @@ def add_rules_to_pymarc_fields(data: List[Any], info: ValidationInfo) -> List[An
 
 def handle_errors(
     validator: Callable, data: Any, info: ValidationInfo
-) -> tuple[Any, List[InitErrorDetails]]:
+) -> tuple[Any, list[InitErrorDetails]]:
     """
     Execute a validator function and convert any errors raised to custom errors.
 
@@ -135,7 +135,7 @@ def marc_field_validator(error_checker_func: Callable) -> Callable:
     return decorator
 
 
-def raise_validation_errors(errors: List[InitErrorDetails], data: Any) -> Any:
+def raise_validation_errors(errors: list[InitErrorDetails], data: Any) -> Any:
     """
     Raise a `ValidationError` if any collected error details exist.
 

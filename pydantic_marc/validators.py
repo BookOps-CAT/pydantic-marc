@@ -6,7 +6,7 @@ depending on the field and model.
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable, Sequence, Union
 
 from pydantic import ValidationInfo
 
@@ -25,21 +25,28 @@ from pydantic_marc.utils import (
     raise_validation_errors,
 )
 
+if TYPE_CHECKING:  # pragma: no cover
+    from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
+
 
 @marc_field_validator(get_control_field_length_errors)
-def validate_length(data: Any, info: ValidationInfo) -> None: ...
+def validate_length(data: str, info: ValidationInfo) -> None: ...  # pragma: no cover
 
 
 @marc_field_validator(get_control_field_value_errors)
-def validate_values(data: Any, info: ValidationInfo) -> None: ...
+def validate_values(data: str, info: ValidationInfo) -> None: ...  # pragma: no cover
 
 
 @marc_field_validator(get_indicator_errors)
-def validate_indicators(data: Any, info: ValidationInfo) -> None: ...
+def validate_indicators(
+    data: Union[PydanticIndicators, Sequence], info: ValidationInfo
+) -> None: ...  # pragma: no cover
 
 
 @marc_field_validator(get_subfield_errors)
-def validate_subfields(data: Any, info: ValidationInfo) -> None: ...
+def validate_subfields(
+    data: list[PydanticSubfield], info: ValidationInfo
+) -> None: ...  # pragma: no cover
 
 
 def validate_marc_data(data: Any, info: ValidationInfo) -> Any:
@@ -108,7 +115,7 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     return raise_validation_errors(errors=all_errors, data=data)
 
 
-def validate_leader(data: Any, info: ValidationInfo) -> Any:
+def validate_leader(data: Any, info: ValidationInfo) -> str:
     """
     Confirm that the value passed to the `MarcRecord.leader` attribute conforms to the
     rules passed to the `MarcRecord.rules` attribute. If the values do not match the
@@ -125,7 +132,7 @@ def validate_leader(data: Any, info: ValidationInfo) -> Any:
 
     Returns:
 
-        A list of `MarcCustomError` objects.
+        The validated leader as a string or a list of `MarcCustomError` objects.
 
 
     Raises:
