@@ -254,7 +254,7 @@ def get_marc_field_errors(
     return errors
 
 
-def get_leader_errors(data: Any, info: ValidationInfo) -> list[InitErrorDetails]:
+def get_leader_errors(data: str, info: ValidationInfo) -> list[InitErrorDetails]:
     """
     Validate each character in a string against the allowed values each byte in a
     MARC leader.
@@ -270,14 +270,13 @@ def get_leader_errors(data: Any, info: ValidationInfo) -> list[InitErrorDetails]
 
         A list of `MarcCustomError` objects.
     """
-    errors: list = []
+    errors: list[InitErrorDetails] = []
     rules = info.data["rules"]
     if not rules or not rules.rules:
         return errors
     rule = rules.rules.get("LDR")
     if not rule or not rule.values:
         return errors
-    data = str(data)
     for i, c in enumerate(data):
         position = str(i).zfill(2)
         valid = rule.values.get(f"{position}", [])
