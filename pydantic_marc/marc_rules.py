@@ -118,8 +118,5 @@ class RuleSet(BaseModel, frozen=True):
         """Convert dictionary passed to `RuleSet.rules` attribute if needed"""
         rules = {}
         for k, v in data.items():
-            if isinstance(v, Rule):
-                rules[k] = v
-            else:
-                rules[k] = Rule(**v)
+            rules[k] = v if isinstance(v, Rule) else Rule(**v)
         return rules

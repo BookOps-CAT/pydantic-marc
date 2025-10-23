@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import pytest
 from pymarc import Field as PymarcField
@@ -31,16 +31,16 @@ def make_mock_info():
     class MockInfo:
         def __init__(
             self,
-            data: Dict[str, Any],
+            data: dict[str, Any],
             field_name: str,
-            context: Optional[Dict[str, Any]] = None,
+            context: Optional[dict[str, Any]] = None,
         ):
             self.data = data
             self.field_name = field_name
             self.context = context
 
     def _make_mock_info(
-        data: Dict[str, Any], field_name: str, context: Optional[Dict[str, Any]] = None
+        data: dict[str, Any], field_name: str, context: Optional[dict[str, Any]] = None
     ):
         if "leader" not in data:
             data["leader"] = "00454cam a22001575i 4500"
