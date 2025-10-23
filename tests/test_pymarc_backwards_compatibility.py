@@ -1,19 +1,20 @@
 from typing import Optional
+
 import pytest
 from pydantic import ValidationError
 from pymarc import Field as PymarcField
-from pymarc import Leader as PymarcLeader
 from pymarc import MARCReader
-from pymarc import Subfield as PymarcSubfield
 from pymarc import Record as PymarcRecord
+from pymarc import Subfield as PymarcSubfield
+
 from pydantic_marc.fields import (
     ControlField,
     DataField,
     PydanticIndicators,
     PydanticSubfield,
 )
-from pydantic_marc.models import MarcRecord
 from pydantic_marc.marc_rules import Rule, RuleSet
+from pydantic_marc.models import MarcRecord
 
 
 @pytest.fixture
@@ -96,7 +97,7 @@ def stub_record_invalid_300(stub_record) -> PymarcField:
     stub_record.add_field(
         PymarcField(
             tag="300",
-            indicators=("1", "0"),
+            indicators=("1", "0"),  # type: ignore
             subfields=[PymarcSubfield(code="h", value="foo")],
         )
     )
@@ -126,7 +127,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="100",
-            indicators=("1", ""),
+            indicators=("1", ""),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="Foo"),
                 PymarcSubfield(code="e", value="author"),
@@ -136,7 +137,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="110",
-            indicators=("1", ""),
+            indicators=("1", ""),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="Bar"),
                 PymarcSubfield(code="e", value="publisher"),
@@ -146,7 +147,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="300",
-            indicators=(" ", " "),
+            indicators=(" ", " "),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="100 pages :"),
             ],
@@ -155,7 +156,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="336",
-            indicators=("1", "1"),
+            indicators=("1", "1"),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="still image"),
                 PymarcSubfield(code="b", value="sti"),
@@ -167,7 +168,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="600",
-            indicators=("1", "0"),
+            indicators=("1", "0"),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="Foo, Bar,"),
                 PymarcSubfield(code="a", value="Foo, Bar,"),
