@@ -19,6 +19,40 @@ from typing import Annotated, Any, ClassVar, Union
 from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 
+def determine_material_type(leader: str) -> Union[str, None]:
+    """
+    Determine the material type from a MARC record leader.
+
+    This function extracts the material type from the leader string based on the
+    character at position 6. It maps specific characters to predefined material types
+    used in MARC records.
+
+    Args:
+        leader:
+            A string representing the MARC record leader.
+    Returns:
+        A string representing the material type, or `None` if the leader is invalid.
+    """
+    if not leader or len(leader) < 8:
+        return None
+    record_type = leader[6:7]
+    print(f"Record type: {record_type}")
+    if record_type == "a" and leader[7:8] in ["b", "i", "s"]:
+        return "CR"
+    elif record_type in ["c", "d", "i", "j"]:
+        return "MU"
+    elif record_type in ["e", "f"]:
+        return "MP"
+    elif record_type in ["g", "k", "o", "r"]:
+        return "VM"
+    elif record_type == "m":
+        return "CF"
+    elif record_type == "p":
+        return "MM"
+    else:
+        return "BK"
+
+
 class _DefaultRules:
     """Used to generate a default set of MARC rules from rules/default.json"""
 
@@ -83,29 +117,11 @@ class RuleSet(BaseModel, frozen=True):
         record_rules = info.data["rules"]
         if not record_rules and not rules:
             return None
-        record_type = info.data.get("leader")
-        if not record_type:
-            material_type = None
-        else:
-            record_type = record_type[6:7]
-        if record_type == "a" and info.data["leader"][7:8] in ["b", "i", "s"]:
-            material_type = "CR"
-        elif record_type in ["c", "d", "i", "j"]:
-            material_type = "MU"
-        elif record_type in ["e", "f"]:
-            material_type = "MP"
-        elif record_type in ["g", "k", "o", "r"]:
-            material_type = "VM"
-        elif record_type in ["m"]:
-            material_type = "CF"
-        elif record_type in ["p"]:
-            material_type = "MM"
-        else:
-            material_type = "BK"
+        material_type = determine_material_type(info.data.get("leader", ""))
         for k, v in record_rules.rules.items():
             if material_type and k in ["006", "008"] and v.model_extra:
-                rule_dict = v.__dict__
-                type_vals = v.model_extra.get("material_types", {}).get(material_type)
+                rule_dict = v.model_dump()
+                type_vals = rule_dict.get("material_types", {}).get(material_type, {})
                 rule_dict.update(type_vals)
                 v = Rule(**rule_dict)
             if k not in rules:
