@@ -20,9 +20,6 @@ from collections import Counter
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any, Sequence, Union
 
-from pydantic import ValidationInfo
-from pydantic_core import InitErrorDetails
-
 from pydantic_marc.errors import (
     ControlFieldLength,
     InvalidFixedField,
@@ -34,10 +31,14 @@ from pydantic_marc.errors import (
     NonRepeatableField,
     NonRepeatableSubfield,
 )
-from pydantic_marc.marc_rules import Rule, RuleSet
+from pydantic_marc.marc_rules import RuleSet
 
 if TYPE_CHECKING:  # pragma: no cover
+    from pydantic import ValidationInfo
+    from pydantic_core import InitErrorDetails
+
     from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
+    from pydantic_marc.marc_rules import Rule
 
 
 @lru_cache
@@ -239,14 +240,12 @@ def get_marc_field_errors(
     if not rules:
         return errors
     tag_counts = Counter([i["tag"] for i in data])
-    nr_fields = [k for k, v in rules.rules.items() if v.repeatable is False]
-    required_fields = [k for k, v in rules.rules.items() if v.required is True]
     main_entries = [i for i in tag_counts.elements() if i.startswith("1")]
 
-    for tag in nr_fields:
+    for tag in rules.non_repeatable_fields:
         if tag_counts[tag] > 1:
             errors.append(NonRepeatableField({"input": tag}).error_details)
-    for tag in required_fields:
+    for tag in rules.required_fields:
         if tag not in tag_counts.elements():
             errors.append(MissingRequiredField({"input": tag}).error_details)
     if len(main_entries) > 1:

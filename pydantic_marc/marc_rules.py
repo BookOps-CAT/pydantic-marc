@@ -16,7 +16,7 @@ from importlib import resources
 from types import MappingProxyType
 from typing import Annotated, Any, ClassVar, Union
 
-from pydantic import BaseModel, Field, ValidationInfo, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, computed_field, field_validator
 
 
 def determine_material_type(leader: str) -> Union[str, None]:
@@ -80,7 +80,6 @@ class Rule(BaseModel, frozen=True, extra="allow"):
     length: Union[int, dict[str, Union[int, list[int]]], None] = None
     required: Union[bool, None] = None
     values: Union[dict[str, Any], None] = None
-    material_type: Union[str, None] = None
 
 
 class RuleSet(BaseModel, frozen=True):
@@ -135,3 +134,39 @@ class RuleSet(BaseModel, frozen=True):
         for k, v in data.items():
             rules[k] = v if isinstance(v, Rule) else Rule(**v)
         return rules
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def non_repeatable_fields(self) -> list[str]:
+        """A list of tags for fields that are not repeatable in the RuleSet."""
+        fields = []
+        for tag, rule in self.rules.items():
+            if isinstance(rule, Rule) and rule.repeatable is False:
+                fields.append(tag)
+            elif isinstance(rule, dict):
+                fields.extend(
+                    [
+                        tag
+                        for subtag, subrule in rule.items()
+                        if isinstance(subrule, Rule) and subrule.repeatable is False
+                    ]
+                )
+        return fields
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def required_fields(self) -> list[str]:
+        """A list of tags for fields that are required in the RuleSet."""
+        fields = []
+        for tag, rule in self.rules.items():
+            if isinstance(rule, Rule) and rule.required is True:
+                fields.append(tag)
+            elif isinstance(rule, dict):
+                fields.extend(
+                    [
+                        tag
+                        for subtag, subrule in rule.items()
+                        if isinstance(subrule, Rule) and subrule.required is True
+                    ]
+                )
+        return fields
