@@ -36,7 +36,6 @@ def determine_material_type(leader: str) -> Union[str, None]:
     if not leader or len(leader) < 8:
         return None
     record_type = leader[6:7]
-    print(f"Record type: {record_type}")
     if record_type == "a" and leader[7:8] in ["b", "i", "s"]:
         return "CR"
     elif record_type in ["c", "d", "i", "j"]:
