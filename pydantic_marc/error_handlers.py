@@ -34,7 +34,6 @@ from pydantic_marc.errors import (
     NonRepeatableField,
     NonRepeatableSubfield,
 )
-from pydantic_marc.marc_rules import RuleSet
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
@@ -236,7 +235,7 @@ def get_marc_field_errors(
         A list of `MarcCustomError` objects.
     """
     errors: list[InitErrorDetails] = []
-    rules = RuleSet.from_validation_info(info=info)
+    rules = info.data["rules"]
     if not rules:
         return errors
     tag_counts = Counter([i["tag"] for i in data])
