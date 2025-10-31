@@ -127,7 +127,7 @@ def stub_invalid_record() -> Record:
     bib.add_field(
         PymarcField(
             tag="100",
-            indicators=Indicators("1", ""),
+            indicators=Indicators("1", " "),
             subfields=[
                 Subfield(code="a", value="Foo"),
                 Subfield(code="e", value="author"),
@@ -137,7 +137,7 @@ def stub_invalid_record() -> Record:
     bib.add_field(
         PymarcField(
             tag="110",
-            indicators=Indicators("1", ""),
+            indicators=Indicators("1", " "),
             subfields=[
                 Subfield(code="a", value="Bar"),
                 Subfield(code="e", value="publisher"),
