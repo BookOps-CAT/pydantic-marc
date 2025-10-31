@@ -20,6 +20,9 @@ from collections import Counter
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any, Sequence, Union
 
+from pydantic import ValidationInfo
+from pydantic_core import InitErrorDetails
+
 from pydantic_marc.errors import (
     ControlFieldLength,
     InvalidFixedField,
@@ -34,9 +37,6 @@ from pydantic_marc.errors import (
 from pydantic_marc.marc_rules import RuleSet
 
 if TYPE_CHECKING:  # pragma: no cover
-    from pydantic import ValidationInfo
-    from pydantic_core import InitErrorDetails
-
     from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
     from pydantic_marc.marc_rules import Rule
 

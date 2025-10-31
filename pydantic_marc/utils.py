@@ -9,7 +9,6 @@ Functions:
 
 add_rules_to_pymarc_fields:
     Adds rule metadata from a `RuleSet` to MARC fields.
-
 handle_errors:
     Wraps validators to capture and normalize Pydantic validation errors.
 raise_validation_errors:
@@ -102,37 +101,6 @@ def handle_errors(
     except ValidationError as exc:
         errors = [MarcCustomError(e["type"], e["msg"], e["ctx"]) for e in exc.errors()]
         return data, [i.error_details for i in errors]
-
-
-def marc_field_validator(error_checker_func: Callable) -> Callable:
-    """
-    Wrapper function to run field-level validation for a MARC field using
-    rules from the model.
-
-    This function looks up a validation function based on the field name and applies
-    it if a corresponding rule and validator are found. If no rule or validator is
-    found, the input `data` is returned unchanged. If validation errors are found,
-    they are raised using `raise_validation_errors`.
-
-    Args:
-        data: the data passed to the field being validated
-        info: A `ValidationInfo` object.
-
-    Returns:
-        The validated field data, or raises a `ValidationError` if rules are violated.
-    """
-
-    def decorator(func: Callable) -> Callable:
-        def wrapper(data: Any, info: ValidationInfo) -> Any:
-            rule = info.data.get("rules", None)
-            if not rule:
-                return data
-            errors = error_checker_func(rule=rule, data=data, tag=info.data["tag"])
-            return raise_validation_errors(errors=errors, data=data)
-
-        return wrapper
-
-    return decorator
 
 
 def raise_validation_errors(errors: list[InitErrorDetails], data: Any) -> Any:

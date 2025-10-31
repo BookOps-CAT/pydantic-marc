@@ -21,12 +21,42 @@ from pydantic_marc.error_handlers import (
 from pydantic_marc.utils import (
     add_rules_to_pymarc_fields,
     handle_errors,
-    marc_field_validator,
     raise_validation_errors,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
+
+
+def marc_field_validator(error_checker_func: Callable) -> Callable:
+    """
+    Wrapper function to run field-level validation for a MARC field using
+    rules from the model.
+
+    This function looks up a validation function based on the field name and applies
+    it if a corresponding rule and validator are found. If no rule or validator is
+    found, the input `data` is returned unchanged. If validation errors are found,
+    they are raised using `raise_validation_errors`.
+
+    Args:
+        data: the data passed to the field being validated
+        info: A `ValidationInfo` object.
+
+    Returns:
+        The validated field data, or raises a `ValidationError` if rules are violated.
+    """
+
+    def decorator(func: Callable) -> Callable:
+        def wrapper(data: Any, info: ValidationInfo) -> Any:
+            rule = info.data.get("rules", None)
+            if not rule:
+                return data
+            errors = error_checker_func(rule=rule, data=data, tag=info.data["tag"])
+            return raise_validation_errors(errors=errors, data=data)
+
+        return wrapper
+
+    return decorator
 
 
 @marc_field_validator(get_control_field_length_errors)
