@@ -4,7 +4,7 @@ import pytest
 from pymarc import Field as PymarcField
 from pymarc import Indicators, Record, Subfield
 
-from pydantic_marc.marc_rules import Rule, RuleSet
+from pydantic_marc.marc_rules import RuleSet
 
 
 @pytest.fixture
@@ -14,14 +14,7 @@ def get_default_rule():
     def _get_default_rule(tag: str, subtype: Optional[str] = None):
         if subtype is None:
             return rules.rules.get(tag)
-        rule = rules.rules.get(tag, {})
-        return Rule(
-            tag=tag,
-            length=rule.material_types.get(subtype, {}).get("length"),
-            values=rule.material_types.get(subtype, {}).get("values"),
-            repeatable=rule.repeatable,
-            required=rule.required,
-        )
+        return rules.rules.get(tag, {}).get(subtype)
 
     return _get_default_rule
 
