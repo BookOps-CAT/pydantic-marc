@@ -22,7 +22,7 @@ from pydantic import (
 
 from .fields import ControlField, DataField
 from .marc_rules import RuleSet
-from .validators import validate_leader, validate_marc_fields
+from .record_validators import validate_leader, validate_marc_fields
 
 
 def field_discriminator(data: Any) -> str:
