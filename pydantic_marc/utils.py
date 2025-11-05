@@ -23,7 +23,6 @@ from pydantic import ValidationError, ValidationInfo
 from pydantic_core import InitErrorDetails
 
 from pydantic_marc.errors import MarcCustomError
-from pydantic_marc.marc_rules import Rule, RuleSet
 
 
 def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[Any]:
@@ -49,29 +48,20 @@ def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[An
         a list of dictionaries where each item represents a MARC field and its
         associated `Rule`.
     """
-    rule_set = RuleSet.from_validation_info(info=info)
+    rule_set = info.data["rules"]
     rules = rule_set.rules if rule_set else {}
     field_list = []
 
     for field in data:
         rule = rules.get(field.tag, None)
+        if field.tag == "007" and rule:
+            rule = rule.get(field.data[0], {})
         field_dict = {"rules": rule, "tag": field.tag}
         if getattr(field, "control_field", field.is_control_field()) is True:
             field_dict["data"] = field.data
         else:
             field_dict["indicators"] = field.indicators
             field_dict["subfields"] = field.subfields
-        if field.tag == "007" and rule:
-            types = field_dict["rules"].model_extra["material_types"][field.data[0]]
-            rule_dict = {
-                "length": types["length"],
-                "values": types["values"],
-                "tag": rule.tag,
-                "repeatable": rule.repeatable,
-                "required": rule.required,
-                "material_type": field.data[0],
-            }
-            field_dict["rules"] = Rule(**rule_dict)
         field_list.append(field_dict)
     return field_list
 

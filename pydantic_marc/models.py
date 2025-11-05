@@ -14,8 +14,10 @@ from pydantic import (
     Discriminator,
     Field,
     Tag,
+    ValidationInfo,
     WrapValidator,
     model_serializer,
+    model_validator,
 )
 
 from pydantic_marc.fields import ControlField, DataField
@@ -81,3 +83,27 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
             "leader": str(self.leader),
             "fields": [field.model_dump() for field in self.fields],
         }
+
+    @model_validator(mode="before")
+    @classmethod
+    def get_rules_based_on_leader(cls, data: Any, info: ValidationInfo) -> Any:
+        context = getattr(info, "context", {})
+        if isinstance(data, dict):
+            record_rules = data.get("rules", "unset")
+            leader = data.get("leader")
+            if record_rules == "unset":
+                data["rules"] = {"leader_data": str(leader), "context": context}
+        elif hasattr(data, "getattr"):
+            record_rules = data.getattr(data, "rules", "unset")
+            leader = data.getattr(data, "leader", None)
+            if record_rules == "unset":
+                data.setattr(
+                    data, "rules", {"leader_data": str(leader), "context": context}
+                )
+        else:
+            return {
+                "rules": {"leader_data": str(data.leader), "context": context},
+                "leader": data.leader,
+                "fields": data.fields,
+            }
+        return data

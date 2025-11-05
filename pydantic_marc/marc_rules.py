@@ -11,17 +11,16 @@ Models defined in this module include:
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
+from functools import lru_cache
 from importlib import resources
-from types import MappingProxyType
-from typing import Annotated, Any, ClassVar, Union
+from typing import Annotated, Any, Union
 
-from pydantic import BaseModel, Field, ValidationInfo, computed_field, field_validator
+from pydantic import BaseModel, Field, computed_field, field_validator
 
 
-def determine_material_type(leader: str) -> Union[str, None]:
+def determine_material_type(leader: Union[str, None] = None) -> Union[str, None]:
     """
-    Determine the material type from a MARC record leader.
+    Determine the material type from a MARC record's leader.
 
     This function extracts the material type from the leader string based on the
     character at position 6. It maps specific characters to predefined material types
@@ -52,19 +51,41 @@ def determine_material_type(leader: str) -> Union[str, None]:
         return "BK"
 
 
-class _DefaultRules:
-    """Used to generate a default set of MARC rules from rules/default.json"""
+@lru_cache
+def default_rules_from_json() -> dict[str, Any]:
+    data = (
+        resources.files("pydantic_marc")
+        .joinpath("validation_rules/default_rules.json")
+        .read_text(encoding="utf-8")
+    )
+    return json.loads(data)
 
-    _cached_rules = None
 
-    @classmethod
-    def rules_from_json(cls) -> dict[str, Any]:
-        data = (
-            resources.files("pydantic_marc")
-            .joinpath("validation_rules/default_rules.json")
-            .read_text(encoding="utf-8")
-        )
-        return json.loads(data)
+def default_rules(data: dict[str, Any]) -> dict[str, Any]:
+    rules: dict[str, Any] = {}
+    leader = data.get("leader_data")
+    context = data.get("context")
+    if context and "rules" in context:
+        for k, v in context["rules"].items():
+            rules[k] = Rule(**{**v, "tag": v.get("tag", k)})
+        if context.get("replace_all"):
+            return rules
+    material_type = determine_material_type(leader)
+    data_dict = default_rules_from_json()
+    for k, v in data_dict.items():
+        if isinstance(v, dict) and material_type in v.keys():
+            v = Rule(**v[material_type])
+        elif (
+            isinstance(v, dict)
+            and material_type not in v.keys()
+            and "tag" not in v.keys()
+        ):
+            v = {key: Rule(**val) for key, val in v.items()}
+        else:
+            v = Rule(**v)
+        if k not in rules:
+            rules[k] = v
+    return rules
 
 
 class Rule(BaseModel, frozen=True, extra="allow"):
@@ -83,56 +104,31 @@ class Rule(BaseModel, frozen=True, extra="allow"):
 
 
 class RuleSet(BaseModel, frozen=True):
-    _default: ClassVar[Mapping] = MappingProxyType(_DefaultRules.rules_from_json())
-
-    rules: dict[str, Union[Rule, Any]] = {k: Rule(**v) for k, v in _default.items()}
-
-    @classmethod
-    def from_validation_info(cls, info: ValidationInfo) -> Union[RuleSet, None]:
-        """
-        Create a `RuleSet` from a `ValidationInfo` object to be used in validating
-        a `MarcRecord` model and the `ControlField` and `DataField` objects contained
-        within it.
-
-        The function identifies which rules to use in validation by checking two places
-        for MARC rules: the model's validation context, and the model's `rules`
-        attribute.
-
-        This function first checks if MARC rules were passed to the model via validation
-        context (indentified in the `ValidationInfo.context`attribute). It then checks
-        the rules passed to the model via the `MarcRecord.rules` attribute. If a value
-        was not passed to the `MarcRecord.rules` attribute then the default value
-        `RuleSet` will be used.
-        """
-        rules = {}
-        context = info.context
-
-        if context and "rules" in context:
-            for k, v in context["rules"].items():
-                rules[k] = Rule(**{**v, "tag": v.get("tag", k)})
-            if context.get("replace_all"):
-                return RuleSet(rules=rules)
-        record_rules = info.data["rules"]
-        if not record_rules and not rules:
-            return None
-        material_type = determine_material_type(info.data.get("leader", ""))
-        for k, v in record_rules.rules.items():
-            if material_type and k in ["006", "008"] and v.model_extra:
-                rule_dict = v.model_dump()
-                type_vals = rule_dict.get("material_types", {}).get(material_type, {})
-                rule_dict.update(type_vals)
-                v = Rule(**rule_dict)
-            if k not in rules:
-                rules[k] = v
-        return RuleSet(rules=rules)
+    context: Annotated[Union[Any, None], Field(exclude=True, default=None)]
+    leader_data: Annotated[Union[str, None], Field(exclude=True, default=None)]
+    rules: Annotated[
+        dict[str, Union[Rule, dict[str, Rule]]],
+        Field(default_factory=lambda data: default_rules(data)),
+    ]
 
     @field_validator("rules", mode="before")
     @classmethod
-    def get_rules(cls, data: dict[str, Union[Rule, dict[str, Any]]]) -> dict[str, Rule]:
+    def get_rules(cls, data: dict[str, Any]) -> dict[str, Any]:
         """Convert dictionary passed to `RuleSet.rules` attribute if needed"""
-        rules = {}
+        rules: dict[str, Any] = {}
         for k, v in data.items():
-            rules[k] = v if isinstance(v, Rule) else Rule(**v)
+            if isinstance(v, Rule):
+                rules[k] = v
+            elif k in ["006", "007", "008"] and isinstance(v, dict):
+                for key, val in v.items():
+                    if isinstance(val, Rule):
+                        rules[k] = {key: val}
+                    elif isinstance(val, dict):
+                        rules[k] = {key: Rule(**val)}
+                    else:
+                        rules[k] = Rule(**v)
+            else:
+                rules[k] = Rule(**v)
         return rules
 
     @computed_field  # type: ignore[prop-decorator]
