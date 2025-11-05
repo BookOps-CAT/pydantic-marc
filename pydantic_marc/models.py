@@ -87,6 +87,19 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     @model_validator(mode="before")
     @classmethod
     def get_rules_based_on_leader(cls, data: Any, info: ValidationInfo) -> Any:
+        """
+        Set values for `MarcRecord.rules` based on validation context and data
+        passed to `MarcRecord.leader` field.
+
+        Args:
+
+            data: The data passed to the `MarcRecord` model.
+            info: A `ValidationInfo` object which may contain validation context
+
+        Returns:
+            The data passed to the `MarcRecord` model as a dictionary with values
+            needed to set the `MarcRecord.rules` field.
+        """
         context = getattr(info, "context", {})
         if isinstance(data, dict):
             record_rules = data.get("rules", "unset")
