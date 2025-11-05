@@ -22,7 +22,7 @@ from typing import Any, Callable
 from pydantic import ValidationError, ValidationInfo
 from pydantic_core import InitErrorDetails
 
-from pydantic_marc.errors import MarcCustomError
+from .errors import MarcCustomError
 
 
 def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[Any]:

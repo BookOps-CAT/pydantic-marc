@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING, Any, Sequence, Union
 from pydantic import ValidationInfo
 from pydantic_core import InitErrorDetails
 
-from pydantic_marc.errors import (
+from .errors import (
     ControlFieldLength,
     InvalidFixedField,
     InvalidIndicator,
@@ -36,8 +36,8 @@ from pydantic_marc.errors import (
 )
 
 if TYPE_CHECKING:  # pragma: no cover
-    from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
-    from pydantic_marc.marc_rules import Rule
+    from .components import PydanticIndicators, PydanticSubfield
+    from .marc_rules import Rule
 
 
 @lru_cache

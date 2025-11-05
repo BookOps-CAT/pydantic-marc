@@ -1,4 +1,4 @@
-"""Models that define components of MARC record objects.
+"""Models that define fields within MARC record objects.
 
 Models defined in this module include:
 
@@ -7,12 +7,6 @@ Models defined in this module include:
 `DataField`:
     a model to validate all other MARC fields. Contains `tag`, `indicators`
     and `subfield` attributes.
-`PydanticIndicators`:
-    a model to validate the structure of the `indicators` attribute of a
-    `DataField` object.
-`PydanticSubfield`:
-    a model to validate a the structure of the `subfields` attribute of a
-    `DataField` object.
 """
 
 from __future__ import annotations
@@ -21,8 +15,9 @@ from typing import Annotated, Any, Literal, Sequence, Union
 
 from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
-from pydantic_marc.marc_rules import Rule
-from pydantic_marc.validators import (
+from .components import PydanticIndicators, PydanticSubfield
+from .marc_rules import Rule
+from .validators import (
     validate_indicators,
     validate_length,
     validate_subfields,
@@ -112,47 +107,3 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
                 "subfields": [i.model_dump() for i in self.subfields],
             }
         }
-
-
-class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
-    """
-    A class that defines a set of indicators for a `DataField` object. Each indicator
-    must be an empty string or a single character string.
-
-    Args:
-        first: the field's first indicator as a 0-1 character string
-        second: the field's second indicator as a 0-1 character string.
-
-    """
-
-    first: Annotated[str, Field(min_length=0, max_length=1)]
-    second: Annotated[str, Field(min_length=0, max_length=1)]
-
-    def __getitem__(self, index: int) -> str:
-        return list(self.__dict__.values())[index]
-
-    @model_serializer(when_used="unless-none")
-    def serialize_indicators(self) -> tuple[str, str]:
-        """Serialize indicators into a tuple with the correct format."""
-        return (self.first, self.second)
-
-
-class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
-    """
-    A class that defines a single subfield within  a `DataField` object. Each subfield
-    must contain a `code` attribute as a single character string and a `value`
-    attribute.
-
-    Args:
-        code: The subfield's code. Must be a single character string.
-        value: The data contained within a subfield.
-
-    """
-
-    code: Annotated[str, Field(min_length=1, max_length=1)]
-    value: str
-
-    @model_serializer(when_used="unless-none")
-    def serialize_subfield(self) -> dict[str, str]:
-        """Serialize a subfield into a dict with the correct format."""
-        return {self.code: self.value}

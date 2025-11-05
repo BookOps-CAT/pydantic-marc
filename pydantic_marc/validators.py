@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any, Callable, Sequence, Union
 
 from pydantic import ValidationInfo
 
-from pydantic_marc.error_handlers import (
+from .error_handlers import (
     get_control_field_length_errors,
     get_control_field_value_errors,
     get_indicator_errors,
@@ -18,14 +18,14 @@ from pydantic_marc.error_handlers import (
     get_marc_field_errors,
     get_subfield_errors,
 )
-from pydantic_marc.utils import (
+from .utils import (
     add_rules_to_pymarc_fields,
     handle_errors,
     raise_validation_errors,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
-    from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
+    from .components import PydanticIndicators, PydanticSubfield
 
 
 def marc_field_validator(error_checker_func: Callable) -> Callable:

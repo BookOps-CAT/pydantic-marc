@@ -20,9 +20,9 @@ from pydantic import (
     model_validator,
 )
 
-from pydantic_marc.fields import ControlField, DataField
-from pydantic_marc.marc_rules import RuleSet
-from pydantic_marc.validators import validate_leader, validate_marc_fields
+from .fields import ControlField, DataField
+from .marc_rules import RuleSet
+from .validators import validate_leader, validate_marc_fields
 
 
 def field_discriminator(data: Any) -> str:

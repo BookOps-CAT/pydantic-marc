@@ -3,12 +3,8 @@ from pydantic import ValidationError
 from pymarc import Indicators as PymarcIndicators
 from pymarc import Subfield as PymarcSubfield
 
-from pydantic_marc.fields import (
-    ControlField,
-    DataField,
-    PydanticIndicators,
-    PydanticSubfield,
-)
+from pydantic_marc.components import PydanticIndicators, PydanticSubfield
+from pydantic_marc.fields import ControlField, DataField
 
 
 class TestControlField:
