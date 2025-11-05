@@ -1095,6 +1095,7 @@ class TestMarcRecordCustomRulesPassedToModel:
                     "required": True,
                 }
             },
+            "replace_all": True,
         }
         model = MarcRecord(
             leader=stub_record_invalid_300.leader,
