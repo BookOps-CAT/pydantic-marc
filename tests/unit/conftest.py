@@ -1,10 +1,10 @@
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import pytest
 from pymarc import Field as PymarcField
 from pymarc import Indicators, Record, Subfield
 
-from pydantic_marc.marc_rules import Rule, RuleSet
+from pydantic_marc.marc_rules import RuleSet
 
 
 @pytest.fixture
@@ -14,14 +14,7 @@ def get_default_rule():
     def _get_default_rule(tag: str, subtype: Optional[str] = None):
         if subtype is None:
             return rules.rules.get(tag)
-        rule = rules.rules.get(tag, {})
-        return Rule(
-            tag=tag,
-            length=rule.material_types.get(subtype, {}).get("length"),
-            values=rule.material_types.get(subtype, {}).get("values"),
-            repeatable=rule.repeatable,
-            required=rule.required,
-        )
+        return rules.rules.get(tag, {}).get(subtype)
 
     return _get_default_rule
 
@@ -31,16 +24,16 @@ def make_mock_info():
     class MockInfo:
         def __init__(
             self,
-            data: Dict[str, Any],
+            data: dict[str, Any],
             field_name: str,
-            context: Optional[Dict[str, Any]] = None,
+            context: Optional[dict[str, Any]] = None,
         ):
             self.data = data
             self.field_name = field_name
             self.context = context
 
     def _make_mock_info(
-        data: Dict[str, Any], field_name: str, context: Optional[Dict[str, Any]] = None
+        data: dict[str, Any], field_name: str, context: Optional[dict[str, Any]] = None
     ):
         if "leader" not in data:
             data["leader"] = "00454cam a22001575i 4500"
@@ -127,7 +120,7 @@ def stub_invalid_record() -> Record:
     bib.add_field(
         PymarcField(
             tag="100",
-            indicators=Indicators("1", ""),
+            indicators=Indicators("1", " "),
             subfields=[
                 Subfield(code="a", value="Foo"),
                 Subfield(code="e", value="author"),
@@ -137,7 +130,7 @@ def stub_invalid_record() -> Record:
     bib.add_field(
         PymarcField(
             tag="110",
-            indicators=Indicators("1", ""),
+            indicators=Indicators("1", " "),
             subfields=[
                 Subfield(code="a", value="Bar"),
                 Subfield(code="e", value="publisher"),

@@ -1,19 +1,20 @@
 from typing import Optional
+
 import pytest
 from pydantic import ValidationError
 from pymarc import Field as PymarcField
-from pymarc import Leader as PymarcLeader
 from pymarc import MARCReader
-from pymarc import Subfield as PymarcSubfield
 from pymarc import Record as PymarcRecord
+from pymarc import Subfield as PymarcSubfield
+
 from pydantic_marc.fields import (
     ControlField,
     DataField,
     PydanticIndicators,
     PydanticSubfield,
 )
+from pydantic_marc.marc_rules import RuleSet
 from pydantic_marc.models import MarcRecord
-from pydantic_marc.marc_rules import Rule, RuleSet
 
 
 @pytest.fixture
@@ -23,14 +24,7 @@ def get_default_rule():
     def _get_default_rule(tag: str, subtype: Optional[str] = None):
         if subtype is None:
             return rules.rules.get(tag)
-        rule = rules.rules.get(tag, {})
-        return Rule(
-            tag=tag,
-            length=rule.material_types.get(subtype, {}).get("length"),
-            values=rule.material_types.get(subtype, {}).get("values"),
-            repeatable=rule.repeatable,
-            required=rule.required,
-        )
+        return rules.rules.get(tag, {}).get(subtype)
 
     return _get_default_rule
 
@@ -96,7 +90,7 @@ def stub_record_invalid_300(stub_record) -> PymarcField:
     stub_record.add_field(
         PymarcField(
             tag="300",
-            indicators=("1", "0"),
+            indicators=("1", "0"),  # type: ignore
             subfields=[PymarcSubfield(code="h", value="foo")],
         )
     )
@@ -126,7 +120,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="100",
-            indicators=("1", ""),
+            indicators=("1", ""),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="Foo"),
                 PymarcSubfield(code="e", value="author"),
@@ -136,7 +130,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="110",
-            indicators=("1", ""),
+            indicators=("1", ""),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="Bar"),
                 PymarcSubfield(code="e", value="publisher"),
@@ -146,7 +140,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="300",
-            indicators=(" ", " "),
+            indicators=(" ", " "),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="100 pages :"),
             ],
@@ -155,7 +149,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="336",
-            indicators=("1", "1"),
+            indicators=("1", "1"),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="still image"),
                 PymarcSubfield(code="b", value="sti"),
@@ -167,7 +161,7 @@ def stub_invalid_record() -> PymarcRecord:
     bib.add_field(
         PymarcField(
             tag="600",
-            indicators=("1", "0"),
+            indicators=("1", "0"),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="Foo, Bar,"),
                 PymarcSubfield(code="a", value="Foo, Bar,"),
@@ -1318,195 +1312,6 @@ class TestMarcRecordCustomRulesPassedToModel:
         assert model.model_dump()["fields"][-1] == {
             "300": {"ind1": "1", "ind2": "0", "subfields": [{"h": "foo"}]}
         }
-
-
-class TestControlField:
-    @pytest.mark.parametrize(
-        "tag, subtype, data",
-        [
-            ("001", None, "ocn123456789"),
-            ("003", None, "OCoLC"),
-            ("005", None, "20241111111111.0"),
-            ("006", "BK", "a|||||||||||||| ||"),
-            ("007", "c", "cr |||||||||||"),
-            ("008", "BK", "210505s2021    nyu           000 0 eng d"),
-            ("009", None, "foo"),
-        ],
-    )
-    def test_ControlField_valid(self, tag, data, subtype, get_default_rule):
-        model = ControlField(tag=tag, data=data, rules=get_default_rule(tag, subtype))
-        assert model.model_dump(by_alias=True) == {tag: data}
-        assert model.model_json_schema()["properties"]["rules"].get("default") is None
-
-    @pytest.mark.parametrize(
-        "data",
-        ["cr |||||||||||", "ad |||||"],
-    )
-    def test_ControlField_007(self, data, get_default_rule):
-        model = ControlField(
-            tag="007", data=data, rules=get_default_rule("007", data[0])
-        )
-        assert model.model_dump(by_alias=True) == {"007": data}
-        assert model.model_json_schema()["properties"]["rules"].get("default") is None
-
-    def test_ControlField_valid_with_rules(self):
-        rule = {
-            "tag": "005",
-            "repeatable": False,
-            "ind1": None,
-            "ind2": None,
-            "subfields": None,
-            "length": 16,
-        }
-        model = ControlField(tag="005", data="20241111111111.0", rules=rule)
-        assert model.model_dump(by_alias=True) == {"005": "20241111111111.0"}
-
-    @pytest.mark.parametrize(
-        "tag",
-        [
-            "001",
-            "003",
-            "005",
-            "006",
-            "007",
-            "007",
-        ],
-    )
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
-    def test_ControlField_data_string_type_error(
-        self, tag, field_value, get_default_rule
-    ):
-        with pytest.raises(ValidationError) as e:
-            ControlField(tag=tag, data=field_value, rules=get_default_rule(tag))
-        assert e.value.errors()[0]["type"] == "string_type"
-        assert e.value.errors()[0]["loc"] == ("data",)
-        assert len(e.value.errors()) == 1
-
-    @pytest.mark.parametrize(
-        "field_value, error_type",
-        [
-            ("2024", "control_field_length_invalid"),
-            ("b|", "control_field_length_invalid"),
-            ("b||||||||||||||||||||", "control_field_length_invalid"),
-        ],
-    )
-    def test_ControlField_006_field_control_field_length_invalid(
-        self, field_value, error_type, get_default_rule
-    ):
-        with pytest.raises(ValidationError) as e:
-            ControlField(
-                tag="006", data=field_value, rules=get_default_rule("006", "BK")
-            )
-        assert e.value.errors()[0]["type"] == error_type
-        assert e.value.errors()[0]["loc"] == ("data", "006")
-        assert len(e.value.errors()) == 1
-
-    @pytest.mark.parametrize(
-        "field_value, error_msg",
-        [
-            (
-                "a||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 8",
-            ),
-            (
-                "c||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 14",
-            ),
-            (
-                "d||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 6",
-            ),
-            (
-                "f||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 10",
-            ),
-            (
-                "g||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 9",
-            ),
-            (
-                "h||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 13",
-            ),
-            (
-                "k||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 6",
-            ),
-            (
-                "m||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 23",
-            ),
-            (
-                "o||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 2",
-            ),
-            (
-                "q||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 2",
-            ),
-            (
-                "r||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 11",
-            ),
-            (
-                "s||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 14",
-            ),
-            (
-                "t||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 2",
-            ),
-            (
-                "v||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 9",
-            ),
-            (
-                "z||",
-                "007: Length appears to be invalid. Reported length is: 3. Expected length is: 2",
-            ),
-        ],
-    )
-    def test_ControlField_007_control_field_length_invalid(
-        self, field_value, error_msg, get_default_rule
-    ):
-        with pytest.raises(ValidationError) as e:
-            ControlField(
-                tag="007",
-                data=field_value,
-                rules=get_default_rule("007", field_value[0]),
-            )
-        assert e.value.errors()[0]["type"] == "control_field_length_invalid"
-        assert e.value.errors()[0]["msg"] == error_msg
-        assert len(e.value.errors()) == 1
-
-    @pytest.mark.parametrize(
-        "field_value, error_type",
-        [
-            ("210505s2021    nyu", "control_field_length_invalid"),
-            (
-                "20210505s2021    nyu           000 0 eng d",
-                "control_field_length_invalid",
-            ),
-        ],
-    )
-    def test_ControlField_008_field_control_field_length_invalid(
-        self, field_value, error_type, get_default_rule
-    ):
-        with pytest.raises(ValidationError) as e:
-            ControlField(
-                tag="008", data=field_value, rules=get_default_rule("008", "BK")
-            )
-        assert e.value.errors()[0]["type"] == error_type
-        assert e.value.errors()[0]["loc"] == ("data", "008")
-        assert len(e.value.errors()) == 1
 
 
 class TestDataField:

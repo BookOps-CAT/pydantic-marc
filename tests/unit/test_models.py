@@ -48,7 +48,7 @@ class TestMarcRecord:
                     "ind2": ["0", "1"],
                 }
             },
-            "replace": True,
+            "replace_all": True,
         }
         with pytest.raises(ValidationError) as e:
             MarcRecord.model_validate(stub_record, context=context_dict)
@@ -1035,7 +1035,6 @@ class TestMarcRecordCustomRulesAsContext:
 class TestMarcRecordCustomRulesPassedToModel:
     def test_custom_rules_dict(self, stub_record_invalid_300):
         custom_rules = {
-            "replace_all": False,
             "rules": {
                 "008": {
                     "tag": "008",
@@ -1061,7 +1060,6 @@ class TestMarcRecordCustomRulesPassedToModel:
 
     def test_custom_rule_set(self, stub_record_invalid_300):
         custom_rules = {
-            "replace_all": False,
             "rules": {
                 "008": {
                     "tag": "008",
@@ -1086,7 +1084,6 @@ class TestMarcRecordCustomRulesPassedToModel:
 
     def test_custom_rule_dict_replace_all_true(self, stub_record_invalid_300):
         custom_rules = {
-            "replace_all": True,
             "rules": {
                 "008": {
                     "tag": "008",
@@ -1098,6 +1095,7 @@ class TestMarcRecordCustomRulesPassedToModel:
                     "required": True,
                 }
             },
+            "replace_all": True,
         }
         model = MarcRecord(
             leader=stub_record_invalid_300.leader,
@@ -1111,7 +1109,6 @@ class TestMarcRecordCustomRulesPassedToModel:
 
     def test_custom_rule_dict_replace_all_false(self, stub_record_invalid_300):
         custom_rules = {
-            "replace_all": False,
             "rules": {
                 "008": {
                     "tag": "008",

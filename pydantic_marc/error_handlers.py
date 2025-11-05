@@ -34,10 +34,10 @@ from pydantic_marc.errors import (
     NonRepeatableField,
     NonRepeatableSubfield,
 )
-from pydantic_marc.marc_rules import Rule, RuleSet
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydantic_marc.fields import PydanticIndicators, PydanticSubfield
+    from pydantic_marc.marc_rules import Rule
 
 
 @lru_cache
@@ -235,18 +235,16 @@ def get_marc_field_errors(
         A list of `MarcCustomError` objects.
     """
     errors: list[InitErrorDetails] = []
-    rules = RuleSet.from_validation_info(info=info)
+    rules = info.data["rules"]
     if not rules:
         return errors
     tag_counts = Counter([i["tag"] for i in data])
-    nr_fields = [k for k, v in rules.rules.items() if v.repeatable is False]
-    required_fields = [k for k, v in rules.rules.items() if v.required is True]
     main_entries = [i for i in tag_counts.elements() if i.startswith("1")]
 
-    for tag in nr_fields:
+    for tag in rules.non_repeatable_fields:
         if tag_counts[tag] > 1:
             errors.append(NonRepeatableField({"input": tag}).error_details)
-    for tag in required_fields:
+    for tag in rules.required_fields:
         if tag not in tag_counts.elements():
             errors.append(MissingRequiredField({"input": tag}).error_details)
     if len(main_entries) > 1:
@@ -254,7 +252,7 @@ def get_marc_field_errors(
     return errors
 
 
-def get_leader_errors(data: Any, info: ValidationInfo) -> list[InitErrorDetails]:
+def get_leader_errors(data: str, info: ValidationInfo) -> list[InitErrorDetails]:
     """
     Validate each character in a string against the allowed values each byte in a
     MARC leader.
@@ -270,14 +268,13 @@ def get_leader_errors(data: Any, info: ValidationInfo) -> list[InitErrorDetails]
 
         A list of `MarcCustomError` objects.
     """
-    errors: list = []
+    errors: list[InitErrorDetails] = []
     rules = info.data["rules"]
     if not rules or not rules.rules:
         return errors
     rule = rules.rules.get("LDR")
     if not rule or not rule.values:
         return errors
-    data = str(data)
     for i, c in enumerate(data):
         position = str(i).zfill(2)
         valid = rule.values.get(f"{position}", [])
