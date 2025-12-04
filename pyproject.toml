@@ -3,7 +3,7 @@ name = "pydantic-marc"
 version = "0.1.0"
 description = "A data validation tool for MARC records"
 authors = [
-    {name = "Charlotte Kostelic",email = "charlottekostelic@gmail.com"}
+    {name = "Charlotte Kostelic",email = "charlottekostelic@bookops.org"}
 ]
 license = "MIT"
 readme = "README.md"
