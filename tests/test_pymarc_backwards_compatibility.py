@@ -7,12 +7,8 @@ from pymarc import MARCReader
 from pymarc import Record as PymarcRecord
 from pymarc import Subfield as PymarcSubfield
 
-from pydantic_marc.fields import (
-    ControlField,
-    DataField,
-    PydanticIndicators,
-    PydanticSubfield,
-)
+from pydantic_marc.components import PydanticIndicators, PydanticSubfield
+from pydantic_marc.fields import ControlField, DataField
 from pydantic_marc.marc_rules import RuleSet
 from pydantic_marc.models import MarcRecord
 
