@@ -34,7 +34,7 @@ def handle_errors(
 
     Returns:
         a tuple containing the validated data (or original data if invalid), and a
-        list of Pydantic-compatible error details.
+        list of `InitErrorDetails` objects containing details about errors.
     """
     try:
         return validator(data, info), []
@@ -52,14 +52,14 @@ def raise_validation_errors(errors: list[InitErrorDetails], data: Any) -> Any:
     data.
 
     Args:
-        errors: a list of error details to raise, if any.
-        data: the data object being validated (used to name the error context).
+        errors: a list of errors as `InitErrorDetails` objects to raise, if any.
+        data: the data object being validated (used as name in error context).
 
     Returns:
         The input data, validated, if no errors were raised.
 
     Raises:
-        `ValidationError` from the collected `errors`.
+        `ValidationError`: if errors were passed to the function via the `errors` arg.
     """
     if errors:
         raise ValidationError.from_exception_data(
