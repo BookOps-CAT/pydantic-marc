@@ -22,7 +22,7 @@ class PydanticIndicators(BaseModel, arbitrary_types_allowed=True, from_attribute
     A class that defines a set of indicators for a `DataField` object. Each indicator
     must be an empty string or a single character string.
 
-    Args:
+    Attributes:
         first: the field's first indicator as a 0-1 character string
         second: the field's second indicator as a 0-1 character string.
 
@@ -46,7 +46,7 @@ class PydanticSubfield(BaseModel, arbitrary_types_allowed=True, from_attributes=
     must contain a `code` attribute as a single character string and a `value`
     attribute.
 
-    Args:
+    Attributes:
         code: The subfield's code. Must be a single character string.
         value: The data contained within a subfield.
 

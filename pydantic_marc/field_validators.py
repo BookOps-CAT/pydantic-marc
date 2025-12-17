@@ -43,14 +43,14 @@ def marc_field_validator(error_checker_func: Callable) -> Callable:
     Wrapper function to run field-level validation for a MARC field using
     rules from the model.
 
-    This function looks up a validation function based on the field name and applies
-    it if a corresponding rule and validator are found. If no rule or validator is
-    found, the input `data` is returned unchanged. If validation errors are found,
-    they are raised using `raise_validation_errors`.
+    This decorator function takes a validation function as its only parameter and
+    applies it. If validation errors are found, they are raised using
+    `raise_validation_errors`.
 
     Args:
-        data: the data passed to the field being validated
-        info: A `ValidationInfo` object.
+        error_checker_func:
+            a `Callable` that takes a model's data and `ValidationInfo` as args and
+            returns a list of `MarcCustomErrors` based on the field.
 
     Returns:
         The validated field data, or raises a `ValidationError` if rules are violated.
@@ -58,6 +58,17 @@ def marc_field_validator(error_checker_func: Callable) -> Callable:
 
     def decorator(func: Callable) -> Callable:
         def wrapper(data: Any, info: ValidationInfo) -> Any:
+            """
+            Generic function
+
+            Args:
+                data: the data passed to the field being validated
+                info: A `ValidationInfo` object.
+
+            Returns:
+                The validated field data, or raises a `ValidationError` if
+                rules are violated.
+            """
             rule = info.data.get("rules", None)
             if not rule:
                 return data
