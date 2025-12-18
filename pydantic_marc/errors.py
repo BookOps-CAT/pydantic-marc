@@ -5,67 +5,14 @@ Validate MARC Records tool. Each exception inherits from `MarcCustomError` which
 inherits from `PydanticCustomError`. The `MarcCustomError` exception and includes
 an `error_details` property to will create an `InitErrorDetails` object from the
 exception. An `InitErrorDetails` object is required in order to wrap an exception
-within a `pydantic.ValidationError` object.
+within a `ValidationError` object.
 """
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any
 
-from pydantic import ValidationError, ValidationInfo
 from pydantic_core import InitErrorDetails, PydanticCustomError
-
-
-def handle_errors(
-    validator: Callable, data: Any, info: ValidationInfo
-) -> tuple[Any, list[InitErrorDetails]]:
-    """
-    Execute a validator function and convert any errors raised to custom errors.
-
-    This function wraps the execution of a validator, catching `ValidationError`
-    exceptions and converting each error into a `MarcCustomError`. It returns the
-    original or validated data along with a list of `InitErrorDetails` used for raising
-    or aggregating errors later.
-
-    Args:
-        validator: a callable validator function that takes `data` and `info`.
-        data: the input data as a list to be validated.
-        info: the `ValidationInfo` used during model validation.
-
-    Returns:
-        a tuple containing the validated data (or original data if invalid), and a
-        list of `InitErrorDetails` objects containing details about errors.
-    """
-    try:
-        return validator(data, info), []
-    except ValidationError as exc:
-        errors = [MarcCustomError(e["type"], e["msg"], e["ctx"]) for e in exc.errors()]
-        return data, [i.error_details for i in errors]
-
-
-def raise_validation_errors(errors: list[InitErrorDetails], data: Any) -> Any:
-    """
-    Raise a `ValidationError` if any collected error details exist.
-
-    This function takes a list of Pydantic `InitErrorDetails` objects and raises a
-    `ValidationError` if the list is not empty. Otherwise, it returns the validated
-    data.
-
-    Args:
-        errors: a list of errors as `InitErrorDetails` objects to raise, if any.
-        data: the data object being validated (used as name in error context).
-
-    Returns:
-        The input data, validated, if no errors were raised.
-
-    Raises:
-        `ValidationError`: if errors were passed to the function via the `errors` arg.
-    """
-    if errors:
-        raise ValidationError.from_exception_data(
-            title=data.__class__.__name__, line_errors=errors
-        )
-    return data
 
 
 class MarcCustomError(PydanticCustomError):
