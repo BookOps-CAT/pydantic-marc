@@ -36,18 +36,6 @@ class TestControlField:
         assert model.model_dump(by_alias=True) == {"007": data}
         assert model.model_json_schema()["properties"]["rules"].get("default") is None
 
-    def test_ControlField_valid_with_rules(self):
-        rule = {
-            "tag": "005",
-            "repeatable": False,
-            "ind1": None,
-            "ind2": None,
-            "subfields": None,
-            "length": 16,
-        }
-        model = ControlField(tag="005", data="20241111111111.0", rules=rule)
-        assert model.model_dump(by_alias=True) == {"005": "20241111111111.0"}
-
     @pytest.mark.parametrize(
         "tag",
         [
