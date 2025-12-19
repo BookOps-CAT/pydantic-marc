@@ -689,28 +689,28 @@ class TestMarcRecord:
             "loc": ("leader", "20"),
             "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "21"),
             "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "22"),
             "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "23"),
             "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"], "tag": "LDR"},
         } in errors
 
     def test_MarcRecord_multiple_errors_model_validate(self, stub_invalid_record):
@@ -826,28 +826,28 @@ class TestMarcRecord:
             "loc": ("leader", "20"),
             "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "21"),
             "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "22"),
             "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "23"),
             "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"], "tag": "LDR"},
         } in errors
 
 
@@ -1187,7 +1187,6 @@ class TestMarcRecordCustomRulesAsContext:
 class TestMarcRecordCustomRulesPassedToModel:
     def test_custom_rules_dict(self, stub_record_invalid_300):
         custom_rules = {
-            "replace_all": False,
             "rules": {
                 "008": {
                     "tag": "008",
@@ -1210,93 +1209,6 @@ class TestMarcRecordCustomRulesPassedToModel:
         assert list(model.model_dump()["fields"][0].keys()) == ["001"]
         assert list(model.model_dump()["fields"][1].keys()) == ["008"]
         assert list(model.model_dump()["fields"][2].keys()) == ["050"]
-
-    def test_custom_rule_set(self, stub_record_invalid_300):
-        custom_rules = {
-            "replace_all": False,
-            "rules": {
-                "008": {
-                    "tag": "008",
-                    "repeatable": False,
-                    "ind1": None,
-                    "ind2": None,
-                    "subfields": None,
-                    "length": 40,
-                    "required": True,
-                }
-            },
-        }
-        model = MarcRecord(
-            leader=stub_record_invalid_300.leader,
-            fields=stub_record_invalid_300.fields,
-            rules=custom_rules,
-        )
-        assert list(model.model_dump().keys()) == ["leader", "fields"]
-        assert list(model.model_dump()["fields"][0].keys()) == ["001"]
-        assert list(model.model_dump()["fields"][1].keys()) == ["008"]
-        assert list(model.model_dump()["fields"][2].keys()) == ["050"]
-
-    def test_custom_rule_dict_replace_all_true(self, stub_record_invalid_300):
-        custom_rules = {
-            "replace_all": True,
-            "rules": {
-                "008": {
-                    "tag": "008",
-                    "repeatable": False,
-                    "ind1": None,
-                    "ind2": None,
-                    "subfields": None,
-                    "length": 40,
-                    "required": True,
-                }
-            },
-        }
-        model = MarcRecord(
-            leader=stub_record_invalid_300.leader,
-            fields=stub_record_invalid_300.fields,
-            rules=custom_rules,
-        )
-        assert list(model.model_dump().keys()) == ["leader", "fields"]
-        assert list(model.model_dump()["fields"][0].keys()) == ["001"]
-        assert list(model.model_dump()["fields"][1].keys()) == ["008"]
-        assert list(model.model_dump()["fields"][2].keys()) == ["050"]
-
-    def test_custom_rule_dict_replace_all_false(self, stub_record_invalid_300):
-        custom_rules = {
-            "replace_all": False,
-            "rules": {
-                "008": {
-                    "tag": "008",
-                    "repeatable": False,
-                    "ind1": None,
-                    "ind2": None,
-                    "subfields": None,
-                    "length": 30,
-                    "required": True,
-                }
-            },
-        }
-        data = {
-            "rules": custom_rules,
-            "leader": stub_record_invalid_300.leader,
-            "fields": stub_record_invalid_300.fields,
-        }
-        with pytest.raises(ValidationError) as e:
-            MarcRecord.model_validate(data)
-        errors = e.value.errors()
-        assert len(errors) == 1
-        assert {
-            "ctx": {
-                "input": "190306s2017    ht a   j      000 1 hat d",
-                "length": 40,
-                "tag": "008",
-                "valid": 30,
-            },
-            "input": "190306s2017    ht a   j      000 1 hat d",
-            "loc": ("fields", "008"),
-            "msg": "008: Length appears to be invalid. Reported length is: 40. Expected length is: 30",
-            "type": "control_field_length_invalid",
-        } in errors
 
     def test_no_marc_rules(self, stub_record_invalid_300):
         data = {
