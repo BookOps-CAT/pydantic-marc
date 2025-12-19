@@ -3,7 +3,7 @@
     "tag": "LDR",
     "repeatable": false,
     "length": 24,
-    "values": {
+    "field_values": {
       "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -76,7 +76,7 @@
     "repeatable": false,
     "length": 16,
     "required": false,
-    "values": {
+    "field_values": {
       "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -101,7 +101,7 @@
       "repeatable": true,
       "required": false,
       "length": 18,
-      "values": {
+      "field_values": {
         "00": ["a", "t"],
         "01": [
           " ",
@@ -319,7 +319,7 @@
       "repeatable": true,
       "required": false,
       "length": 18,
-      "values": {
+      "field_values": {
         "00": ["a"],
         "01": [
           " ",
@@ -514,7 +514,7 @@
       "repeatable": true,
       "required": false,
       "length": 18,
-      "values": {
+      "field_values": {
         "00": ["c", "d", "i", "j"],
         "01-02": [
           "an",
@@ -773,7 +773,7 @@
       "repeatable": true,
       "required": false,
       "length": 18,
-      "values": {
+      "field_values": {
         "00": ["e", "f"],
         "01": [
           " ",
@@ -907,7 +907,7 @@
       "repeatable": true,
       "required": false,
       "length": 18,
-      "values": {
+      "field_values": {
         "00": ["g", "k", "o", "r"],
         "01-03": ["000", "nnn", "---", "|||"],
         "04": [" "],
@@ -955,7 +955,7 @@
       "repeatable": true,
       "required": false,
       "length": 18,
-      "values": {
+      "field_values": {
         "00": ["m"],
         "01": [" ", "|"],
         "02": [" ", "|"],
@@ -996,7 +996,7 @@
       "repeatable": true,
       "required": false,
       "length": 18,
-      "values": {
+      "field_values": {
         "00": ["p"],
         "01": [" "],
         "02": [" "],
@@ -1024,7 +1024,7 @@
       "repeatable": true,
       "required": false,
       "length": 8,
-      "values": {
+      "field_values": {
         "00": ["a"],
         "01": ["d", "g", "j", "k", "q", "r", "s", "u", "y", "z", "|"],
         "02": [" "],
@@ -1064,7 +1064,7 @@
       "repeatable": true,
       "required": false,
       "length": 14,
-      "values": {
+      "field_values": {
         "00": ["c"],
         "01": [
           "a",
@@ -1148,7 +1148,7 @@
       "repeatable": true,
       "required": false,
       "length": 6,
-      "values": {
+      "field_values": {
         "00": ["d"],
         "01": ["a", "b", "c", "e", "u", "z", "|"],
         "02": [" "],
@@ -1179,7 +1179,7 @@
       "repeatable": true,
       "required": false,
       "length": 10,
-      "values": {
+      "field_values": {
         "00": ["f"],
         "01": ["a", "b", "c", "d", "u", "z", "|"],
         "02": [" "],
@@ -1251,7 +1251,7 @@
       "repeatable": true,
       "required": false,
       "length": 9,
-      "values": {
+      "field_values": {
         "00": ["g"],
         "01": ["c", "d", "f", "o", "s", "t", "u", "z", "|"],
         "02": [" "],
@@ -1286,7 +1286,7 @@
       "repeatable": true,
       "required": false,
       "length": 13,
-      "values": {
+      "field_values": {
         "00": ["h"],
         "01": ["a", "b", "c", "d", "e", "f", "g", "h", "j", "u", "z", "|"],
         "02": [" "],
@@ -1307,7 +1307,7 @@
       "repeatable": true,
       "required": false,
       "length": 6,
-      "values": {
+      "field_values": {
         "00": ["k"],
         "01": [
           "a",
@@ -1392,7 +1392,7 @@
       "repeatable": true,
       "required": false,
       "length": 23,
-      "values": {
+      "field_values": {
         "00": ["m"],
         "01": ["c", "f", "o", "r", "u", "z", "|"],
         "02": [" "],
@@ -1447,7 +1447,7 @@
       "repeatable": true,
       "required": false,
       "length": 2,
-      "values": {
+      "field_values": {
         "00": ["o"],
         "01": ["u", "|"]
       }
@@ -1457,7 +1457,7 @@
       "repeatable": true,
       "required": false,
       "length": 2,
-      "values": {
+      "field_values": {
         "00": ["q"],
         "01": ["u", "|"]
       }
@@ -1467,7 +1467,7 @@
       "repeatable": true,
       "required": false,
       "length": 11,
-      "values": {
+      "field_values": {
         "00": ["r"],
         "01": ["u", "|"],
         "02": [" "],
@@ -1544,7 +1544,7 @@
       "repeatable": true,
       "required": false,
       "length": 14,
-      "values": {
+      "field_values": {
         "00": ["s"],
         "01": ["b", "d", "e", "g", "i", "q", "r", "s", "t", "u", "w", "z", "|"],
         "02": [" "],
@@ -1616,7 +1616,7 @@
       "repeatable": true,
       "required": false,
       "length": 2,
-      "values": {
+      "field_values": {
         "00": ["t"],
         "01": ["a", "b", "c", "d", "u", "z", "|"]
       }
@@ -1626,7 +1626,7 @@
       "repeatable": true,
       "required": false,
       "length": 9,
-      "values": {
+      "field_values": {
         "00": ["v"],
         "01": ["c", "d", "f", "r", "u", "z", "|"],
         "02": [" "],
@@ -1664,7 +1664,7 @@
       "repeatable": true,
       "required": false,
       "length": 2,
-      "values": {
+      "field_values": {
         "00": ["z"],
         "01": ["m", "u", "z", "|"]
       }
@@ -1676,7 +1676,7 @@
       "repeatable": false,
       "required": true,
       "length": 40,
-      "values": {
+      "field_values": {
         "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -2046,7 +2046,7 @@
       "repeatable": false,
       "required": true,
       "length": 40,
-      "values": {
+      "field_values": {
         "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -2393,7 +2393,7 @@
       "repeatable": false,
       "required": true,
       "length": 40,
-      "values": {
+      "field_values": {
         "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -2776,7 +2776,7 @@
       "repeatable": false,
       "required": true,
       "length": 40,
-      "values": {
+      "field_values": {
         "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -3037,7 +3037,7 @@
       "repeatable": false,
       "required": true,
       "length": 40,
-      "values": {
+      "field_values": {
         "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -3239,7 +3239,7 @@
       "repeatable": false,
       "required": true,
       "length": 40,
-      "values": {
+      "field_values": {
         "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -3432,7 +3432,7 @@
       "repeatable": false,
       "required": true,
       "length": 40,
-      "values": {
+      "field_values": {
         "00": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "01": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         "02": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
