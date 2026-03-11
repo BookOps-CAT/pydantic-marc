@@ -861,7 +861,7 @@ COUNTRY_CODES = frozenset(
         "ykc",
         "za ",
         "|||",
-        # The following are codes for deprecated but may still be present in records
+        # The following codes are deprecated but may still be present in records
         "ac ",
         "ai ",
         "air",
