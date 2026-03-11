@@ -46,8 +46,10 @@ ignore = ["D417"]
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 88
+
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["E501"]
+"*" = ["ANN401"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

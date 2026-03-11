@@ -13,37 +13,17 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Sequence, Union
 
-from pydantic import AfterValidator, BaseModel, Field, ValidationInfo, model_serializer
+from pydantic import AfterValidator, BaseModel, Field, model_serializer
 
 from .components import PydanticIndicators, PydanticSubfield
+from .error_handlers import MarcFieldValidator
 from .field_validators import (
     get_control_field_length_errors,
     get_control_field_value_errors,
     get_indicator_errors,
     get_subfield_errors,
-    marc_field_validator,
 )
 from .marc_rules import Rule
-
-
-@marc_field_validator(get_control_field_length_errors)
-def validate_length(data: str, info: ValidationInfo) -> None: ...  # pragma: no cover
-
-
-@marc_field_validator(get_control_field_value_errors)
-def validate_values(data: str, info: ValidationInfo) -> None: ...  # pragma: no cover
-
-
-@marc_field_validator(get_indicator_errors)
-def validate_indicators(
-    data: Union[PydanticIndicators, Sequence], info: ValidationInfo
-) -> None: ...  # pragma: no cover
-
-
-@marc_field_validator(get_subfield_errors)
-def validate_subfields(
-    data: list[PydanticSubfield], info: ValidationInfo
-) -> None: ...  # pragma: no cover
 
 
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
@@ -71,7 +51,9 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
 
     tag: Literal["001", "002", "003", "004", "005", "006", "007", "008", "009"]
     data: Annotated[
-        str, AfterValidator(validate_length), AfterValidator(validate_values)
+        str,
+        AfterValidator(MarcFieldValidator(get_control_field_length_errors)),
+        AfterValidator(MarcFieldValidator(get_control_field_value_errors)),
     ]
 
     @model_serializer(when_used="unless-none")
@@ -112,9 +94,12 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
     indicators: Annotated[
-        Union[PydanticIndicators, Sequence], AfterValidator(validate_indicators)
+        Union[PydanticIndicators, Sequence],
+        AfterValidator(MarcFieldValidator(get_indicator_errors)),
     ]
-    subfields: Annotated[list[PydanticSubfield], AfterValidator(validate_subfields)]
+    subfields: Annotated[
+        list[PydanticSubfield], AfterValidator(MarcFieldValidator(get_subfield_errors))
+    ]
 
     @model_serializer
     def serialize_data_field(

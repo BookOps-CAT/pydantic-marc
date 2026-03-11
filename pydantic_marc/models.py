@@ -20,9 +20,11 @@ from pydantic import (
     model_validator,
 )
 
+from .error_handlers import MarcFieldValidator
+from .field_validators import get_leader_errors
 from .fields import ControlField, DataField
 from .marc_rules import RuleSet
-from .record_validators import validate_leader, validate_marc_fields
+from .record_validators import validate_marc_fields
 
 
 def field_discriminator(data: Any) -> str:
@@ -62,7 +64,11 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
         Union[RuleSet, dict[str, Any], None],
         Field(default_factory=RuleSet, exclude=True),
     ]
-    leader: Annotated[str, BeforeValidator(validate_leader)]
+    leader: Annotated[
+        str,
+        BeforeValidator(lambda x: str(x)),
+        BeforeValidator(MarcFieldValidator(get_leader_errors)),
+    ]
     fields: Annotated[
         list[
             Annotated[
@@ -105,17 +111,12 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
             record_rules = data.get("rules", "unset")
             leader = data.get("leader")
             if record_rules == "unset":
-                data["rules"] = {"leader_data": str(leader), "context": context}
-        elif hasattr(data, "getattr"):
-            record_rules = data.getattr(data, "rules", "unset")
-            leader = data.getattr(data, "leader", None)
-            if record_rules == "unset":
-                data.setattr(
-                    data, "rules", {"leader_data": str(leader), "context": context}
-                )
+                data["rules"] = RuleSet(leader_data=str(leader), context=context)
+            elif isinstance(record_rules, dict):
+                data["rules"] = RuleSet(**record_rules)
         else:
             return {
-                "rules": {"leader_data": str(data.leader), "context": context},
+                "rules": RuleSet(leader_data=str(data.leader), context=context),
                 "leader": data.leader,
                 "fields": data.fields,
             }

@@ -6,85 +6,28 @@ depending on the field and model.
 
 from __future__ import annotations
 
-import json
-import os
 from collections import Counter
-from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Callable, Sequence, Union
+from typing import TYPE_CHECKING, Sequence, Union
 
-from pydantic import ValidationInfo
-from pydantic_core import InitErrorDetails
-
+from .constants import COUNTRY_CODES, LANGUAGE_CODES
 from .errors import (
     ControlFieldLength,
     InvalidFixedField,
     InvalidIndicator,
+    InvalidLeader,
     InvalidSubfield,
+    MarcCustomError,
     NonRepeatableSubfield,
-    raise_validation_errors,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
     from .components import PydanticIndicators, PydanticSubfield
-
-
-@lru_cache
-def marc_codes() -> dict[str, Any]:
-    rules = {}
-    base_dir = os.path.dirname(__file__)
-    json_path = os.path.join(base_dir, "validation_rules", "marc_codes.json")
-    with open(json_path, "r", encoding="utf-8") as fh:
-        rules.update({k: v for k, v in json.load(fh).items()})
-    return rules
-
-
-def marc_field_validator(error_checker_func: Callable) -> Callable:
-    """
-    Wrapper function to run field-level validation for a MARC field using
-    rules from the model.
-
-    This decorator function takes a validation function as its only parameter and
-    applies it. If validation errors are found, they are raised using
-    `raise_validation_errors`.
-
-    Args:
-        error_checker_func:
-            a `Callable` that takes a model's data and `ValidationInfo` as args and
-            returns a list of `MarcCustomErrors` based on the field.
-
-    Returns:
-        The validated field data, or raises a `ValidationError` if rules are violated.
-    """
-
-    def decorator(func: Callable) -> Callable:
-        def wrapper(data: Any, info: ValidationInfo) -> Any:
-            """
-            Generic function
-
-            Args:
-                data: the data passed to the field being validated
-                info: A `ValidationInfo` object.
-
-            Returns:
-                The validated field data, or raises a `ValidationError` if
-                rules are violated.
-            """
-            rule = info.data.get("rules", None)
-            if not rule:
-                return data
-            errors = error_checker_func(
-                rule=rule.model_dump(), data=data, tag=info.data["tag"]
-            )
-            return raise_validation_errors(errors=errors, data=data)
-
-        return wrapper
-
-    return decorator
+    from .marc_rules import Rule
 
 
 def get_control_field_length_errors(
-    rule: dict[str, Any], data: str, tag: str
-) -> list[InitErrorDetails]:
+    rule: Rule, data: str, tag: str
+) -> list[MarcCustomError]:
     """
     Validate the length of a control field's `data` string against the expected rule.
 
@@ -100,20 +43,20 @@ def get_control_field_length_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: list[InitErrorDetails] = []
-    valid_length = rule.get("length")
+    errors: list[MarcCustomError] = []
+    valid_length = rule.length
     if not valid_length:
         return errors
     match = len(data) == valid_length
     if match is False:
         error = ControlFieldLength({"tag": tag, "valid": valid_length, "input": data})
-        errors.append(error.error_details)
+        errors.append(error)
     return errors
 
 
 def get_control_field_value_errors(
-    rule: dict[str, Any], data: str, tag: str
-) -> list[InitErrorDetails]:
+    rule: Rule, data: str, tag: str
+) -> list[MarcCustomError]:
     """
     Validate the values of each character of a control field's `data` string
     against the expected rule.
@@ -132,8 +75,8 @@ def get_control_field_value_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: list[InitErrorDetails] = []
-    value_rules = rule.get("values")
+    errors: list[MarcCustomError] = []
+    value_rules = rule.field_values
     if value_rules:
         data_dict = {f"{i:02d}": char for i, char in enumerate(data)}
         for position in value_rules.keys():
@@ -147,35 +90,35 @@ def get_control_field_value_errors(
             values = value_rules.get(loc)
             if values and char not in values:
                 error_data = {"tag": tag, "input": char, "valid": values, "loc": loc}
-                errors.append(InvalidFixedField(error_data).error_details)
+                errors.append(InvalidFixedField(error_data))
     if tag == "008":
-        codes = marc_codes()
-        if data[35:38] not in codes["language_codes"].keys():
+        lang = data[35:38]
+        country = data[15:18]
+        if lang not in LANGUAGE_CODES:
             error_data = {
                 "tag": tag,
-                "input": data[35:38],
+                "input": lang,
                 "valid": "see https://id.loc.gov/vocabulary/languages.html for "
                 "list of valid language codes",
                 "loc": "35-37",
             }
-            errors.append(InvalidFixedField(error_data).error_details)
-        country_codes = [f"{i.ljust(3, ' ')}" for i in codes["country_codes"].keys()]
-        if data[15:18] not in country_codes:
+            errors.append(InvalidFixedField(error_data))
+        if country not in COUNTRY_CODES:
             error_data = {
                 "tag": tag,
-                "input": data[15:18],
+                "input": country,
                 "valid": "see https://id.loc.gov/vocabulary/countries.html for "
                 "list of valid country codes",
                 "loc": "15-17",
             }
-            errors.append(InvalidFixedField(error_data).error_details)
+            errors.append(InvalidFixedField(error_data))
 
     return errors
 
 
 def get_indicator_errors(
-    rule: dict[str, Any], data: Union[PydanticIndicators, Sequence], tag: str
-) -> list[InitErrorDetails]:
+    rule: Rule, data: Union[PydanticIndicators, Sequence], tag: str
+) -> list[MarcCustomError]:
     """
     Validate the indicator values of a `DataField` against the allowed values in a rule.
 
@@ -191,19 +134,49 @@ def get_indicator_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: list[InitErrorDetails] = []
+    errors: list[MarcCustomError] = []
     for n, indicator in enumerate(data):
         ind = f"ind{n + 1}"
-        valid_inds = rule.get(ind, "")
+        valid_inds = getattr(rule, ind, "")
         if data[n] not in valid_inds:
             error_data = {"loc": (tag, ind), "input": indicator, "valid": valid_inds}
-            errors.append(InvalidIndicator(error_data).error_details)
+            errors.append(InvalidIndicator(error_data))
+    return errors
+
+
+def get_leader_errors(rule: Rule, data: str, tag: str) -> list[MarcCustomError]:
+    """
+    Validate each character in a string against the allowed values each byte in a
+    MARC leader.
+
+    If the value does not match the rules for the leader, an `InvalidLeader`
+    error will be added to the list of errors and returned.
+
+    Args:
+        rule: The `Rule` object specifying the valid leader values.
+        data: A string passed to the `MarcRecord.leader` attribute.
+        tag: The MARC field tag being validated ('LDR').
+    Returns:
+
+        A list of `MarcCustomError` objects.
+    """
+    errors: list[MarcCustomError] = []
+    values = rule.field_values
+    if not values:
+        return errors
+    for i, c in enumerate(data):
+        position = str(i).zfill(2)
+        print(values)
+        valid = values.get(f"{position}", [])
+        if c not in valid:
+            error_data = {"input": c, "loc": f"{position}", "valid": valid, "tag": tag}
+            errors.append(InvalidLeader(error_data))
     return errors
 
 
 def get_subfield_errors(
-    rule: dict[str, Any], data: list[PydanticSubfield], tag: str
-) -> list[InitErrorDetails]:
+    rule: Rule, data: list[PydanticSubfield], tag: str
+) -> list[MarcCustomError]:
     """
     Validate the subfields in a `DataField` against the allowed and repeatable values
     in a rule.
@@ -225,8 +198,8 @@ def get_subfield_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: list[InitErrorDetails] = []
-    sub_rules = rule.get("subfields")
+    errors: list[MarcCustomError] = []
+    sub_rules = rule.subfields
     if not sub_rules:
         return errors
 
@@ -239,7 +212,7 @@ def get_subfield_errors(
     for code in deduped_sub_codes:
         error_data = {"loc": (tag, code), "input": [i for i in data if i.code == code]}
         if sub_codes[code] > 1 and code in nr_sub_codes:
-            errors.append(NonRepeatableSubfield(error_data).error_details)
+            errors.append(NonRepeatableSubfield(error_data))
         elif valid_sub_codes and code not in valid_sub_codes:
-            errors.append(InvalidSubfield(error_data).error_details)
+            errors.append(InvalidSubfield(error_data))
     return errors
