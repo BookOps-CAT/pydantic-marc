@@ -10,14 +10,13 @@ from collections import Counter
 from typing import Any, Callable
 
 from pydantic import ValidationInfo
-from pydantic_core import InitErrorDetails
 
+from .error_handlers import ErrorCollector, MarcValidator, ValidationHandler
 from .errors import (
+    MarcCustomError,
     MissingRequiredField,
     MultipleMainEntryValues,
     NonRepeatableField,
-    handle_errors,
-    raise_validation_errors,
 )
 
 
@@ -64,17 +63,24 @@ def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[An
 
 def get_marc_field_errors(
     data: list[Any], info: ValidationInfo
-) -> list[InitErrorDetails]:
+) -> list[MarcCustomError]:
     """
     Validate rules across all fields in a `MarcRecord`.
+
+    Confirm that the values passed to the `MarcRecord.fields` attribute conform to the
+    rules passed to the `MarcRecord.rules` attribute. If the values do not match the
+    rules for that field, a `NonRepeatableField` error, a `MissingRequiredField`
+    error and/or a `MultipleMainEntryValues` error will be raised.
+
+    This is a part of the `WrapValidator` on the `fields` field and when called by the
+    `MarcValidator` class and runs before validating the model. This means that it will
+    collect all errors raised within this function and then raise them at the same it
+    raises any errors identified while validating the parent model.
 
     This includes:
     - Checking that non-repeatable fields appear no more than once.
     - Confirming that required fields are present.
     - Ensuring that only one main entry field (1XX tag) exists.
-
-    This function is called before validation of the `MarcRecord` model within the
-    `WrapValidator` on the `MarcRecord.fields` attribute.
 
     Args:
         data: A list of fields from a `MarcRecord`.
@@ -84,7 +90,7 @@ def get_marc_field_errors(
 
         A list of `MarcCustomError` objects.
     """
-    errors: list[InitErrorDetails] = []
+    errors: list[MarcCustomError] = []
     rules = info.data["rules"]
     if not rules:
         return errors
@@ -93,42 +99,13 @@ def get_marc_field_errors(
 
     for tag in rules.non_repeatable_fields:
         if tag_counts[tag] > 1:
-            errors.append(NonRepeatableField({"input": tag}).error_details)
+            errors.append(NonRepeatableField({"input": tag}))
     for tag in rules.required_fields:
         if tag not in tag_counts.elements():
-            errors.append(MissingRequiredField({"input": tag}).error_details)
+            errors.append(MissingRequiredField({"input": tag}))
     if len(main_entries) > 1:
-        errors.append(MultipleMainEntryValues({"input": main_entries}).error_details)
+        errors.append(MultipleMainEntryValues({"input": main_entries}))
     return errors
-
-
-def validate_marc_data(data: Any, info: ValidationInfo) -> Any:
-    """
-    Confirm that the values passed to the `MarcRecord.fields` attribute conform to the
-    rules passed to the `MarcRecord.rules` attribute. If the values do not match the
-    rules for that field, a `NonRepeatableField` error, a `MissingRequiredField`
-    error and/or a `MultipleMainEntryValues` error will be raised.
-
-    This is a part of the `WrapValidator` on the `fields` field and runs before
-    validating the model. This means that it will collect all errors raised within this
-    function and then raise them at the same it raises any errors identified while
-    validating the parent model.
-
-    Args:
-
-        data: The input data passed to the `MarcRecord.fields` attribute.
-        info: A `ValidationInfo` object.
-
-    Returns:
-
-        A list of `MarcCustomError` objects.
-
-
-    Raises:
-        `ValidationError`: if the there are any MARC validation errors
-    """
-    errors = get_marc_field_errors(data=data, info=info)
-    return raise_validation_errors(errors, data=data)
 
 
 def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> Any:
@@ -157,12 +134,15 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     # Running BeforeValidator for `MarcRecord`
     all_errors = []
 
+    collector = ErrorCollector()
     data = add_rules_to_pymarc_fields(data=data, info=info)
-    data, errors = handle_errors(data=data, info=info, validator=validate_marc_data)
+    data, errors = collector.collect_errors(
+        data=data, info=info, validator=MarcValidator(get_marc_field_errors)
+    )
     all_errors.extend(errors)
 
     # Validating `MarcRecord`
-    data, errors = handle_errors(data=data, info=info, validator=handler)
+    data, errors = collector.collect_errors(data=data, info=info, validator=handler)
     all_errors.extend(errors)
 
-    return raise_validation_errors(errors=all_errors, data=data)
+    return ValidationHandler().raise_if_errors(errors=all_errors, data=data)
