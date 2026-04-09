@@ -13,25 +13,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - name: Install uv and set python version
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: ${{ matrix.python-version}}
-      - name: Install Poetry with pipx
-        run: pipx install poetry
-      - name: Install dependencies with poetry
-        run: poetry install --no-root --without docs
+          python-version: ${{ matrix.python-version }}  
       - name: Run tests
-        run: poetry run pytest --cov=pydantic_marc/ --cov-report=xml
+        run: uv run --frozen python -m pytest --cov=pydantic_marc/ --cov-report=xml
       - name: Send report to Coveralls
         uses: coverallsapp/github-action@v2
         with:
           parallel: true
           github-token: ${{ secrets.GITHUB_TOKEN}}
-          flag-name: ${{ matrix.python-version}}   
+          fail-on-error: false       
   finish:
     needs: test
     runs-on: ubuntu-latest
