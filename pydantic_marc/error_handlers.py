@@ -32,12 +32,6 @@ class MarcFieldValidator(MarcValidator):
         def provider(*, data: Any, info: ValidationInfo) -> list[MarcCustomError]:
             rule = info.data.get("rules")
             tag = info.data.get("tag")
-            if rule and isinstance(rule, dict) and "rules" in rule:
-                rule = rule.get("rules", {}).get("LDR", {})
-                tag = "LDR"
-            elif rule and hasattr(rule, "rules"):
-                rule = getattr(rule, "rules").get("LDR", {})
-                tag = "LDR"
             if not rule:
                 return []
             return error_func(rule=rule, data=data, tag=tag)

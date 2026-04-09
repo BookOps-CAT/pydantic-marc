@@ -13,6 +13,7 @@ from pydantic import ValidationInfo
 
 from .error_handlers import ErrorCollector, MarcValidator, ValidationHandler
 from .errors import (
+    InvalidLeader,
     MarcCustomError,
     MissingRequiredField,
     MultipleMainEntryValues,
@@ -59,6 +60,43 @@ def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[An
             field_dict["subfields"] = field.subfields
         field_list.append(field_dict)
     return field_list
+
+
+def get_leader_errors(data: Any, info: ValidationInfo) -> list[MarcCustomError]:
+    """
+    Validate each character in a string against the allowed values each byte in a
+    MARC leader.
+
+    If the value does not match the rules for the leader, an `InvalidLeader`
+    error will be added to the list of errors and returned.
+
+    Args:
+        rule: The `Rule` object specifying the valid leader values.
+        data: A string passed to the `MarcRecord.leader` attribute.
+        tag: The MARC field tag being validated ('LDR').
+    Returns:
+
+        A list of `MarcCustomError` objects.
+    """
+    errors: list[MarcCustomError] = []
+    rules = info.data["rules"]
+    if not rules:
+        return errors
+    rule = rules.rules.get("LDR", {})
+    if not rule:
+        return errors
+    for i, c in enumerate(data):
+        position = str(i).zfill(2)
+        valid = rule.field_values.get(f"{position}", [])
+        if c not in valid:
+            error_data = {
+                "input": c,
+                "loc": f"{position}",
+                "valid": valid,
+                "tag": "LDR",
+            }
+            errors.append(InvalidLeader(error_data))
+    return errors
 
 
 def get_marc_field_errors(

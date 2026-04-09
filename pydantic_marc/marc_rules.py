@@ -65,9 +65,9 @@ class RuleSet:
         leader_data: Union[str, Any, None] = None,
         rules: dict[str, Any] = {},
     ) -> None:
-        self.context = context
+        self.context = context or {}
         self.leader_data = leader_data
-        self.rules = self._set_rules(rules)
+        self.rules = self._set_rules(rules or {})
 
     @cached_property
     def default_rules(self) -> dict[str, Any]:
@@ -76,36 +76,40 @@ class RuleSet:
             .joinpath("validation_rules/default_rules.json")
             .read_text(encoding="utf-8")
         )
-        return json.loads(data)
+        loaded = json.loads(data)
+
+        defaults = {}
+        mt = self.material_type
+        for k, v in loaded.items():
+            if mt in v:
+                defaults[k] = Rule(**v[mt])
+            elif "tag" not in v:
+                defaults[k] = {kk: Rule(**vv) for kk, vv in v.items()}
+            else:
+                defaults[k] = Rule(**v)
+        return defaults
+
+    def _normalize(self, data: dict[str, Any]) -> dict[str, Any]:
+        return {k: Rule(**{**v, "tag": v.get("tag", k)}) for k, v in data.items()}
 
     def _set_rules(self, value: dict[str, Any]) -> dict[str, Rule]:
-        rules = {}
+        # If explicit rules are provided they are the only rules used.
         if value:
-            for k, v in value.items():
-                if isinstance(v, dict):
-                    rules[k] = Rule(**v)
-                else:
-                    rules[k] = v
-            return rules
-        if self.context and "rules" in self.context:
-            for k, v in self.context["rules"].items():
-                rules[k] = Rule(**{**v, "tag": v.get("tag", k)})
-            if self.context.get("replace_all"):
-                return rules
-        for k, v in self.default_rules.items():
-            if isinstance(v, dict) and self.material_type in v.keys():
-                v = Rule(**v[self.material_type])
-            elif (
-                isinstance(v, dict)
-                and self.material_type not in v.keys()
-                and "tag" not in v.keys()
-            ):
-                v = {key: Rule(**val) for key, val in v.items()}
-            else:
-                v = Rule(**v)
-            if k not in rules:
-                rules[k] = v
-        return rules
+            return self._normalize(value)
+
+        # If rules are passed as context they are used
+        context_rules = self._normalize(self.context.get("rules", {}))
+
+        # If context also has passed 'replace_all' then only they will be used
+        if self.context.get("replace_all"):
+            return context_rules
+
+        # Otherwise default rules are added to the context rules without replacing any
+        context_rules.update(
+            {k: v for k, v in self.default_rules.items() if k not in context_rules}
+        )
+
+        return context_rules
 
     @property
     def non_repeatable_fields(self) -> list[str]:

@@ -14,7 +14,6 @@ from .errors import (
     ControlFieldLength,
     InvalidFixedField,
     InvalidIndicator,
-    InvalidLeader,
     InvalidSubfield,
     MarcCustomError,
     NonRepeatableSubfield,
@@ -141,36 +140,6 @@ def get_indicator_errors(
         if data[n] not in valid_inds:
             error_data = {"loc": (tag, ind), "input": indicator, "valid": valid_inds}
             errors.append(InvalidIndicator(error_data))
-    return errors
-
-
-def get_leader_errors(rule: Rule, data: str, tag: str) -> list[MarcCustomError]:
-    """
-    Validate each character in a string against the allowed values each byte in a
-    MARC leader.
-
-    If the value does not match the rules for the leader, an `InvalidLeader`
-    error will be added to the list of errors and returned.
-
-    Args:
-        rule: The `Rule` object specifying the valid leader values.
-        data: A string passed to the `MarcRecord.leader` attribute.
-        tag: The MARC field tag being validated ('LDR').
-    Returns:
-
-        A list of `MarcCustomError` objects.
-    """
-    errors: list[MarcCustomError] = []
-    values = rule.field_values
-    if not values:
-        return errors
-    for i, c in enumerate(data):
-        position = str(i).zfill(2)
-        print(values)
-        valid = values.get(f"{position}", [])
-        if c not in valid:
-            error_data = {"input": c, "loc": f"{position}", "valid": valid, "tag": tag}
-            errors.append(InvalidLeader(error_data))
     return errors
 
 

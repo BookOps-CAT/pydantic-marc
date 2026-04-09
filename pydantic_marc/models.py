@@ -20,11 +20,10 @@ from pydantic import (
     model_validator,
 )
 
-from .error_handlers import MarcFieldValidator
-from .field_validators import get_leader_errors
+from .error_handlers import MarcValidator
 from .fields import ControlField, DataField
 from .marc_rules import RuleSet
-from .record_validators import validate_marc_fields
+from .record_validators import get_leader_errors, validate_marc_fields
 
 
 def field_discriminator(data: Any) -> str:
@@ -67,7 +66,7 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
     leader: Annotated[
         str,
         BeforeValidator(lambda x: str(x)),
-        BeforeValidator(MarcFieldValidator(get_leader_errors)),
+        BeforeValidator(MarcValidator(get_leader_errors)),
     ]
     fields: Annotated[
         list[
