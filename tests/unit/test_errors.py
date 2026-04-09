@@ -171,13 +171,14 @@ def test_invalid_leader():
             "input": "c",
             "loc": "00",
             "valid": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            "tag": "LDR",
         }
     )
     assert error.type == "invalid_leader"
     assert error.context.get("input") == "c"
     assert (
         error.message()
-        == "{tag}: Invalid character 'c' at position 'leader/00'. Valid characters are: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']."
+        == "LDR: Invalid character 'c' at position 'leader/00'. Valid characters are: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']."
     )
     assert (
         error.message_template
