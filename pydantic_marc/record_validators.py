@@ -13,7 +13,6 @@ from pydantic import ValidationInfo
 from pydantic_core import InitErrorDetails
 
 from .errors import (
-    InvalidLeader,
     MissingRequiredField,
     MultipleMainEntryValues,
     NonRepeatableField,
@@ -61,41 +60,6 @@ def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[An
             field_dict["subfields"] = field.subfields
         field_list.append(field_dict)
     return field_list
-
-
-def get_leader_errors(data: str, info: ValidationInfo) -> list[InitErrorDetails]:
-    """
-    Validate each character in a string against the allowed values each byte in a
-    MARC leader.
-
-    If the value does not match the rules for the leader, an `InvalidLeader`
-    error will be added to the list of errors and returned.
-
-    Args:
-        data: A string passed to the `MarcRecord.leader` attribute.
-        info: A `ValidationInfo` context used to extract applicable rules.
-
-    Returns:
-
-        A list of `MarcCustomError` objects.
-    """
-    errors: list[InitErrorDetails] = []
-    rules = info.data["rules"]
-    if not rules or not rules.rules:
-        return errors
-    rule = rules.rules.get("LDR")
-    if not rule or not rule.field_values:
-        return errors
-    for i, c in enumerate(data):
-        position = str(i).zfill(2)
-        valid = rule.field_values.get(f"{position}", [])
-        if c not in valid:
-            errors.append(
-                InvalidLeader(
-                    {"input": c, "loc": f"{position}", "valid": valid, "tag": "LDR"}
-                ).error_details
-            )
-    return errors
 
 
 def get_marc_field_errors(
@@ -202,30 +166,3 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     all_errors.extend(errors)
 
     return raise_validation_errors(errors=all_errors, data=data)
-
-
-def validate_leader(data: Any, info: ValidationInfo) -> str:
-    """
-    Confirm that the value passed to the `MarcRecord.leader` attribute conforms to the
-    rules passed to the `MarcRecord.rules` attribute. If the values do not match the
-    rules for that field, one or more `InvalidLeader` errors will be raised.
-
-    This is a the `BeforeValidator` on the `leader` field and runs before validating
-    the model. These errors will be collected and raised with any other errors
-    identified while validating the `MarcRecord`.
-
-    Args:
-
-        data: The input data passed to the `MarcRecord.leader` attribute.
-        info: A `ValidationInfo` object.
-
-    Returns:
-
-        The validated leader as a string or a list of `MarcCustomError` objects.
-
-
-    Raises:
-        `ValidationError`: if the there are any MARC validation errors
-    """
-    errors = get_leader_errors(data=str(data), info=info)
-    return raise_validation_errors(errors=errors, data=str(data))
