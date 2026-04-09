@@ -133,3 +133,5 @@ venvcmd.sh
 
 # OSX
 .DS_Store
+.pydeps
+*.svg
