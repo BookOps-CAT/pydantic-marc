@@ -6,12 +6,10 @@ depending on the field and model.
 
 from __future__ import annotations
 
-import json
-import os
 from collections import Counter
-from functools import lru_cache
 from typing import TYPE_CHECKING, Any, Sequence, Union
 
+from .constants import COUNTRY_CODES, LANGUAGE_CODES
 from .errors import (
     ControlFieldLength,
     InvalidFixedField,
@@ -23,16 +21,7 @@ from .errors import (
 
 if TYPE_CHECKING:  # pragma: no cover
     from .components import PydanticIndicators, PydanticSubfield
-
-
-@lru_cache
-def marc_codes() -> dict[str, Any]:
-    rules = {}
-    base_dir = os.path.dirname(__file__)
-    json_path = os.path.join(base_dir, "validation_rules", "marc_codes.json")
-    with open(json_path, "r", encoding="utf-8") as fh:
-        rules.update({k: v for k, v in json.load(fh).items()})
-    return rules
+    from .marc_rules import Rule
 
 
 def get_control_field_length_errors(
@@ -65,7 +54,7 @@ def get_control_field_length_errors(
 
 
 def get_control_field_value_errors(
-    rule: dict[str, Any], data: str, tag: str
+    rule: Rule, data: str, tag: str
 ) -> list[MarcCustomError]:
     """
     Validate the values of each character of a control field's `data` string
@@ -102,21 +91,21 @@ def get_control_field_value_errors(
                 error_data = {"tag": tag, "input": char, "valid": values, "loc": loc}
                 errors.append(InvalidFixedField(error_data))
     if tag == "008":
-        codes = marc_codes()
-        if data[35:38] not in codes["language_codes"].keys():
+        lang = data[35:38]
+        country = data[15:18]
+        if lang not in LANGUAGE_CODES:
             error_data = {
                 "tag": tag,
-                "input": data[35:38],
+                "input": lang,
                 "valid": "see https://id.loc.gov/vocabulary/languages.html for "
                 "list of valid language codes",
                 "loc": "35-37",
             }
             errors.append(InvalidFixedField(error_data))
-        country_codes = [f"{i.ljust(3, ' ')}" for i in codes["country_codes"].keys()]
-        if data[15:18] not in country_codes:
+        if country not in COUNTRY_CODES:
             error_data = {
                 "tag": tag,
-                "input": data[15:18],
+                "input": country,
                 "valid": "see https://id.loc.gov/vocabulary/countries.html for "
                 "list of valid country codes",
                 "loc": "15-17",
