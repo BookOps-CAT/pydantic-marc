@@ -145,7 +145,7 @@ class InvalidLeader(MarcCustomError):
         instance = super().__new__(
             cls,
             "invalid_leader",
-            "LDR: Invalid character '{input}' at position 'leader/{loc}'. "
+            "{tag}: Invalid character '{input}' at position 'leader/{loc}'. "
             "Valid characters are: {valid}.",
             context,
         )

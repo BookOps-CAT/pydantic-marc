@@ -648,28 +648,28 @@ class TestMarcRecord:
             "loc": ("leader", "20"),
             "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "21"),
             "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "22"),
             "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "23"),
             "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"], "tag": "LDR"},
         } in errors
 
     def test_MarcRecord_multiple_errors_model_validate(self, stub_invalid_record):
@@ -769,28 +769,28 @@ class TestMarcRecord:
             "loc": ("leader", "20"),
             "msg": "LDR: Invalid character ' ' at position 'leader/20'. Valid characters are: ['4'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "20", "valid": ["4"]},
+            "ctx": {"input": " ", "loc": "20", "valid": ["4"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "21"),
             "msg": "LDR: Invalid character ' ' at position 'leader/21'. Valid characters are: ['5'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "21", "valid": ["5"]},
+            "ctx": {"input": " ", "loc": "21", "valid": ["5"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "22"),
             "msg": "LDR: Invalid character ' ' at position 'leader/22'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "22", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "22", "valid": ["0"], "tag": "LDR"},
         } in errors
         assert {
             "type": "invalid_leader",
             "loc": ("leader", "23"),
             "msg": "LDR: Invalid character ' ' at position 'leader/23'. Valid characters are: ['0'].",
             "input": " ",
-            "ctx": {"input": " ", "loc": "23", "valid": ["0"]},
+            "ctx": {"input": " ", "loc": "23", "valid": ["0"], "tag": "LDR"},
         } in errors
 
 

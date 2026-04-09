@@ -92,7 +92,7 @@ def get_leader_errors(data: str, info: ValidationInfo) -> list[InitErrorDetails]
         if c not in valid:
             errors.append(
                 InvalidLeader(
-                    {"input": c, "loc": f"{position}", "valid": valid}
+                    {"input": c, "loc": f"{position}", "valid": valid, "tag": "LDR"}
                 ).error_details
             )
     return errors
