@@ -100,7 +100,7 @@ class Rule(BaseModel, frozen=True, extra="allow"):
     subfields: Union[dict[str, list[str]], None] = None
     length: Union[int, dict[str, Union[int, list[int]]], None] = None
     required: Union[bool, None] = None
-    values: Union[dict[str, Any], None] = None
+    field_values: Union[dict[str, Any], None] = None
 
 
 class RuleSet(BaseModel, frozen=True):

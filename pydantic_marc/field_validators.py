@@ -133,7 +133,7 @@ def get_control_field_value_errors(
         A list of `MarcCustomError` objects.
     """
     errors: list[InitErrorDetails] = []
-    value_rules = rule.get("values")
+    value_rules = rule.get("field_values")
     if value_rules:
         data_dict = {f"{i:02d}": char for i, char in enumerate(data)}
         for position in value_rules.keys():

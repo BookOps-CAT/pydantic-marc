@@ -84,11 +84,11 @@ def get_leader_errors(data: str, info: ValidationInfo) -> list[InitErrorDetails]
     if not rules or not rules.rules:
         return errors
     rule = rules.rules.get("LDR")
-    if not rule or not rule.values:
+    if not rule or not rule.field_values:
         return errors
     for i, c in enumerate(data):
         position = str(i).zfill(2)
-        valid = rule.values.get(f"{position}", [])
+        valid = rule.field_values.get(f"{position}", [])
         if c not in valid:
             errors.append(
                 InvalidLeader(
