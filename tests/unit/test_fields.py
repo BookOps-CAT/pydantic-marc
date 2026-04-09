@@ -25,10 +25,7 @@ class TestControlField:
         assert model.model_dump(by_alias=True) == {tag: data}
         assert model.model_json_schema()["properties"]["rules"].get("default") is None
 
-    @pytest.mark.parametrize(
-        "data",
-        ["cr |||||||||||", "ad |||||"],
-    )
+    @pytest.mark.parametrize("data", ["cr |||||||||||", "ad |||||"])
     def test_ControlField_007(self, data, get_default_rule):
         model = ControlField(
             tag="007", data=data, rules=get_default_rule("007", data[0])
@@ -48,26 +45,8 @@ class TestControlField:
         model = ControlField(tag="005", data="20241111111111.0", rules=rule)
         assert model.model_dump(by_alias=True) == {"005": "20241111111111.0"}
 
-    @pytest.mark.parametrize(
-        "tag",
-        [
-            "001",
-            "003",
-            "005",
-            "006",
-            "007",
-            "007",
-        ],
-    )
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("tag", ["001", "003", "005", "006", "007", "007"])
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_ControlField_data_string_type_error(
         self, tag, field_value, get_default_rule
     ):
@@ -218,21 +197,7 @@ class TestDataField:
         assert model.indicators[1] == ""
 
     @pytest.mark.parametrize(
-        "ind1_value, ind2_value",
-        [
-            (
-                "1",
-                "1",
-            ),
-            (
-                "0",
-                "0",
-            ),
-            (
-                "2",
-                "2",
-            ),
-        ],
+        "ind1_value, ind2_value", [("1", "1"), ("0", "0"), ("2", "2")]
     )
     def test_DataField_010_invalid_indicators(
         self, ind1_value, ind2_value, get_default_rule
@@ -248,23 +213,13 @@ class TestDataField:
         assert len(e.value.errors()) == 2
         assert sorted(error_types) == sorted(["invalid_indicator", "invalid_indicator"])
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_010_invalid_type(self, field_value, get_default_rule):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="010",
                 indicators=PymarcIndicators("", ""),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
                 rules=get_default_rule("010"),
             )
         error_types = [i["type"] for i in e.value.errors()]
@@ -274,10 +229,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="010",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[
                     PymarcSubfield(code="a", value="2024111111"),
                     PymarcSubfield(code="a", value="2025111111"),
@@ -292,10 +244,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="010",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[PymarcSubfield(code="c", value="2024111111")],
                 rules=get_default_rule("010"),
             )
@@ -309,9 +258,7 @@ class TestDataField:
         model = DataField(
             tag="020",
             indicators=PymarcIndicators("", ""),
-            subfields=[
-                PymarcSubfield(code="a", value="2024111111"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="2024111111")],
             rules=get_default_rule("020"),
         )
         assert model.model_dump() == {
@@ -321,21 +268,7 @@ class TestDataField:
         assert model.indicators[1] == ""
 
     @pytest.mark.parametrize(
-        "ind1_value, ind2_value",
-        [
-            (
-                "1",
-                "1",
-            ),
-            (
-                "0",
-                "0",
-            ),
-            (
-                "2",
-                "2",
-            ),
-        ],
+        "ind1_value, ind2_value", [("1", "1"), ("0", "0"), ("2", "2")]
     )
     def test_DataField_020_invalid_indicators(
         self, ind1_value, ind2_value, get_default_rule
@@ -351,23 +284,13 @@ class TestDataField:
         assert len(e.value.errors()) == 2
         assert sorted(error_types) == sorted(["invalid_indicator", "invalid_indicator"])
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_020_invalid_type(self, field_value, get_default_rule):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="020",
                 indicators=PymarcIndicators("", ""),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
                 rules=get_default_rule("020"),
             )
         error_types = [i["type"] for i in e.value.errors()]
@@ -377,10 +300,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="020",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[
                     PymarcSubfield(code="a", value="2024111111"),
                     PymarcSubfield(code="a", value="2024111111"),
@@ -395,10 +315,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="020",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[PymarcSubfield(code="t", value="2024111111")],
                 rules=get_default_rule("020"),
             )
@@ -412,9 +329,7 @@ class TestDataField:
         model = DataField(
             tag="050",
             indicators=PymarcIndicators("0", "4"),
-            subfields=[
-                PymarcSubfield(code="a", value="F00"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="F00")],
             rules=get_default_rule("050"),
         )
         assert model.model_dump() == {
@@ -424,21 +339,7 @@ class TestDataField:
         assert model.indicators[1] == "4"
 
     @pytest.mark.parametrize(
-        "ind1_value, ind2_value",
-        [
-            (
-                "5",
-                "6",
-            ),
-            (
-                "7",
-                "8",
-            ),
-            (
-                "9",
-                "1",
-            ),
-        ],
+        "ind1_value, ind2_value", [("5", "6"), ("7", "8"), ("9", "1")]
     )
     def test_DataField_050_invalid_indicators(
         self, ind1_value, ind2_value, get_default_rule
@@ -454,23 +355,13 @@ class TestDataField:
         assert len(e.value.errors()) == 2
         assert sorted(error_types) == sorted(["invalid_indicator", "invalid_indicator"])
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_050_invalid_type(self, field_value, get_default_rule):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="050",
                 indicators=PymarcIndicators("0", "4"),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
                 rules=get_default_rule("050"),
             )
         error_types = [i["type"] for i in e.value.errors()]
@@ -480,10 +371,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="050",
-                indicators=(
-                    "0",
-                    "4",
-                ),
+                indicators=("0", "4"),
                 subfields=[
                     PymarcSubfield(code="a", value="F00"),
                     PymarcSubfield(code="a", value="F00"),
@@ -500,10 +388,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="050",
-                indicators=(
-                    "0",
-                    "4",
-                ),
+                indicators=("0", "4"),
                 subfields=[PymarcSubfield(code="t", value="F00")],
                 rules=get_default_rule("050"),
             )
@@ -517,9 +402,7 @@ class TestDataField:
         model = DataField(
             tag="900",
             indicators=PymarcIndicators("", ""),
-            subfields=[
-                PymarcSubfield(code="a", value="Foo"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="Foo")],
             rules=get_default_rule("900"),
         )
         assert model.model_dump() == {
@@ -528,37 +411,20 @@ class TestDataField:
         assert model.indicators[0] == ""
         assert model.indicators[1] == ""
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_900_invalid_type(self, field_value):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="900",
                 indicators=PymarcIndicators(" ", " "),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert "string_type" in error_types
 
 
 class TestPydanticIndicators:
-    @pytest.mark.parametrize(
-        "first, second",
-        [
-            ("0", "1"),
-            ("", " "),
-            (" ", "5"),
-        ],
-    )
+    @pytest.mark.parametrize("first, second", [("0", "1"), ("", " "), (" ", "5")])
     def test_PydanticIndicators_valid(self, first, second):
         model = PydanticIndicators(first=first, second=second)
         assert model.model_dump(by_alias=True) == (first, second)
@@ -581,14 +447,7 @@ class TestPydanticIndicators:
 
 
 class TestPydanticSubfield:
-    @pytest.mark.parametrize(
-        "code, value",
-        [
-            ("a", "foo"),
-            ("b", "bar"),
-            ("8", "baz"),
-        ],
-    )
+    @pytest.mark.parametrize("code, value", [("a", "foo"), ("b", "bar"), ("8", "baz")])
     def test_PydanticSubfield_valid(self, code, value):
         model = PydanticSubfield(code=code, value=value)
         assert model.model_dump(by_alias=True) == {code: value}

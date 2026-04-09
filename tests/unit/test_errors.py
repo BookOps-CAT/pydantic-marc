@@ -74,24 +74,7 @@ def test_invalid_subfield(tag, code, subfields):
 
 
 @pytest.mark.parametrize(
-    "tag, data, valid",
-    [
-        (
-            "006",
-            "a|",
-            "18",
-        ),
-        (
-            "007",
-            "a|",
-            "8",
-        ),
-        (
-            "008",
-            "a|",
-            "40",
-        ),
-    ],
+    "tag, data, valid", [("006", "a|", "18"), ("007", "a|", "8"), ("008", "a|", "40")]
 )
 def test_control_field_length(tag, data, valid):
     error = ControlFieldLength({"tag": tag, "valid": valid, "input": data})

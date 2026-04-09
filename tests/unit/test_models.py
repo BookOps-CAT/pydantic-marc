@@ -283,15 +283,11 @@ class TestMarcRecord:
         assert {
             "ctx": {
                 "code": "t",
-                "input": [
-                    PydanticSubfield(code="t", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="t", value="foo")],
                 "loc": ("050", "t"),
                 "tag": "050",
             },
-            "input": [
-                PydanticSubfield(code="t", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="t", value="foo")],
             "loc": ("fields", "050", "t"),
             "msg": "050 $t: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -377,14 +373,9 @@ class TestMarcRecord:
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
         assert error == {
-            "ctx": {
-                "input": "245",
-            },
+            "ctx": {"input": "245"},
             "input": "245",
-            "loc": (
-                "fields",
-                "245",
-            ),
+            "loc": ("fields", "245"),
             "msg": "One 245 field must be present in a MARC21 record.",
             "type": "missing_required_field",
         }
@@ -409,9 +400,7 @@ class TestMarcRecord:
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
         assert error == {
-            "ctx": {
-                "input": ["100", "110"],
-            },
+            "ctx": {"input": ["100", "110"]},
             "input": ["100", "110"],
             "loc": ("fields", "100", "110"),
             "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
@@ -433,24 +422,14 @@ class TestMarcRecord:
         errors = e.value.errors()
         assert len(errors) == 12
         assert {
-            "ctx": {
-                "input": "245",
-            },
+            "ctx": {"input": "245"},
             "input": "245",
-            "loc": (
-                "fields",
-                "245",
-            ),
+            "loc": ("fields", "245"),
             "msg": "One 245 field must be present in a MARC21 record.",
             "type": "missing_required_field",
         } in errors
         assert {
-            "ctx": {
-                "input": "p|||||",
-                "length": 6,
-                "tag": "006",
-                "valid": 18,
-            },
+            "ctx": {"input": "p|||||", "length": 6, "tag": "006", "valid": 18},
             "input": "p|||||",
             "loc": ("fields", "006"),
             "msg": "006: Length appears to be invalid. Reported length is: 6. Expected length is: 18",
@@ -485,15 +464,11 @@ class TestMarcRecord:
         assert {
             "ctx": {
                 "code": "z",
-                "input": [
-                    PydanticSubfield(code="z", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="z", value="foo")],
                 "loc": ("336", "z"),
                 "tag": "336",
             },
-            "input": [
-                PydanticSubfield(code="z", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="z", value="foo")],
             "loc": ("fields", "336", "z"),
             "msg": "336 $z: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -506,9 +481,7 @@ class TestMarcRecord:
             "ctx": {"input": "001"},
         } in errors
         assert {
-            "ctx": {
-                "input": ["100", "110"],
-            },
+            "ctx": {"input": ["100", "110"]},
             "input": ["100", "110"],
             "loc": ("fields", "100", "110"),
             "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
@@ -570,24 +543,14 @@ class TestMarcRecord:
         errors = e.value.errors()
         assert len(errors) == 12
         assert {
-            "ctx": {
-                "input": "245",
-            },
+            "ctx": {"input": "245"},
             "input": "245",
-            "loc": (
-                "fields",
-                "245",
-            ),
+            "loc": ("fields", "245"),
             "msg": "One 245 field must be present in a MARC21 record.",
             "type": "missing_required_field",
         } in errors
         assert {
-            "ctx": {
-                "input": "p|||||",
-                "length": 6,
-                "tag": "006",
-                "valid": 18,
-            },
+            "ctx": {"input": "p|||||", "length": 6, "tag": "006", "valid": 18},
             "input": "p|||||",
             "loc": ("fields", "006"),
             "msg": "006: Length appears to be invalid. Reported length is: 6. Expected length is: 18",
@@ -622,15 +585,11 @@ class TestMarcRecord:
         assert {
             "ctx": {
                 "code": "z",
-                "input": [
-                    PydanticSubfield(code="z", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="z", value="foo")],
                 "loc": ("336", "z"),
                 "tag": "336",
             },
-            "input": [
-                PydanticSubfield(code="z", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="z", value="foo")],
             "loc": ("fields", "336", "z"),
             "msg": "336 $z: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -643,9 +602,7 @@ class TestMarcRecord:
             "ctx": {"input": "001"},
         } in errors
         assert {
-            "ctx": {
-                "input": ["100", "110"],
-            },
+            "ctx": {"input": ["100", "110"]},
             "input": ["100", "110"],
             "loc": ("fields", "100", "110"),
             "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
@@ -751,15 +708,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "h",
-                "input": [
-                    PydanticSubfield(code="h", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="h", value="foo")],
                 "loc": ("300", "h"),
                 "tag": "300",
             },
-            "input": [
-                PydanticSubfield(code="h", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="h", value="foo")],
             "loc": ("fields", "300", "h"),
             "msg": "300 $h: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -825,15 +778,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "h",
-                "input": [
-                    PydanticSubfield(code="h", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="h", value="foo")],
                 "loc": ("300", "h"),
                 "tag": "300",
             },
-            "input": [
-                PydanticSubfield(code="h", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="h", value="foo")],
             "loc": ("fields", "300", "h"),
             "msg": "300 $h: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -911,15 +860,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "a",
-                "input": [
-                    PydanticSubfield(code="a", value="Title :"),
-                ],
+                "input": [PydanticSubfield(code="a", value="Title :")],
                 "loc": ("245", "a"),
                 "tag": "245",
             },
-            "input": [
-                PydanticSubfield(code="a", value="Title :"),
-            ],
+            "input": [PydanticSubfield(code="a", value="Title :")],
             "loc": ("fields", "245", "a"),
             "msg": "245 $a: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -927,15 +872,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "b",
-                "input": [
-                    PydanticSubfield(code="b", value="subtitle /"),
-                ],
+                "input": [PydanticSubfield(code="b", value="subtitle /")],
                 "loc": ("245", "b"),
                 "tag": "245",
             },
-            "input": [
-                PydanticSubfield(code="b", value="subtitle /"),
-            ],
+            "input": [PydanticSubfield(code="b", value="subtitle /")],
             "loc": ("fields", "245", "b"),
             "msg": "245 $b: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -943,15 +884,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "c",
-                "input": [
-                    PydanticSubfield(code="c", value="Author"),
-                ],
+                "input": [PydanticSubfield(code="c", value="Author")],
                 "loc": ("245", "c"),
                 "tag": "245",
             },
-            "input": [
-                PydanticSubfield(code="c", value="Author"),
-            ],
+            "input": [PydanticSubfield(code="c", value="Author")],
             "loc": ("fields", "245", "c"),
             "msg": "245 $c: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -985,15 +922,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "h",
-                "input": [
-                    PydanticSubfield(code="h", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="h", value="foo")],
                 "loc": ("300", "h"),
                 "tag": "300",
             },
-            "input": [
-                PydanticSubfield(code="h", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="h", value="foo")],
             "loc": ("fields", "300", "h"),
             "msg": "300 $h: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -1045,7 +978,7 @@ class TestMarcRecordCustomRulesPassedToModel:
                     "length": 40,
                     "required": True,
                 }
-            },
+            }
         }
         data = {
             "rules": custom_rules,
@@ -1070,7 +1003,7 @@ class TestMarcRecordCustomRulesPassedToModel:
                     "length": 40,
                     "required": True,
                 }
-            },
+            }
         }
         model = MarcRecord(
             leader=stub_record_invalid_300.leader,
@@ -1119,7 +1052,7 @@ class TestMarcRecordCustomRulesPassedToModel:
                     "length": 30,
                     "required": True,
                 }
-            },
+            }
         }
         data = {
             "rules": custom_rules,
