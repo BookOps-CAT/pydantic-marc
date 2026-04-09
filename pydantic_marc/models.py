@@ -111,17 +111,12 @@ class MarcRecord(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
             record_rules = data.get("rules", "unset")
             leader = data.get("leader")
             if record_rules == "unset":
-                data["rules"] = {"leader_data": str(leader), "context": context}
-        elif hasattr(data, "getattr"):
-            record_rules = data.getattr(data, "rules", "unset")
-            leader = data.getattr(data, "leader", None)
-            if record_rules == "unset":
-                data.setattr(
-                    data, "rules", {"leader_data": str(leader), "context": context}
-                )
+                data["rules"] = RuleSet(leader_data=str(leader), context=context)
+            elif isinstance(record_rules, dict):
+                data["rules"] = RuleSet(**record_rules)
         else:
             return {
-                "rules": {"leader_data": str(data.leader), "context": context},
+                "rules": RuleSet(leader_data=str(data.leader), context=context),
                 "leader": data.leader,
                 "fields": data.fields,
             }
