@@ -16,11 +16,10 @@ from .errors import MarcCustomError
 class MarcValidator:
     def __init__(self, error_provider: Callable) -> None:
         self.error_provider = error_provider
-        self.validation_handler = ValidationHandler()
 
     def __call__(self, data: Any, info: ValidationInfo) -> Any:
         errors = self.error_provider(data=data, info=info)
-        return self.validation_handler.raise_if_errors(errors=errors, data=data)
+        return ValidationHandler.raise_if_errors(errors=errors, data=data)
 
 
 class MarcFieldValidator(MarcValidator):
@@ -47,7 +46,8 @@ class MarcFieldValidator(MarcValidator):
 
 
 class ValidationHandler:
-    def raise_if_errors(self, errors: list[MarcCustomError], data: Any) -> Any:
+    @staticmethod
+    def raise_if_errors(errors: list[MarcCustomError], data: Any) -> Any:
         """
         Raise a `ValidationError` if any collected error details exist.
 

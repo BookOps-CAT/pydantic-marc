@@ -145,4 +145,4 @@ def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> 
     data, errors = collector.collect_errors(data=data, info=info, validator=handler)
     all_errors.extend(errors)
 
-    return ValidationHandler().raise_if_errors(errors=all_errors, data=data)
+    return ValidationHandler.raise_if_errors(errors=all_errors, data=data)
