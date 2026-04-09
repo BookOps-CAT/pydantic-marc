@@ -37,9 +37,7 @@ def stub_record() -> PymarcRecord:
         PymarcField(
             tag="050",
             indicators=(" ", "4"),  # type: ignore
-            subfields=[
-                PymarcSubfield(code="a", value="F00"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="F00")],
         )
     )
     bib.add_field(
@@ -48,14 +46,8 @@ def stub_record() -> PymarcRecord:
             indicators=("0", "0"),  # type: ignore
             subfields=[
                 PymarcSubfield(code="a", value="Title :"),
-                PymarcSubfield(
-                    code="b",
-                    value="subtitle /",
-                ),
-                PymarcSubfield(
-                    code="c",
-                    value="Author",
-                ),
+                PymarcSubfield(code="b", value="subtitle /"),
+                PymarcSubfield(code="c", value="Author"),
             ],
         )
     )
@@ -63,18 +55,14 @@ def stub_record() -> PymarcRecord:
         PymarcField(
             tag="300",
             indicators=(" ", " "),  # type: ignore
-            subfields=[
-                PymarcSubfield(code="a", value="100 pages :"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="100 pages :")],
         )
     )
     bib.add_field(
         PymarcField(
             tag="910",
             indicators=(" ", " "),  # type: ignore
-            subfields=[
-                PymarcSubfield(code="a", value="RL"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="RL")],
         )
     )
     return bib
@@ -137,9 +125,7 @@ def stub_invalid_record() -> PymarcRecord:
         PymarcField(
             tag="300",
             indicators=(" ", " "),  # type: ignore
-            subfields=[
-                PymarcSubfield(code="a", value="100 pages :"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="100 pages :")],
         )
     )
     bib.add_field(
@@ -435,15 +421,11 @@ class TestMarcRecord:
         assert {
             "ctx": {
                 "code": "t",
-                "input": [
-                    PydanticSubfield(code="t", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="t", value="foo")],
                 "loc": ("050", "t"),
                 "tag": "050",
             },
-            "input": [
-                PydanticSubfield(code="t", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="t", value="foo")],
             "loc": ("fields", "050", "t"),
             "msg": "050 $t: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -529,14 +511,9 @@ class TestMarcRecord:
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
         assert error == {
-            "ctx": {
-                "input": "245",
-            },
+            "ctx": {"input": "245"},
             "input": "245",
-            "loc": (
-                "fields",
-                "245",
-            ),
+            "loc": ("fields", "245"),
             "msg": "One 245 field must be present in a MARC21 record.",
             "type": "missing_required_field",
         }
@@ -561,9 +538,7 @@ class TestMarcRecord:
         error = e.value.errors()[0]
         assert len(e.value.errors()) == 1
         assert error == {
-            "ctx": {
-                "input": ["100", "110"],
-            },
+            "ctx": {"input": ["100", "110"]},
             "input": ["100", "110"],
             "loc": ("fields", "100", "110"),
             "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
@@ -585,24 +560,14 @@ class TestMarcRecord:
         errors = e.value.errors()
         assert len(errors) == 12
         assert {
-            "ctx": {
-                "input": "245",
-            },
+            "ctx": {"input": "245"},
             "input": "245",
-            "loc": (
-                "fields",
-                "245",
-            ),
+            "loc": ("fields", "245"),
             "msg": "One 245 field must be present in a MARC21 record.",
             "type": "missing_required_field",
         } in errors
         assert {
-            "ctx": {
-                "input": "p|||||",
-                "length": 6,
-                "tag": "006",
-                "valid": 18,
-            },
+            "ctx": {"input": "p|||||", "length": 6, "tag": "006", "valid": 18},
             "input": "p|||||",
             "loc": ("fields", "006"),
             "msg": "006: Length appears to be invalid. Reported length is: 6. Expected length is: 18",
@@ -637,15 +602,11 @@ class TestMarcRecord:
         assert {
             "ctx": {
                 "code": "z",
-                "input": [
-                    PydanticSubfield(code="z", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="z", value="foo")],
                 "loc": ("336", "z"),
                 "tag": "336",
             },
-            "input": [
-                PydanticSubfield(code="z", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="z", value="foo")],
             "loc": ("fields", "336", "z"),
             "msg": "336 $z: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -658,9 +619,7 @@ class TestMarcRecord:
             "ctx": {"input": "001"},
         } in errors
         assert {
-            "ctx": {
-                "input": ["100", "110"],
-            },
+            "ctx": {"input": ["100", "110"]},
             "input": ["100", "110"],
             "loc": ("fields", "100", "110"),
             "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
@@ -722,24 +681,14 @@ class TestMarcRecord:
         errors = e.value.errors()
         assert len(errors) == 12
         assert {
-            "ctx": {
-                "input": "245",
-            },
+            "ctx": {"input": "245"},
             "input": "245",
-            "loc": (
-                "fields",
-                "245",
-            ),
+            "loc": ("fields", "245"),
             "msg": "One 245 field must be present in a MARC21 record.",
             "type": "missing_required_field",
         } in errors
         assert {
-            "ctx": {
-                "input": "p|||||",
-                "length": 6,
-                "tag": "006",
-                "valid": 18,
-            },
+            "ctx": {"input": "p|||||", "length": 6, "tag": "006", "valid": 18},
             "input": "p|||||",
             "loc": ("fields", "006"),
             "msg": "006: Length appears to be invalid. Reported length is: 6. Expected length is: 18",
@@ -774,15 +723,11 @@ class TestMarcRecord:
         assert {
             "ctx": {
                 "code": "z",
-                "input": [
-                    PydanticSubfield(code="z", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="z", value="foo")],
                 "loc": ("336", "z"),
                 "tag": "336",
             },
-            "input": [
-                PydanticSubfield(code="z", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="z", value="foo")],
             "loc": ("fields", "336", "z"),
             "msg": "336 $z: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -795,9 +740,7 @@ class TestMarcRecord:
             "ctx": {"input": "001"},
         } in errors
         assert {
-            "ctx": {
-                "input": ["100", "110"],
-            },
+            "ctx": {"input": ["100", "110"]},
             "input": ["100", "110"],
             "loc": ("fields", "100", "110"),
             "msg": "1XX: Only one 1XX tag is allowed. Record contains: ['100', '110']",
@@ -903,15 +846,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "h",
-                "input": [
-                    PydanticSubfield(code="h", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="h", value="foo")],
                 "loc": ("300", "h"),
                 "tag": "300",
             },
-            "input": [
-                PydanticSubfield(code="h", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="h", value="foo")],
             "loc": ("fields", "300", "h"),
             "msg": "300 $h: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -977,15 +916,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "h",
-                "input": [
-                    PydanticSubfield(code="h", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="h", value="foo")],
                 "loc": ("300", "h"),
                 "tag": "300",
             },
-            "input": [
-                PydanticSubfield(code="h", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="h", value="foo")],
             "loc": ("fields", "300", "h"),
             "msg": "300 $h: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -1063,15 +998,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "a",
-                "input": [
-                    PydanticSubfield(code="a", value="Title :"),
-                ],
+                "input": [PydanticSubfield(code="a", value="Title :")],
                 "loc": ("245", "a"),
                 "tag": "245",
             },
-            "input": [
-                PydanticSubfield(code="a", value="Title :"),
-            ],
+            "input": [PydanticSubfield(code="a", value="Title :")],
             "loc": ("fields", "245", "a"),
             "msg": "245 $a: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -1079,15 +1010,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "b",
-                "input": [
-                    PydanticSubfield(code="b", value="subtitle /"),
-                ],
+                "input": [PydanticSubfield(code="b", value="subtitle /")],
                 "loc": ("245", "b"),
                 "tag": "245",
             },
-            "input": [
-                PydanticSubfield(code="b", value="subtitle /"),
-            ],
+            "input": [PydanticSubfield(code="b", value="subtitle /")],
             "loc": ("fields", "245", "b"),
             "msg": "245 $b: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -1095,15 +1022,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "c",
-                "input": [
-                    PydanticSubfield(code="c", value="Author"),
-                ],
+                "input": [PydanticSubfield(code="c", value="Author")],
                 "loc": ("245", "c"),
                 "tag": "245",
             },
-            "input": [
-                PydanticSubfield(code="c", value="Author"),
-            ],
+            "input": [PydanticSubfield(code="c", value="Author")],
             "loc": ("fields", "245", "c"),
             "msg": "245 $c: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -1137,15 +1060,11 @@ class TestMarcRecordCustomRulesAsContext:
         assert {
             "ctx": {
                 "code": "h",
-                "input": [
-                    PydanticSubfield(code="h", value="foo"),
-                ],
+                "input": [PydanticSubfield(code="h", value="foo")],
                 "loc": ("300", "h"),
                 "tag": "300",
             },
-            "input": [
-                PydanticSubfield(code="h", value="foo"),
-            ],
+            "input": [PydanticSubfield(code="h", value="foo")],
             "loc": ("fields", "300", "h"),
             "msg": "300 $h: Subfield cannot be defined in this field.",
             "type": "subfield_not_allowed",
@@ -1332,21 +1251,7 @@ class TestDataField:
         assert model.indicators[1] == ""
 
     @pytest.mark.parametrize(
-        "ind1_value, ind2_value",
-        [
-            (
-                "1",
-                "1",
-            ),
-            (
-                "0",
-                "0",
-            ),
-            (
-                "2",
-                "2",
-            ),
-        ],
+        "ind1_value, ind2_value", [("1", "1"), ("0", "0"), ("2", "2")]
     )
     def test_DataField_010_invalid_indicators(
         self, ind1_value, ind2_value, get_default_rule
@@ -1362,23 +1267,13 @@ class TestDataField:
         assert len(e.value.errors()) == 2
         assert sorted(error_types) == sorted(["invalid_indicator", "invalid_indicator"])
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_010_invalid_type(self, field_value, get_default_rule):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="010",
                 indicators=("", ""),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
                 rules=get_default_rule("010"),
             )
         error_types = [i["type"] for i in e.value.errors()]
@@ -1388,10 +1283,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="010",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[
                     PymarcSubfield(code="a", value="2024111111"),
                     PymarcSubfield(code="a", value="2025111111"),
@@ -1406,10 +1298,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="010",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[PymarcSubfield(code="c", value="2024111111")],
                 rules=get_default_rule("010"),
             )
@@ -1423,9 +1312,7 @@ class TestDataField:
         model = DataField(
             tag="020",
             indicators=("", ""),
-            subfields=[
-                PymarcSubfield(code="a", value="2024111111"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="2024111111")],
             rules=get_default_rule("020"),
         )
         assert model.model_dump() == {
@@ -1435,21 +1322,7 @@ class TestDataField:
         assert model.indicators[1] == ""
 
     @pytest.mark.parametrize(
-        "ind1_value, ind2_value",
-        [
-            (
-                "1",
-                "1",
-            ),
-            (
-                "0",
-                "0",
-            ),
-            (
-                "2",
-                "2",
-            ),
-        ],
+        "ind1_value, ind2_value", [("1", "1"), ("0", "0"), ("2", "2")]
     )
     def test_DataField_020_invalid_indicators(
         self, ind1_value, ind2_value, get_default_rule
@@ -1465,23 +1338,13 @@ class TestDataField:
         assert len(e.value.errors()) == 2
         assert sorted(error_types) == sorted(["invalid_indicator", "invalid_indicator"])
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_020_invalid_type(self, field_value, get_default_rule):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="020",
                 indicators=("", ""),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
                 rules=get_default_rule("020"),
             )
         error_types = [i["type"] for i in e.value.errors()]
@@ -1491,10 +1354,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="020",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[
                     PymarcSubfield(code="a", value="2024111111"),
                     PymarcSubfield(code="a", value="2024111111"),
@@ -1509,10 +1369,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="020",
-                indicators=(
-                    "",
-                    "",
-                ),
+                indicators=("", ""),
                 subfields=[PymarcSubfield(code="t", value="2024111111")],
                 rules=get_default_rule("020"),
             )
@@ -1526,9 +1383,7 @@ class TestDataField:
         model = DataField(
             tag="050",
             indicators=("0", "4"),
-            subfields=[
-                PymarcSubfield(code="a", value="F00"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="F00")],
             rules=get_default_rule("050"),
         )
         assert model.model_dump() == {
@@ -1538,21 +1393,7 @@ class TestDataField:
         assert model.indicators[1] == "4"
 
     @pytest.mark.parametrize(
-        "ind1_value, ind2_value",
-        [
-            (
-                "5",
-                "6",
-            ),
-            (
-                "7",
-                "8",
-            ),
-            (
-                "9",
-                "1",
-            ),
-        ],
+        "ind1_value, ind2_value", [("5", "6"), ("7", "8"), ("9", "1")]
     )
     def test_DataField_050_invalid_indicators(
         self, ind1_value, ind2_value, get_default_rule
@@ -1568,23 +1409,13 @@ class TestDataField:
         assert len(e.value.errors()) == 2
         assert sorted(error_types) == sorted(["invalid_indicator", "invalid_indicator"])
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_050_invalid_type(self, field_value, get_default_rule):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="050",
                 indicators=("0", "4"),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
                 rules=get_default_rule("050"),
             )
         error_types = [i["type"] for i in e.value.errors()]
@@ -1594,10 +1425,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="050",
-                indicators=(
-                    "0",
-                    "4",
-                ),
+                indicators=("0", "4"),
                 subfields=[
                     PymarcSubfield(code="a", value="F00"),
                     PymarcSubfield(code="a", value="F00"),
@@ -1614,10 +1442,7 @@ class TestDataField:
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="050",
-                indicators=(
-                    "0",
-                    "4",
-                ),
+                indicators=("0", "4"),
                 subfields=[PymarcSubfield(code="t", value="F00")],
                 rules=get_default_rule("050"),
             )
@@ -1631,9 +1456,7 @@ class TestDataField:
         model = DataField(
             tag="900",
             indicators=("", ""),
-            subfields=[
-                PymarcSubfield(code="a", value="Foo"),
-            ],
+            subfields=[PymarcSubfield(code="a", value="Foo")],
             rules=get_default_rule("900"),
         )
         assert model.model_dump() == {
@@ -1642,37 +1465,20 @@ class TestDataField:
         assert model.indicators[0] == ""
         assert model.indicators[1] == ""
 
-    @pytest.mark.parametrize(
-        "field_value",
-        [
-            1,
-            1.0,
-            None,
-            [],
-        ],
-    )
+    @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_DataField_900_invalid_type(self, field_value):
         with pytest.raises(ValidationError) as e:
             DataField(
                 tag="900",
                 indicators=(" ", " "),
-                subfields=[
-                    PymarcSubfield(code="a", value=field_value),
-                ],
+                subfields=[PymarcSubfield(code="a", value=field_value)],
             )
         error_types = [i["type"] for i in e.value.errors()]
         assert "string_type" in error_types
 
 
 class TestPydanticIndicators:
-    @pytest.mark.parametrize(
-        "first, second",
-        [
-            ("0", "1"),
-            ("", " "),
-            (" ", "5"),
-        ],
-    )
+    @pytest.mark.parametrize("first, second", [("0", "1"), ("", " "), (" ", "5")])
     def test_PydanticIndicators_valid(self, first, second):
         model = PydanticIndicators(first=first, second=second)
         assert model.model_dump(by_alias=True) == (first, second)
@@ -1695,14 +1501,7 @@ class TestPydanticIndicators:
 
 
 class TestPydanticSubfield:
-    @pytest.mark.parametrize(
-        "code, value",
-        [
-            ("a", "foo"),
-            ("b", "bar"),
-            ("8", "baz"),
-        ],
-    )
+    @pytest.mark.parametrize("code, value", [("a", "foo"), ("b", "bar"), ("8", "baz")])
     def test_PydanticSubfield_valid(self, code, value):
         model = PydanticSubfield(code=code, value=value)
         assert model.model_dump(by_alias=True) == {code: value}

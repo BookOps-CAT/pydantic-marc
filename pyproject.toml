@@ -12,15 +12,18 @@ dependencies = [
     "pydantic (>=2.10.6,<3.0.0)"
 ]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-pytest-cov = "^6.0.0"
-pymarc = "^5.2.3"
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+    "pymarc>=5.2.3"
+]
+docs = [
+    "mkdocs-material>=9.6",
+    "mkdocstrings>=1.0.3",
+    "mike>=2.1.3"
+]
 
-[tool.poetry.group.docs.dependencies]
-mkdocs-material = "^9.6"
-mkdocstrings = {extras = ["python"], version = "^0.30.0"}
-mike = "^2.1.3"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -30,6 +33,7 @@ addopts = "--cov=pydantic_marc"
 relative_files = true
 source = ["."]
 omit = ["tests/*"]
+branch = true
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
@@ -41,13 +45,16 @@ module = ["tests.*"]
 disallow_untyped_defs = false
 
 [tool.ruff.lint]
-select = ["D", "E", "W"]
-ignore = ["D417"]
+select = ["D", "E", "F", "W", "ANN"]
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 88
+
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["E501"]
+"tests/*" = ["E501", "ANN"]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

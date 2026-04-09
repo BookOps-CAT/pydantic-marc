@@ -54,9 +54,7 @@ def stub_record() -> Record:
         PymarcField(
             tag="050",
             indicators=Indicators(" ", "4"),
-            subfields=[
-                Subfield(code="a", value="F00"),
-            ],
+            subfields=[Subfield(code="a", value="F00")],
         )
     )
     bib.add_field(
@@ -65,14 +63,8 @@ def stub_record() -> Record:
             indicators=Indicators("0", "0"),
             subfields=[
                 Subfield(code="a", value="Title :"),
-                Subfield(
-                    code="b",
-                    value="subtitle /",
-                ),
-                Subfield(
-                    code="c",
-                    value="Author",
-                ),
+                Subfield(code="b", value="subtitle /"),
+                Subfield(code="c", value="Author"),
             ],
         )
     )
@@ -80,18 +72,14 @@ def stub_record() -> Record:
         PymarcField(
             tag="300",
             indicators=Indicators(" ", " "),
-            subfields=[
-                Subfield(code="a", value="100 pages :"),
-            ],
+            subfields=[Subfield(code="a", value="100 pages :")],
         )
     )
     bib.add_field(
         PymarcField(
             tag="910",
             indicators=Indicators(" ", " "),
-            subfields=[
-                Subfield(code="a", value="RL"),
-            ],
+            subfields=[Subfield(code="a", value="RL")],
         )
     )
     return bib
@@ -141,9 +129,7 @@ def stub_invalid_record() -> Record:
         PymarcField(
             tag="300",
             indicators=Indicators(" ", " "),
-            subfields=[
-                Subfield(code="a", value="100 pages :"),
-            ],
+            subfields=[Subfield(code="a", value="100 pages :")],
         )
     )
     bib.add_field(
