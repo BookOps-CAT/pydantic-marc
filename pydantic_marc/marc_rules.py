@@ -11,35 +11,26 @@ Objects defined in this module include:
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from functools import cached_property
 from importlib import resources
 from typing import Any, Union
 
 
+@dataclass
 class Rule:
     """
     A collection of rules used to validate the content of an individual MARC field.
     """
 
-    def __init__(
-        self,
-        tag: str,
-        repeatable: Union[bool, None] = None,
-        ind1: Union[list[str], None] = None,
-        ind2: Union[list[str], None] = None,
-        subfields: Union[dict[str, list[str]], None] = None,
-        length: Union[int, dict[str, Union[int, list[int]]], None] = None,
-        required: Union[bool, None] = None,
-        field_values: Union[dict[str, Any], None] = None,
-    ) -> None:
-        self.tag = tag
-        self.repeatable = repeatable
-        self.ind1 = ind1
-        self.ind2 = ind2
-        self.subfields = subfields
-        self.length = length
-        self.required = required
-        self.field_values = field_values
+    tag: str
+    repeatable: Union[bool, None] = None
+    ind1: Union[list[str], None] = None
+    ind2: Union[list[str], None] = None
+    subfields: Union[dict[str, list[str]], None] = None
+    length: Union[int, dict[str, Union[int, list[int]]], None] = None
+    required: Union[bool, None] = None
+    field_values: Union[dict[str, Any], None] = None
 
 
 class RuleSet:
