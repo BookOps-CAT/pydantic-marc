@@ -5,8 +5,8 @@ from pymarc import Leader as PymarcLeader
 from pymarc import MARCReader
 from pymarc import Subfield as PymarcSubfield
 
-from pydantic_marc.fields import ControlField, DataField, PydanticSubfield
-from pydantic_marc.models import MarcRecord
+from pydantic_marc import ControlField, DataField, MarcRecord
+from pydantic_marc.components import PydanticSubfield
 
 
 class TestMarcRecord:
