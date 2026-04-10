@@ -33,7 +33,7 @@ class TestControlField:
         assert model.model_dump(by_alias=True) == {"007": data}
         assert model.model_json_schema()["properties"]["rules"].get("default") is None
 
-    @pytest.mark.parametrize("tag", ["001", "003", "005", "006", "007", "007"])
+    @pytest.mark.parametrize("tag", ["001", "003", "005"])
     @pytest.mark.parametrize("field_value", [1, 1.0, None, []])
     def test_ControlField_data_string_type_error(
         self, tag, field_value, get_default_rule

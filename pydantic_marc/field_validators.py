@@ -21,7 +21,7 @@ from .errors import (
 
 if TYPE_CHECKING:  # pragma: no cover
     from .components import PydanticIndicators, PydanticSubfield
-    from .marc_rules import Rule
+    from .rule import Rule
 
 
 def get_control_field_length_errors(

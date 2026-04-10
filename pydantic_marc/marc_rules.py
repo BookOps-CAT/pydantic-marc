@@ -2,8 +2,6 @@
 
 Objects defined in this module include:
 
-`Rule`:
-    a class that defines valid attributes of an individual MARC field.
 `RuleSet`:
     a class that defines a set of rules to be used to validate a MARC record
 """
@@ -11,26 +9,9 @@ Objects defined in this module include:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from functools import cached_property
 from importlib import resources
 from typing import Any, Union
-
-
-@dataclass
-class Rule:
-    """
-    A collection of rules used to validate the content of an individual MARC field.
-    """
-
-    tag: str
-    repeatable: Union[bool, None] = None
-    ind1: Union[list[str], None] = None
-    ind2: Union[list[str], None] = None
-    subfields: Union[dict[str, list[str]], None] = None
-    length: Union[int, dict[str, Union[int, list[int]]], None] = None
-    required: Union[bool, None] = None
-    field_values: Union[dict[str, Any], None] = None
 
 
 class RuleSet:
@@ -73,17 +54,17 @@ class RuleSet:
         mt = self.material_type
         for k, v in loaded.items():
             if mt in v:
-                defaults[k] = Rule(**v[mt])
+                defaults[k] = v[mt]
             elif "tag" not in v:
-                defaults[k] = {kk: Rule(**vv) for kk, vv in v.items()}
+                defaults[k] = {kk: vv for kk, vv in v.items()}
             else:
-                defaults[k] = Rule(**v)
+                defaults[k] = v
         return defaults
 
     def _normalize(self, data: dict[str, Any]) -> dict[str, Any]:
-        return {k: Rule(**{**v, "tag": v.get("tag", k)}) for k, v in data.items()}
+        return {k: {**v, "tag": v.get("tag", k)} for k, v in data.items()}
 
-    def _set_rules(self, value: dict[str, Any]) -> dict[str, Rule]:
+    def _set_rules(self, value: dict[str, Any]) -> dict[str, dict[str, Any]]:
         # If explicit rules are provided they are the only rules used.
         if value:
             return self._normalize(value)
@@ -108,7 +89,7 @@ class RuleSet:
         return [
             tag
             for tag, rule in self.rules.items()
-            if isinstance(rule, Rule) and rule.repeatable is False
+            if isinstance(rule, dict) and rule.get("repeatable", True) is False
         ]
 
     @property
@@ -117,7 +98,7 @@ class RuleSet:
         return [
             tag
             for tag, rule in self.rules.items()
-            if isinstance(rule, Rule) and rule.required is True
+            if isinstance(rule, dict) and rule.get("required", False) is True
         ]
 
     @property

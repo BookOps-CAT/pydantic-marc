@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Sequence, Union
 
-from pydantic import AfterValidator, BaseModel, Field, model_serializer
+from pydantic import AfterValidator, BaseModel, BeforeValidator, Field, model_serializer
 
 from .components import PydanticIndicators, PydanticSubfield
 from .error_handlers import MarcFieldValidator
@@ -23,7 +23,14 @@ from .field_validators import (
     get_indicator_errors,
     get_subfield_errors,
 )
-from .marc_rules import Rule
+from .rule import Rule
+
+
+def format_rule(data: Any) -> Any:
+    if isinstance(data, dict):
+        return Rule(**data)
+    else:
+        return data
 
 
 class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
@@ -47,7 +54,9 @@ class ControlField(BaseModel, arbitrary_types_allowed=True, from_attributes=True
             length.
     """
 
-    rules: Annotated[Union[Rule, dict[str, Any], None], Field(exclude=True)]
+    rules: Annotated[
+        Union[Rule, None], Field(exclude=True), BeforeValidator(format_rule)
+    ]
 
     tag: Literal["001", "002", "003", "004", "005", "006", "007", "008", "009"]
     data: Annotated[
@@ -90,7 +99,9 @@ class DataField(BaseModel, arbitrary_types_allowed=True, from_attributes=True):
 
     """
 
-    rules: Annotated[Union[Rule, dict[str, Any], None], Field(exclude=True)]
+    rules: Annotated[
+        Union[Rule, None], Field(exclude=True), BeforeValidator(format_rule)
+    ]
 
     tag: Annotated[str, Field(pattern=r"0[1-9]\d|[1-9]\d\d")]
     indicators: Annotated[

@@ -137,7 +137,7 @@ def validate_leader(data: Any, info: ValidationInfo) -> Any:
         return errors
     for i, c in enumerate(data):
         position = str(i).zfill(2)
-        valid = rule.field_values.get(f"{position}", [])
+        valid = rule["field_values"].get(f"{position}", [])
         if c not in valid:
             error_data = {
                 "input": c,
