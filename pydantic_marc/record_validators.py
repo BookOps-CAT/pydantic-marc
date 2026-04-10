@@ -62,43 +62,6 @@ def add_rules_to_pymarc_fields(data: list[Any], info: ValidationInfo) -> list[An
     return field_list
 
 
-def get_leader_errors(data: Any, info: ValidationInfo) -> list[MarcCustomError]:
-    """
-    Validate each character in a string against the allowed values each byte in a
-    MARC leader.
-
-    If the value does not match the rules for the leader, an `InvalidLeader`
-    error will be added to the list of errors and returned.
-
-    Args:
-        rule: The `Rule` object specifying the valid leader values.
-        data: A string passed to the `MarcRecord.leader` attribute.
-        tag: The MARC field tag being validated ('LDR').
-    Returns:
-
-        A list of `MarcCustomError` objects.
-    """
-    errors: list[MarcCustomError] = []
-    rules = info.data["rules"]
-    if not rules:
-        return errors
-    rule = rules.rules.get("LDR", {})
-    if not rule:
-        return errors
-    for i, c in enumerate(data):
-        position = str(i).zfill(2)
-        valid = rule.field_values.get(f"{position}", [])
-        if c not in valid:
-            error_data = {
-                "input": c,
-                "loc": f"{position}",
-                "valid": valid,
-                "tag": "LDR",
-            }
-            errors.append(InvalidLeader(error_data))
-    return errors
-
-
 def get_marc_field_errors(
     data: list[Any], info: ValidationInfo
 ) -> list[MarcCustomError]:
@@ -144,6 +107,47 @@ def get_marc_field_errors(
     if len(main_entries) > 1:
         errors.append(MultipleMainEntryValues({"input": main_entries}))
     return errors
+
+
+def validate_leader(data: Any, info: ValidationInfo) -> Any:
+    """
+    Validate each character in a string against the allowed values each byte in a
+    MARC leader.
+
+    If the value does not match the rules for the leader, an `InvalidLeader`
+    error will be added to the list of errors and returned.
+
+    Args:
+        data: A string passed to the `MarcRecord.leader` attribute.
+        info: the `ValidationInfo` used during validation.
+
+    Returns:
+
+        The validated leader as a string
+
+    Raises:
+        `ValidationError`: if the there are any MARC validation errors
+    """
+    errors: list[MarcCustomError] = []
+    rules = info.data["rules"]
+    if not rules:
+        return errors
+    rule = rules.rules.get("LDR", {})
+    if not rule:
+        return errors
+    for i, c in enumerate(data):
+        position = str(i).zfill(2)
+        valid = rule.field_values.get(f"{position}", [])
+        if c not in valid:
+            error_data = {
+                "input": c,
+                "loc": f"{position}",
+                "valid": valid,
+                "tag": "LDR",
+            }
+            errors.append(InvalidLeader(error_data))
+
+    return ValidationHandler.raise_if_errors(errors=errors, data=data)
 
 
 def validate_marc_fields(data: Any, handler: Callable, info: ValidationInfo) -> Any:
