@@ -1,39 +1,43 @@
-name: unit-tests
+name: tests
 on: 
-  push: 
+  push:
     branches:
       - main
   pull_request:
     branches:
       - main
+
+permissions:
+  contents: read
+        
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
         with:
-          python-version: ${{ matrix.python-version}}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r dev-requirements.txt
+          persist-credentials: false       
+      - name: Install uv and set python version
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 #v10.3.3
+        with:
+          python-version: ${{ matrix.python-version }}  
       - name: Run tests
-        run: python -m pytest --cov=pydantic_marc/
+        run: uv run --frozen python -m pytest --cov=pydantic_marc/
       - name: Send report to Coveralls
-        uses: AndreMiras/coveralls-python-action@develop
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 #v2.3.8
         with:
           parallel: true
           github-token: ${{ secrets.GITHUB_TOKEN}}
+          fail-on-error: false          
   finish:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
-        uses: AndreMiras/coveralls-python-action@develop
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 #v2.3.8
         with:
           parallel-finished: true
+          fail-on-error: false

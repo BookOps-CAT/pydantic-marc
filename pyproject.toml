@@ -9,32 +9,52 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "pydantic (>=2.10.6,<3.0.0)"
+    "pydantic>=2.10.6"
 ]
 
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-pytest-cov = "^6.0.0"
-pymarc = "^5.2.3"
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+    "pymarc>=5.2.3"
+]
+docs = [
+    "mkdocs-material>=9.6",
+    "mkdocstrings>=1.0.3",
+    "mike>=2.1.3"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "--cov=pydantic_marc"
 
 [tool.coverage.run]
 relative_files = true
 source = ["."]
+omit = ["tests/*"]
+branch = true
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
-
 warn_unused_ignores = true
 disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = "tests.*"
+module = ["tests.*"]
 disallow_untyped_defs = false
+
+[tool.ruff.lint]
+select = ["D", "E", "F", "W", "ANN"]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 88
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501", "ANN"]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
